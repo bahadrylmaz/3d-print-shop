@@ -29,3 +29,6 @@ public/models/stl/portrait.stl
 
 # Ham ürün fotoğrafı arşivi (web-optimize edilmiş kopyalar public/shop/ altında)
 stl_photos/
+
+# Bahadir'in ham fotograf klasoru (islenmis halleri public/ altina gider)
+yeni-fotolar/

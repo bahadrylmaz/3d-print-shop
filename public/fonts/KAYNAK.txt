@@ -1,0 +1,22 @@
+MicronForge web yazı tipleri: kaynak ve lisans
+
+1) Bodoni Moda (başlık, serif)
+   Tasarımcı: Owen Earl (indestructible-type)
+   Lisans: SIL Open Font License 1.1, Reserved Font Name yok -> bodoni-moda/OFL.txt
+   Kaynak: https://github.com/google/fonts/tree/main/ofl/bodonimoda
+           (BodoniModa[opsz,wght].ttf, BodoniModa-Italic[opsz,wght].ttf; google/fonts commit 6ce172f7)
+   Üst kaynak: https://github.com/indestructible-type/Bodoni
+
+2) Schibsted Grotesk (gövde, grotesk)
+   Tasarımcı: Bakken & Bæck, Henrik Kongsvoll
+   Lisans: SIL Open Font License 1.1, Reserved Font Name yok -> schibsted-grotesk/OFL.txt
+   Kaynak: https://github.com/google/fonts/tree/main/ofl/schibstedgrotesk
+           (SchibstedGrotesk[wght].ttf, SchibstedGrotesk-Italic[wght].ttf; google/fonts commit 8b0a1d0f)
+   Üst kaynak: https://github.com/schibsted/schibsted-grotesk
+
+İşlem: fontTools pyftsubset ile Latin + Latin Genişletilmiş-A (Türkçe ı İ ş Ş ğ Ğ dahil),
+noktalama, para birimleri (₺) aralığına alt küme alındı; tüm OpenType özellikleri ve
+değişken eksenler (opsz, wght) korundu; woff2'ye dönüştürüldü. Unicode aralığı:
+U+0000-017F, U+0192, U+02C6-02DC, U+0300-0329, U+2000-206F, U+20A0-20C0, U+2100-2122,
+U+2190-2199, U+2212, U+2215, U+FB01-FB02
+Not: Bodoni Moda'da ₺ glifi yok; fiyatlar Schibsted Grotesk ile dizilir.

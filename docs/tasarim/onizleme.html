@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MicronForge stil rehberi önizlemesi</title>
+<meta name="robots" content="noindex">
+<!-- Dev sunucusundan açın: http://localhost:5173/docs/tasarim/onizleme.html
+     (tokens.css ve /fonts yolları kök göreli). Metinler ÖRNEKTİR; nihai metin METIN.md'den gelir. -->
+<link rel="preload" href="/fonts/bodoni-moda/BodoniModa-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/schibsted-grotesk/SchibstedGrotesk-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/src/styles/tokens.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; overflow-x: clip; }
+  body {
+    margin: 0;
+    background: var(--mf-alci);
+    color: var(--mf-grafit);
+    font-family: var(--mf-font-sans);
+    font-size: var(--mf-fs-body);
+    line-height: var(--mf-lh-body);
+    font-kerning: normal;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--mf-recine-acik); color: var(--mf-grafit); }
+  :focus-visible { outline: var(--mf-cizgi-kalin) solid var(--mf-recine); outline-offset: 3px; }
+  a { color: inherit; }
+  h1, h2, h3, p { margin: 0; }
+  img { max-width: 100%; display: block; }
+
+  /* ---- Izgara ---- */
+  .kutu { width: 100%; max-width: calc(var(--mf-max) + 2 * var(--mf-kenar)); margin-inline: auto; padding-inline: var(--mf-kenar); }
+  .izgara { display: grid; grid-template-columns: repeat(var(--mf-kolon-mobil), minmax(0, 1fr)); column-gap: var(--mf-oluk); }
+  @media (min-width: 768px) { .izgara { grid-template-columns: repeat(var(--mf-kolon), minmax(0, 1fr)); } }
+  .tam { grid-column: 1 / -1; }
+
+  /* ---- Tipografi rolleri ---- */
+  .serif { font-family: var(--mf-font-serif); font-optical-sizing: auto; font-weight: 400; }
+  .t-display { font-family: var(--mf-font-serif); font-size: var(--mf-fs-display); line-height: var(--mf-lh-display); letter-spacing: var(--mf-tr-display); font-weight: 400; text-wrap: balance; }
+  .t-h1 { font-family: var(--mf-font-serif); font-size: var(--mf-fs-h1); line-height: var(--mf-lh-heading); letter-spacing: var(--mf-tr-display); font-weight: 400; text-wrap: balance; }
+  .t-h2 { font-family: var(--mf-font-serif); font-size: var(--mf-fs-h2); line-height: var(--mf-lh-heading); letter-spacing: var(--mf-tr-heading); font-weight: 400; text-wrap: balance; }
+  .t-h3 { font-family: var(--mf-font-serif); font-size: var(--mf-fs-h3); line-height: 1.2; font-weight: 500; }
+  .t-lead { font-size: var(--mf-fs-lead); line-height: 1.5; color: var(--mf-grafit-2); max-width: var(--mf-olcu-dar); text-wrap: pretty; }
+  .t-body { max-width: var(--mf-olcu-metin); text-wrap: pretty; }
+  .t-small { font-size: var(--mf-fs-small); line-height: 1.5; letter-spacing: var(--mf-tr-small); color: var(--mf-sis); }
+  .rakam { font-variant-numeric: lining-nums proportional-nums; }
+
+  /* ---- Navbar ---- */
+  .nav { position: sticky; top: 0; z-index: var(--mf-z-yapiskan); background: var(--mf-alci); border-bottom: var(--mf-cizgi-ince) solid var(--mf-cizgi); }
+  .nav .kutu { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: var(--mf-b-6); }
+  .marka { font-family: var(--mf-font-serif); font-size: 1.5rem; font-weight: 500; letter-spacing: -0.01em; text-decoration: none; line-height: 1; padding-block: 10px; }
+  .nav-linkler { display: none; gap: var(--mf-b-6); list-style: none; margin: 0 auto 0 var(--mf-b-8); padding: 0; }
+  .nav-linkler a { text-decoration: none; font-size: 0.9375rem; display: inline-flex; align-items: center; min-height: var(--mf-dokunma); color: var(--mf-grafit-2); }
+  .nav-linkler a[aria-current="page"] { color: var(--mf-grafit); box-shadow: inset 0 -1px 0 var(--mf-grafit); }
+  .nav-linkler a:hover { color: var(--mf-grafit); }
+  .nav-sag { display: flex; align-items: center; gap: var(--mf-b-5); }
+  .nav-wa { display: none; font-size: 0.9375rem; text-decoration: none; min-height: var(--mf-dokunma); align-items: center; color: var(--mf-grafit-2); }
+  .menu-dugme { width: var(--mf-dokunma); height: var(--mf-dokunma); display: inline-grid; place-items: center; background: none; border: 0; padding: 0; cursor: pointer; color: var(--mf-grafit); }
+  .menu-dugme span { display: block; width: 22px; height: 1px; background: currentColor; box-shadow: 0 6px 0 currentColor; transform: translateY(-3px); }
+  .nav .dugme { display: none; }
+  @media (min-width: 1024px) {
+    .nav-linkler, .nav-wa { display: inline-flex; }
+    .nav .dugme { display: inline-flex; }
+    .menu-dugme { display: none; }
+  }
+
+  /* ---- Butonlar ---- */
+  .dugme {
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--mf-b-2);
+    min-height: 48px; padding: 0 var(--mf-b-5);
+    border-radius: var(--mf-r-kontrol); border: var(--mf-cizgi-ince) solid var(--mf-grafit);
+    background: var(--mf-grafit); color: var(--mf-kirec);
+    font: 500 0.9375rem/1 var(--mf-font-sans); letter-spacing: 0.005em; text-decoration: none; cursor: pointer; white-space: nowrap;
+    transition: background-color var(--mf-sure-hizli) var(--mf-egri), color var(--mf-sure-hizli) var(--mf-egri), border-color var(--mf-sure-hizli) var(--mf-egri);
+  }
+  .dugme:hover { background: var(--mf-recine-koyu); border-color: var(--mf-recine-koyu); }
+  .dugme:active { transform: translateY(1px); }
+  .dugme.cerceve { background: transparent; color: var(--mf-grafit); }
+  .dugme.cerceve:hover { background: var(--mf-grafit); color: var(--mf-kirec); border-color: var(--mf-grafit); }
+  .dugme[disabled] { background: var(--mf-tas); border-color: var(--mf-tas); color: var(--mf-sis); cursor: not-allowed; }
+  .baglanti { display: inline-flex; align-items: center; min-height: var(--mf-dokunma); color: var(--mf-grafit); font-weight: 500; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.3em; text-decoration-color: var(--mf-cizgi-guclu); transition: text-decoration-color var(--mf-sure-hizli) var(--mf-egri), color var(--mf-sure-hizli); }
+  .baglanti:hover { color: var(--mf-recine); text-decoration-color: currentColor; }
+
+  /* ---- Görsel yer tutucu: stüdyo fonu ---- */
+  .gorsel {
+    position: relative; width: 100%; aspect-ratio: var(--mf-oran-urun);
+    background:
+      linear-gradient(to bottom, transparent 0 74%, rgba(28,32,30,0.035) 74% 100%),
+      radial-gradient(120% 80% at 50% 34%, #E1E3DD 0%, var(--mf-tas) 52%, var(--mf-tas-koyu) 100%);
+    box-shadow: inset 0 0 0 var(--mf-cizgi-ince) var(--mf-cizgi);
+    overflow: hidden;
+  }
+  .gorsel.dikey { aspect-ratio: var(--mf-oran-dikey); }
+  .gorsel.genis { aspect-ratio: var(--mf-oran-genis); }
+  /* Kaide gölgesi: ürünün duracağı yeri ima eder, ürün değildir */
+  .gorsel::after { content: ""; position: absolute; left: 50%; top: 74%; width: 38%; height: 3.2%; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(closest-side, rgba(28,32,30,0.13), transparent); }
+  .gorsel.genis::after { width: 22%; height: 4%; }
+
+  /* Tek açılış anı: hero görseli katman katman belirir (SLA baskıya gönderme) */
+  @media (prefers-reduced-motion: no-preference) {
+    .katman-katman { animation: katman var(--mf-sure-yavas) steps(18, end) 120ms both; }
+    @keyframes katman { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+  }
+
+  /* ---- Eser etiketi (imza bileşen) ---- */
+  .etiket { display: grid; grid-template-columns: 1fr auto; column-gap: var(--mf-b-4); row-gap: var(--mf-b-1); padding-top: var(--mf-b-4); }
+  .etiket .ad { font-family: var(--mf-font-serif); font-style: italic; font-size: 1.375rem; line-height: 1.2; font-weight: 400; }
+  .etiket .fiyat { font-size: 1rem; font-weight: 500; font-variant-numeric: lining-nums proportional-nums; white-space: nowrap; align-self: baseline; padding-top: 0.2em; }
+  .etiket dl { grid-column: 1 / -1; margin: var(--mf-b-2) 0 0; display: grid; grid-template-columns: auto 1fr; column-gap: var(--mf-b-4); row-gap: 2px; font-size: var(--mf-fs-small); }
+  .etiket dt { color: var(--mf-sis); }
+  .etiket dd { margin: 0; color: var(--mf-grafit-2); }
+  .dogrulanacak { color: var(--mf-hata); font-size: var(--mf-fs-small); }
+
+  /* ---- Hero ---- */
+  .hero { padding-top: clamp(2rem, 1rem + 4vw, 4.5rem); padding-bottom: var(--mf-bolum); }
+  .hero .metin { grid-column: 1 / -1; align-self: end; padding-bottom: var(--mf-b-6); }
+  .hero .metin .t-lead { margin-top: var(--mf-b-5); }
+  .hero .eylemler { margin-top: var(--mf-b-6); display: flex; flex-wrap: wrap; align-items: center; gap: var(--mf-b-3) var(--mf-b-6); }
+  .hero figure { grid-column: 1 / -1; margin: var(--mf-b-6) 0 0; }
+  @media (min-width: 768px) {
+    .hero .metin { grid-column: 1 / span 7; padding-bottom: var(--mf-b-9); }
+    .hero figure { grid-column: 8 / -1; margin: 0; }
+  }
+  @media (min-width: 1100px) {
+    .hero .metin { grid-column: 1 / span 7; }
+    .hero figure { grid-column: 8 / -1; }
+    .hero .gorsel { aspect-ratio: var(--mf-oran-dikey); }
+  }
+  .hero .t-display { max-width: 12ch; }
+
+  /* ---- Rehber bölümleri ---- */
+  .bolum { padding-block: var(--mf-bolum-kucuk); border-top: var(--mf-cizgi-ince) solid var(--mf-cizgi); }
+  .bolum-baslik { grid-column: 1 / -1; margin-bottom: var(--mf-b-7); }
+  @media (min-width: 768px) { .bolum-baslik { grid-column: 1 / span 4; margin-bottom: 0; } }
+  .bolum-govde { grid-column: 1 / -1; min-width: 0; }
+  @media (min-width: 768px) { .bolum-govde { grid-column: 5 / -1; } }
+  .bolum-baslik p { margin-top: var(--mf-b-3); }
+
+  .olcek { list-style: none; margin: 0; padding: 0; }
+  .olcek li { display: grid; grid-template-columns: 1fr; gap: var(--mf-b-2); padding-block: var(--mf-b-5); border-bottom: var(--mf-cizgi-ince) solid var(--mf-cizgi); }
+  .olcek li:first-child { padding-top: 0; }
+  @media (min-width: 768px) { .olcek li { grid-template-columns: 9rem 1fr; align-items: baseline; } }
+  .olcek .ornek { min-width: 0; overflow-wrap: anywhere; }
+
+  .renkler { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--mf-b-5) var(--mf-oluk); }
+  @media (min-width: 900px) { .renkler { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .renk .kare { aspect-ratio: 1 / 1; box-shadow: inset 0 0 0 1px var(--mf-cizgi); display: flex; align-items: flex-end; padding: var(--mf-b-3); font-size: var(--mf-fs-small); }
+  .renk .kare.genis { aspect-ratio: 2 / 1; }
+  .renk p { margin-top: var(--mf-b-2); font-size: var(--mf-fs-small); line-height: 1.45; }
+  .renk p b { font-weight: 500; }
+  .renk p span { color: var(--mf-sis); display: block; }
+
+  .bilesenler { display: grid; gap: var(--mf-b-7); }
+  .sira { display: flex; flex-wrap: wrap; gap: var(--mf-b-3) var(--mf-b-5); align-items: center; }
+
+  .sekmeler { display: flex; gap: var(--mf-b-6); overflow-x: auto; scrollbar-width: none; border-bottom: var(--mf-cizgi-ince) solid var(--mf-cizgi); margin-inline: calc(-1 * var(--mf-kenar)); padding-inline: var(--mf-kenar); }
+  @media (min-width: 768px) { .sekmeler { margin-inline: 0; padding-inline: 0; } }
+  .sekmeler button { flex: none; background: none; border: 0; padding: 0; min-height: var(--mf-dokunma); font: 400 0.9375rem var(--mf-font-sans); color: var(--mf-grafit-2); cursor: pointer; box-shadow: inset 0 -2px 0 transparent; }
+  .sekmeler button[aria-pressed="true"] { color: var(--mf-grafit); font-weight: 500; box-shadow: inset 0 -2px 0 var(--mf-grafit); }
+  .sekmeler sup { font-size: 0.75em; color: var(--mf-sis); margin-left: 2px; font-variant-numeric: tabular-nums; }
+
+  .alan { display: grid; gap: var(--mf-b-2); max-width: 26rem; }
+  .alan label { font-size: var(--mf-fs-small); font-weight: 500; }
+  .alan input { min-height: 48px; padding: 0 var(--mf-b-4); border: 1px solid var(--mf-cizgi-guclu); border-radius: var(--mf-r-kontrol); background: var(--mf-kirec); color: var(--mf-grafit); font: 400 1rem var(--mf-font-sans); }
+  .alan input::placeholder { color: var(--mf-sis); }
+  .alan input:focus-visible { outline: 2px solid var(--mf-recine); outline-offset: 1px; border-color: var(--mf-recine); }
+  .alan .yardim { font-size: var(--mf-fs-small); color: var(--mf-sis); }
+
+  /* ---- Vitrin: asimetrik ürün rafı ---- */
+  .vitrin { padding-block: var(--mf-bolum); border-top: var(--mf-cizgi-ince) solid var(--mf-cizgi); }
+  .vitrin .giris { grid-column: 1 / -1; margin-bottom: var(--mf-b-7); }
+  .vitrin .giris .t-body { margin-top: var(--mf-b-4); color: var(--mf-grafit-2); }
+  .vitrin .alt { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; gap: var(--mf-b-4); border-top: 1px solid var(--mf-cizgi); padding-top: var(--mf-b-3); }
+  .kart { grid-column: 1 / -1; margin: 0 0 var(--mf-b-8); text-decoration: none; display: block; }
+  .kart:hover .ad { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+  .kart.k2, .kart.k3 { grid-column: span 2; margin-bottom: var(--mf-b-6); }
+  .kart.k2 .etiket .ad, .kart.k3 .etiket .ad { font-size: 1.125rem; }
+  .kart.k2 .etiket, .kart.k3 .etiket { grid-template-columns: 1fr; }
+  .kart.k2 dl, .kart.k3 dl { display: none; }
+  @media (min-width: 768px) {
+    .vitrin .giris { grid-column: 1 / span 5; }
+    .kart.k1 { grid-column: 1 / span 5; grid-row: 2 / span 2; margin: 0; }
+    .kart.k2 { grid-column: 7 / span 3; grid-row: 2; align-self: start; margin-top: var(--mf-b-10); }
+    .kart.k3 { grid-column: 10 / span 3; grid-row: 2; align-self: start; }
+    .kart.k2 .etiket .ad, .kart.k3 .etiket .ad { font-size: 1.25rem; }
+    .kart.k2 dl, .kart.k3 dl { display: grid; }
+    .vitrin .alt { grid-column: 7 / -1; grid-row: 3; align-self: end; }
+  }
+
+  /* ---- Editoryal kesit (blog) ---- */
+  .editoryal { padding-block: var(--mf-bolum); border-top: 1px solid var(--mf-cizgi); }
+  .editoryal figure { grid-column: 1 / -1; margin: 0; }
+  .editoryal .yazi { grid-column: 1 / -1; padding-top: var(--mf-b-6); }
+  .editoryal .yazi .kunye { margin-bottom: var(--mf-b-3); }
+  .editoryal .yazi p.t-body { margin-top: var(--mf-b-4); color: var(--mf-grafit-2); }
+  @media (min-width: 768px) {
+    .editoryal figure { grid-column: 1 / span 7; }
+    .editoryal .yazi { grid-column: 9 / -1; align-self: end; padding-top: 0; }
+  }
+
+  /* ---- WhatsApp erişimi ---- */
+  .wa { position: fixed; right: var(--mf-b-4); bottom: var(--mf-b-4); z-index: var(--mf-z-whatsapp); display: inline-flex; align-items: center; gap: var(--mf-b-2); min-height: 48px; padding: 0 var(--mf-b-4) 0 var(--mf-b-3); background: var(--mf-grafit); color: var(--mf-kirec); text-decoration: none; border-radius: var(--mf-r-kontrol); font: 500 0.9375rem/1 var(--mf-font-sans); box-shadow: var(--mf-golge-katman); }
+  .wa svg { width: 20px; height: 20px; }
+  .wa:hover { background: var(--mf-recine-koyu); }
+
+  /* ---- Footer ---- */
+  .altbilgi { background: var(--mf-tas); padding-block: var(--mf-b-9) var(--mf-b-6); margin-top: 0; }
+  .altbilgi .marka-buyuk { grid-column: 1 / -1; font-family: var(--mf-font-serif); font-size: clamp(3rem, 1rem + 9vw, 9rem); line-height: 0.9; letter-spacing: -0.03em; font-weight: 400; margin-bottom: var(--mf-b-8); white-space: nowrap; overflow: hidden; }
+  .altbilgi .sutun { grid-column: span 2; margin-bottom: var(--mf-b-6); font-size: var(--mf-fs-small); }
+  .altbilgi .sutun h3 { font: 500 var(--mf-fs-small) var(--mf-font-sans); margin-bottom: var(--mf-b-2); }
+  .altbilgi .sutun ul { list-style: none; margin: 0; padding: 0; }
+  .altbilgi .sutun a { display: inline-flex; min-height: var(--mf-dokunma); align-items: center; text-decoration: none; color: var(--mf-grafit-2); }
+  .altbilgi .sutun a:hover { color: var(--mf-grafit); text-decoration: underline; }
+  .altbilgi .yasal { grid-column: 1 / -1; border-top: 1px solid var(--mf-cizgi); padding-top: var(--mf-b-4); color: var(--mf-grafit-2); }
+  @media (min-width: 768px) { .altbilgi .sutun { grid-column: span 3; } }
+
+  .rehber-not { background: var(--mf-kirec); border-bottom: 1px solid var(--mf-cizgi); }
+  .rehber-not .kutu { padding-block: var(--mf-b-3); font-size: var(--mf-fs-small); color: var(--mf-grafit-2); }
+</style>
+</head>
+<body>
+
+<div class="rehber-not"><div class="kutu">Stil rehberi önizlemesi. Bütün metinler, ürün adları ve görseller örnektir; nihai metin METIN.md, görseller yeni fotoğraf çekiminden gelir.</div></div>
+
+<header class="nav">
+  <div class="kutu">
+    <a class="marka" href="#">MicronForge</a>
+    <ul class="nav-linkler">
+      <li><a href="#" aria-current="page">Mağaza</a></li>
+      <li><a href="#">Özel üretim</a></li>
+      <li><a href="#">Blog</a></li>
+      <li><a href="#">Sorular</a></li>
+    </ul>
+    <div class="nav-sag">
+      <a class="nav-wa" href="#">WhatsApp</a>
+      <a class="dugme" href="#">Teklif iste</a>
+      <button class="menu-dugme" aria-label="Menüyü aç" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- Hero kesiti -->
+  <section class="hero">
+    <div class="kutu izgara">
+      <div class="metin">
+        <h1 class="t-display">Reçineden basılır, elde bitirilir.</h1>
+        <!-- örnek metin; "Manisa" bilgisi mevcut siteden (index.html JSON-LD) -->
+        <p class="t-lead">Manisa'daki atölyede SLA reçine baskı: koleksiyon parçası, kişiye özel figür, mimari maket ve prototip.</p>
+        <div class="eylemler">
+          <a class="dugme" href="#">Teklif iste</a>
+          <a class="baglanti" href="#">Mağazaya bak</a>
+        </div>
+      </div>
+      <figure>
+        <div class="gorsel katman-katman" role="img" aria-label="Ürün fotoğrafı için yer tutucu, 3:4"></div>
+        <figcaption class="etiket">
+          <span class="ad">Buz Ejderhası</span>
+          <span class="fiyat">1.480 ₺</span>
+          <dl>
+            <dt>Malzeme</dt><dd>Şeffaf reçine</dd>
+            <dt>Ölçü</dt><dd><span class="dogrulanacak">[doğrulanacak]</span></dd>
+          </dl>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Vitrin: ürün kartları -->
+  <section class="vitrin" aria-labelledby="vitrin-baslik">
+    <div class="kutu izgara">
+      <div class="giris">
+        <h2 class="t-h1" id="vitrin-baslik">Vitrindekiler</h2>
+        <p class="t-body">Her parça tek tek basılır ve kontrol edilir. Aynı modeli başka boyut ya da reçineyle de üretiriz.</p>
+      </div>
+
+      <a class="kart k1" href="#">
+        <div class="gorsel" role="img" aria-label="Ürün fotoğrafı için yer tutucu"></div>
+        <div class="etiket">
+          <span class="ad">Kristal Anka Kuşu</span>
+          <span class="fiyat">1.320 ₺</span>
+          <dl>
+            <dt>Malzeme</dt><dd>Şeffaf reçine</dd>
+            <dt>Ölçü</dt><dd><span class="dogrulanacak">[doğrulanacak]</span></dd>
+            <dt>Üretim</dt><dd><span class="dogrulanacak">[doğrulanacak]</span></dd>
+          </dl>
+        </div>
+      </a>
+      <a class="kart k2" href="#">
+        <div class="gorsel" role="img" aria-label="Ürün fotoğrafı için yer tutucu"></div>
+        <div class="etiket">
+          <span class="ad">Süslü Baykuş</span>
+          <span class="fiyat">200 ₺</span>
+          <dl><dt>Malzeme</dt><dd>Renkli reçine</dd></dl>
+        </div>
+      </a>
+      <a class="kart k3" href="#">
+        <div class="gorsel" role="img" aria-label="Ürün fotoğrafı için yer tutucu"></div>
+        <div class="etiket">
+          <span class="ad">Low-Poly Kurt</span>
+          <span class="fiyat">240 ₺</span>
+          <dl><dt>Malzeme</dt><dd>Şeffaf reçine</dd></dl>
+        </div>
+      </a>
+      <div class="alt">
+        <span class="t-small">Fiyatlar standart boyut içindir.</span>
+        <a class="baglanti" href="#">Bütün ürünler</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Editoryal kesit -->
+  <section class="editoryal">
+    <div class="kutu izgara">
+      <figure><div class="gorsel genis" role="img" aria-label="Editoryal görsel için yer tutucu, 16:9"></div></figure>
+      <div class="yazi">
+        <p class="t-small kunye">Teknik rehber, 7 dk</p>
+        <h2 class="t-h2">SLA reçine baskı mı, FDM mi?</h2>
+        <p class="t-body">Figür ve prototip için iki yöntemin farkı: yüzey, dayanım ve maliyet. Hangi parçada hangisinin işe yaradığını örneklerle anlattık.</p>
+        <p style="margin-top: var(--mf-b-4)"><a class="baglanti" href="#">Yazıyı oku</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tipografi -->
+  <section class="bolum">
+    <div class="kutu izgara">
+      <div class="bolum-baslik">
+        <h2 class="t-h2">Tipografi</h2>
+        <p class="t-small">Bodoni Moda (başlık, opsz eksenli) ve Schibsted Grotesk (gövde). İkisi de OFL 1.1, kendi sunucumuzdan.</p>
+      </div>
+      <div class="bolum-govde">
+        <ul class="olcek">
+          <li><span class="t-small">Display<br>44 - 88</span><span class="ornek t-display">Işığa tutun.</span></li>
+          <li><span class="t-small">Başlık 1<br>36 - 64</span><span class="ornek t-h1">Kişiye özel figür</span></li>
+          <li><span class="t-small">Başlık 2<br>28 - 44</span><span class="ornek t-h2">Ölçü, malzeme, süre</span></li>
+          <li><span class="t-small">Başlık 3<br>22 - 28</span><span class="ornek t-h3">Şeffaf reçine ile çalışmak</span></li>
+          <li><span class="t-small">Giriş<br>18 - 21</span><span class="ornek t-lead">Dosya yoksa fotoğraf da yeterli; modeli biz hazırlar, onayınıza sunarız.</span></li>
+          <li><span class="t-small">Gövde<br>16 - 17</span><span class="ornek t-body">Baskıdan sonra parça yıkanır, destekleri alınır ve UV ile kürlenir. Yüzeydeki küçük izler zımparayla temizlenir. Türkçe karakter sınaması: ığüşöç İĞÜŞÖÇ.</span></li>
+          <li><span class="t-small">Küçük<br>14</span><span class="ornek t-small">Fiyatlar standart boyut içindir; boyut, adet ve boyamaya göre değişir.</span></li>
+          <li><span class="t-small">Fiyat<br>astar rakam</span><span class="ornek rakam" style="font-size:1.25rem">1.480 ₺ &nbsp; 240 ₺ &nbsp; 1.320 ₺</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Renk -->
+  <section class="bolum">
+    <div class="kutu izgara">
+      <div class="bolum-baslik">
+        <h2 class="t-h2">Renk</h2>
+        <p class="t-small">Alçı zemin, grafit metin, tek vurgu olarak reçine yeşili. Oranlar alçı zemine göre.</p>
+      </div>
+      <div class="bolum-govde renkler">
+        <div class="renk"><div class="kare" style="background:var(--mf-alci)"></div><p><b>Alçı</b><span>#E7E8E3 · zemin, %70</span></p></div>
+        <div class="renk"><div class="kare" style="background:var(--mf-tas)"></div><p><b>Taş</b><span>#D6D8D2 · yer tutucu, alt bilgi</span></p></div>
+        <div class="renk"><div class="kare" style="background:var(--mf-kirec)"></div><p><b>Kireç</b><span>#F3F4F0 · form, panel</span></p></div>
+        <div class="renk"><div class="kare" style="background:var(--mf-cizgi)"></div><p><b>Çizgi</b><span>#C3C6BF · yalnız ayırıcı</span></p></div>
+        <div class="renk"><div class="kare" style="background:var(--mf-grafit);color:var(--mf-kirec)">13,4:1</div><p><b>Grafit</b><span>#1C201E · metin, buton</span></p></div>
+        <div class="renk"><div class="kare" style="background:var(--mf-grafit-2);color:var(--mf-kirec)">6,2:1</div><p><b>Grafit 2</b><span>#4F5551 · ikincil metin</span></p></div>
+        <div class="renk"><div class="kare" style="background:var(--mf-sis);color:var(--mf-kirec)">4,8:1</div><p><b>Sis</b><span>#5F6561 · açıklama</span></p></div>
+        <div class="renk"><div class="kare" style="background:var(--mf-recine);color:var(--mf-kirec)">7,8:1</div><p><b>Reçine</b><span>#1E4D40 · tek vurgu</span></p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bileşenler -->
+  <section class="bolum">
+    <div class="kutu izgara">
+      <div class="bolum-baslik">
+        <h2 class="t-h2">Kontroller</h2>
+        <p class="t-small">Köşe 2 px, yükseklik 48 px. Görsel ve kartlar keskin köşeli.</p>
+      </div>
+      <div class="bolum-govde bilesenler">
+        <div class="sira">
+          <a class="dugme" href="#">Teklif iste</a>
+          <a class="dugme cerceve" href="#">WhatsApp'tan sor</a>
+          <a class="baglanti" href="#">Mağazaya bak</a>
+          <button class="dugme" disabled>Gönderiliyor</button>
+        </div>
+        <div class="sekmeler" role="group" aria-label="Kategori">
+          <button aria-pressed="true">Tümü</button>
+          <button aria-pressed="false">Koleksiyon</button>
+          <button aria-pressed="false">Kişiye özel</button>
+          <button aria-pressed="false">Maket</button>
+          <button aria-pressed="false">Prototip</button>
+        </div>
+        <div class="alan">
+          <label for="ad">Adınız</label>
+          <input id="ad" placeholder="Ad Soyad" autocomplete="name">
+          <span class="yardim">Size dönüş yaparken kullanırız.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="altbilgi">
+  <div class="kutu izgara">
+    <p class="marka-buyuk" aria-hidden="true">MicronForge</p>
+    <div class="sutun"><h3>Mağaza</h3><ul><li><a href="#">Bütün ürünler</a></li><li><a href="#">Koleksiyon</a></li><li><a href="#">Kişiye özel</a></li></ul></div>
+    <div class="sutun"><h3>Atölye</h3><ul><li><a href="#">Özel üretim</a></li><li><a href="#">Blog</a></li><li><a href="#">Sorular</a></li></ul></div>
+    <div class="sutun"><h3>İletişim</h3><ul><li><a href="#">WhatsApp</a></li><li><a href="#">Instagram</a></li><li><a href="#">Manisa</a></li></ul></div>
+    <div class="sutun"><h3>Yasal</h3><ul><li><a href="#">Gizlilik</a></li><li><a href="#">Kullanım şartları</a></li><li><a href="#">Çerezler</a></li></ul></div>
+    <p class="yasal t-small">© 2026 MicronForge</p>
+  </div>
+</footer>
+
+<a class="wa" href="#" aria-label="WhatsApp'tan yazın">
+  <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2Zm0 18.15c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.23 8.23 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24 4.54 0 8.24 3.7 8.24 8.24 0 4.55-3.7 8.24-8.24 8.24Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.13-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28Z"/></svg>
+  <span>WhatsApp</span>
+</a>
+</body>
+</html>

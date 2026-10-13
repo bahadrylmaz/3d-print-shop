@@ -1,0 +1,217 @@
+/* =====================================================================
+   MicronForge tasarım sistemi: "Alçı Atölyesi"
+   Kaynak belge: docs/tasarim/YON.md
+   Kullanım (2. aşama, Dev): src/index.css içinde
+       @import "tailwindcss";
+       @import "./styles/tokens.css";
+   Bu dosya henüz hiçbir yere import edilmedi.
+
+   Yapı:
+   1) @font-face   (kendi sunucumuz: /public/fonts, OFL 1.1)
+   2) :root        ham değerler (tarayıcıda doğrudan çalışır; onizleme.html bunu kullanır)
+   3) @theme       Tailwind 4 eşlemesi (inline: yardımcı sınıflar var(--mf-*) değerini kullanır)
+   4) Hareket azaltma
+   ===================================================================== */
+
+/* ---------- 1. Yazı tipleri ---------- */
+@font-face {
+  font-family: "Bodoni Moda";
+  src: url("/fonts/bodoni-moda/BodoniModa-Variable.woff2") format("woff2-variations"),
+       url("/fonts/bodoni-moda/BodoniModa-Variable.woff2") format("woff2");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Bodoni Moda";
+  src: url("/fonts/bodoni-moda/BodoniModa-Italic-Variable.woff2") format("woff2-variations"),
+       url("/fonts/bodoni-moda/BodoniModa-Italic-Variable.woff2") format("woff2");
+  font-weight: 400 900;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Schibsted Grotesk";
+  src: url("/fonts/schibsted-grotesk/SchibstedGrotesk-Variable.woff2") format("woff2-variations"),
+       url("/fonts/schibsted-grotesk/SchibstedGrotesk-Variable.woff2") format("woff2");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Schibsted Grotesk";
+  src: url("/fonts/schibsted-grotesk/SchibstedGrotesk-Italic-Variable.woff2") format("woff2-variations"),
+       url("/fonts/schibsted-grotesk/SchibstedGrotesk-Italic-Variable.woff2") format("woff2");
+  font-weight: 400 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ---------- 2. Ham değerler ---------- */
+:root {
+  /* Renk: kontrast oranları zemin #E7E8E3 üzerine (WCAG 2.x) */
+  --mf-alci:        #E7E8E3; /* sayfa zemini (%70)                        */
+  --mf-kirec:       #F3F4F0; /* yükseltilmiş yüzey: form, açılır panel     */
+  --mf-tas:         #D6D8D2; /* görsel yer tutucu, ikincil bant (%10)      */
+  --mf-tas-koyu:    #CDD0C9; /* yer tutucu ışık geçişinin koyu ucu         */
+  --mf-grafit:      #1C201E; /* ana metin, birincil buton  13.38:1         */
+  --mf-grafit-2:    #4F5551; /* ikincil metin              6.20:1          */
+  --mf-sis:         #5F6561; /* soluk metin, açıklama      4.84:1 (kireçte 5.40) */
+  --mf-cizgi:       #C3C6BF; /* saç çizgisi, yalnız ayırıcı (metin değil)  */
+  --mf-cizgi-guclu: #7B807A; /* form kenarı, kontrol sınırı 3.27:1 (UI ≥3) */
+  --mf-recine:      #1E4D40; /* TEK vurgu: bağlantı, odak, seçili  7.78:1  */
+  --mf-recine-koyu: #163B31; /* vurgu hover                                */
+  --mf-recine-acik: #CFDAD3; /* seçim zemini, vurgu tonu (grafit 11.47:1)  */
+  --mf-hata:        #8E2A22; /* yalnızca form hatası       6.81:1          */
+  --mf-beyaz:       #F3F4F0; /* koyu zemin üstü metin (kireç ile aynı)     */
+
+  /* Tipografi */
+  --mf-font-serif: "Bodoni Moda", "Bodoni 72", "Didot", Georgia, serif;
+  --mf-font-sans:  "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+
+  /* Ölçek: 375 px'te küçük uç, 1440 px'te büyük uç. Gövde asla 16 px altına inmez. */
+  --mf-fs-display: clamp(2.75rem, 1.78rem + 4.14vw, 5.5rem);    /* 44 -> 88 */
+  --mf-fs-h1:      clamp(2.25rem, 1.59rem + 2.82vw, 4rem);      /* 36 -> 64 */
+  --mf-fs-h2:      clamp(1.75rem, 1.4rem + 1.5vw, 2.75rem);     /* 28 -> 44 */
+  --mf-fs-h3:      clamp(1.375rem, 1.24rem + 0.56vw, 1.75rem);  /* 22 -> 28 */
+  --mf-fs-lead:    clamp(1.125rem, 1.06rem + 0.28vw, 1.3125rem);/* 18 -> 21 */
+  --mf-fs-body:    clamp(1rem, 0.98rem + 0.09vw, 1.0625rem);    /* 16 -> 17 */
+  --mf-fs-small:   0.875rem;                                    /* 14 (taban) */
+
+  --mf-lh-display: 1.04;
+  --mf-lh-heading: 1.12;
+  --mf-lh-body:    1.6;
+  --mf-lh-serif-body: 1.7;
+
+  --mf-tr-display: -0.015em; /* Bodoni büyük boyda hafif sıkı */
+  --mf-tr-heading: -0.01em;
+  --mf-tr-body:    0;
+  --mf-tr-small:   0.01em;
+
+  --mf-olcu-metin: 62ch; /* gövde paragraf azami genişlik */
+  --mf-olcu-dar:   38ch; /* lead / hero alt metni */
+
+  /* Boşluk ölçeği (4 px tabanlı, isimli adımlar) */
+  --mf-b-1: 0.25rem;  /*  4 */
+  --mf-b-2: 0.5rem;   /*  8 */
+  --mf-b-3: 0.75rem;  /* 12 */
+  --mf-b-4: 1rem;     /* 16 */
+  --mf-b-5: 1.5rem;   /* 24 */
+  --mf-b-6: 2rem;     /* 32 */
+  --mf-b-7: 3rem;     /* 48 */
+  --mf-b-8: 4rem;     /* 64 */
+  --mf-b-9: 6rem;     /* 96 */
+  --mf-b-10: 8rem;    /* 128 */
+  --mf-bolum: clamp(4.5rem, 2.9rem + 6.8vw, 9rem);   /* bölümler arası dikey: 72 -> 144 */
+  --mf-bolum-kucuk: clamp(3rem, 2.3rem + 3vw, 5rem); /* aynı bölüm içi büyük ara: 48 -> 80 */
+
+  /* Izgara */
+  --mf-kolon: 12;
+  --mf-kolon-mobil: 4;
+  --mf-oluk: clamp(1rem, 0.75rem + 1.07vw, 2rem);    /* 16 -> 32 */
+  --mf-kenar: clamp(1.25rem, 0.2rem + 4.5vw, 4.5rem);/* 20 -> 72 */
+  --mf-max: 1360px;   /* içerik kutusu (kenar boşlukları hariç) */
+  --mf-max-metin: 720px;
+
+  /* Köşe: keskin. Yalnız dokunulan kontroller 2 px. Hap şekli yok. */
+  --mf-r-0: 0;
+  --mf-r-kontrol: 2px;
+
+  /* Çizgi */
+  --mf-cizgi-ince: 1px;
+  --mf-cizgi-kalin: 2px; /* odak halkası, seçili sekme alt çizgisi */
+
+  /* Gölge: yalnız üstte duran katman (mobil menü, açılır panel). Zeminin tonunda. */
+  --mf-golge-katman: 0 1px 0 rgba(28, 32, 30, 0.06), 0 18px 40px -24px rgba(28, 32, 30, 0.28);
+
+  /* Hareket */
+  --mf-sure-hizli: 140ms;  /* hover, renk */
+  --mf-sure-orta:  280ms;  /* açılır panel, akordeon */
+  --mf-sure-yavas: 900ms;  /* tek açılış anı: hero "katman katman" görünme */
+  --mf-egri:       cubic-bezier(0.2, 0, 0, 1);
+  --mf-egri-cikis: cubic-bezier(0.4, 0, 1, 1);
+
+  /* Katman sırası */
+  --mf-z-icerik: 1;
+  --mf-z-yapiskan: 20;  /* navbar, ürün sayfası alt çubuğu */
+  --mf-z-whatsapp: 30;
+  --mf-z-menu: 40;
+  --mf-z-modal: 50;
+
+  /* Oranlar */
+  --mf-oran-urun: 3 / 4;
+  --mf-oran-dikey: 4 / 5;
+  --mf-oran-genis: 16 / 9;
+
+  /* Dokunma hedefi */
+  --mf-dokunma: 44px;
+}
+
+/* ---------- 3. Tailwind 4 eşlemesi ----------
+   inline: üretilen sınıflar var(--mf-*) kullanır; değer tek yerde (:root) yaşar.
+   Varsayılan Tailwind renkleri kapatıldı: bg-purple-500 gibi sınıflar artık üretilmez. */
+@theme inline {
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-alci: var(--mf-alci);
+  --color-kirec: var(--mf-kirec);
+  --color-tas: var(--mf-tas);
+  --color-tas-koyu: var(--mf-tas-koyu);
+  --color-grafit: var(--mf-grafit);
+  --color-grafit-2: var(--mf-grafit-2);
+  --color-sis: var(--mf-sis);
+  --color-cizgi: var(--mf-cizgi);
+  --color-cizgi-guclu: var(--mf-cizgi-guclu);
+  --color-recine: var(--mf-recine);
+  --color-recine-koyu: var(--mf-recine-koyu);
+  --color-recine-acik: var(--mf-recine-acik);
+  --color-hata: var(--mf-hata);
+
+  --font-*: initial;
+  --font-serif: var(--mf-font-serif);
+  --font-sans: var(--mf-font-sans);
+
+  --text-display: var(--mf-fs-display);
+  --text-display--line-height: var(--mf-lh-display);
+  --text-display--letter-spacing: var(--mf-tr-display);
+  --text-h1: var(--mf-fs-h1);
+  --text-h1--line-height: var(--mf-lh-heading);
+  --text-h1--letter-spacing: var(--mf-tr-display);
+  --text-h2: var(--mf-fs-h2);
+  --text-h2--line-height: var(--mf-lh-heading);
+  --text-h2--letter-spacing: var(--mf-tr-heading);
+  --text-h3: var(--mf-fs-h3);
+  --text-h3--line-height: 1.2;
+  --text-lead: var(--mf-fs-lead);
+  --text-lead--line-height: 1.5;
+  --text-body: var(--mf-fs-body);
+  --text-body--line-height: var(--mf-lh-body);
+  --text-small: var(--mf-fs-small);
+  --text-small--line-height: 1.5;
+  --text-small--letter-spacing: var(--mf-tr-small);
+
+  --radius-*: initial;
+  --radius-none: 0;
+  --radius-kontrol: var(--mf-r-kontrol);
+
+  --shadow-*: initial;
+  --shadow-katman: var(--mf-golge-katman);
+
+  --container-metin: var(--mf-max-metin);
+  --container-sayfa: var(--mf-max);
+
+  --ease-mf: var(--mf-egri);
+  --ease-mf-cikis: var(--mf-egri-cikis);
+
+  /* Tailwind aralık birimi 4 px kalır (p-4 = 16 px). Bölüm aralıkları için: py-(--mf-bolum) */
+}
+
+/* ---------- 4. Hareket azaltma ---------- */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --mf-sure-hizli: 0ms;
+    --mf-sure-orta: 0ms;
+    --mf-sure-yavas: 0ms;
+  }
+}
