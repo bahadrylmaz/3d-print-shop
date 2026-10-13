@@ -2,10 +2,9 @@ import { useMemo } from 'react'
 import { ArrowLeft, ArrowRight, CalendarDays, Check, ChevronRight, Clock3, FileQuestion, Lightbulb, MessageCircle } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 import BlogCard from '../components/blog/BlogCard'
-import Footer from '../components/ui/Footer'
-import Navbar from '../components/ui/Navbar'
-import ScrollProgress from '../components/ui/ScrollProgress'
-import WhatsAppFab from '../components/ui/WhatsAppFab'
+import Footer from '../components/yerlesim/Footer'
+import Navbar from '../components/yerlesim/Navbar'
+import WhatsAppFab from '../components/yerlesim/WhatsAppDugmesi'
 import { blogPostJsonLd, blogPosts, getBlogPost } from '../data/blogPosts'
 import useJsonLd from '../hooks/useJsonLd'
 import usePageSeo from '../hooks/usePageSeo'
@@ -59,7 +58,6 @@ export default function BlogPost() {
 
   return (
     <div className="min-h-screen bg-surface">
-      <ScrollProgress />
       <Navbar />
 
       <main>

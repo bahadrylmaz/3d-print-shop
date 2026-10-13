@@ -5,10 +5,9 @@ import { ShoppingBag, ChevronLeft, MessageCircle, ArrowLeft } from 'lucide-react
 import { getProduct, products, fmt, waOrder, productJsonLd } from '../data/products'
 import usePageSeo from '../hooks/usePageSeo'
 import useJsonLd from '../hooks/useJsonLd'
-import ScrollProgress from '../components/ui/ScrollProgress'
-import Navbar from '../components/ui/Navbar'
-import Footer from '../components/ui/Footer'
-import WhatsAppFab from '../components/ui/WhatsAppFab'
+import Navbar from '../components/yerlesim/Navbar'
+import Footer from '../components/yerlesim/Footer'
+import WhatsAppFab from '../components/yerlesim/WhatsAppDugmesi'
 
 export default function ProductDetail() {
   const { slug } = useParams()
@@ -31,7 +30,6 @@ export default function ProductDetail() {
   if (!product) {
     return (
       <div className="min-h-screen bg-surface">
-        <ScrollProgress />
         <Navbar />
         <section className="theme-dark bg-surface min-h-screen flex items-center justify-center px-6 text-center">
           <div>
@@ -53,7 +51,6 @@ export default function ProductDetail() {
 
   return (
     <div className="min-h-screen bg-surface">
-      <ScrollProgress />
       <Navbar />
 
       <section className="theme-dark bg-surface pt-28 pb-24 px-6 relative">

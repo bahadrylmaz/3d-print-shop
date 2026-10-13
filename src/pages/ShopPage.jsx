@@ -1,9 +1,8 @@
 import usePageSeo from '../hooks/usePageSeo'
-import ScrollProgress from '../components/ui/ScrollProgress'
-import Navbar from '../components/ui/Navbar'
+import Navbar from '../components/yerlesim/Navbar'
 import Shop from '../components/ui/Shop'
-import Footer from '../components/ui/Footer'
-import WhatsAppFab from '../components/ui/WhatsAppFab'
+import Footer from '../components/yerlesim/Footer'
+import WhatsAppFab from '../components/yerlesim/WhatsAppDugmesi'
 
 export default function ShopPage() {
   usePageSeo({
@@ -15,7 +14,6 @@ export default function ShopPage() {
 
   return (
     <div className="min-h-screen bg-surface">
-      <ScrollProgress />
       <Navbar />
       <Shop />
       <Footer />

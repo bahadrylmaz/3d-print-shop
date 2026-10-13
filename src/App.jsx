@@ -21,7 +21,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <Suspense fallback={<div className="min-h-screen bg-surface" />}>
+      <Suspense fallback={<div className="min-h-screen bg-alci" />}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/magaza" element={<ShopPage />} />

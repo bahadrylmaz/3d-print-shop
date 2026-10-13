@@ -21,7 +21,7 @@
     />
     <meta name="author" content="MicronForge" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
-    <meta name="theme-color" content="#6C3CE9" />
+    <meta name="theme-color" content="#E7E8E3" />
     <link rel="canonical" href="https://micronforge.shop/" />
     <link rel="alternate" type="application/rss+xml" title="MicronForge 3D Baskı Rehberi" href="/feed.xml" />
 
@@ -54,13 +54,9 @@
     />
     <meta name="twitter:image" content="https://micronforge.shop/og-image.png" />
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Yazı tipleri: kendi sunucumuzdan (OFL 1.1), @font-face tanımları src/styles/tokens.css -->
+    <link rel="preload" href="/fonts/bodoni-moda/BodoniModa-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/schibsted-grotesk/SchibstedGrotesk-Variable.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- Structured Data: LocalBusiness + Organization + FAQPage + Service -->
     <script type="application/ld+json">
@@ -118,7 +114,7 @@
               "itemListElement": [
                 {
                   "@type": "Offer",
-                  "itemOffered": { "@type": "Service", "name": "DnD / FRP / Tabletop Minyatür Baskı", "description": "32mm, 75mm karakter figürü, boss yaratık, terrain ve aksesuar." }
+                  "itemOffered": { "@type": "Service", "name": "Koleksiyon ve Dekor Baskı", "description": "Şeffaf ve renkli reçineden dekor heykeli, 32 mm ve 75 mm masa oyunu figürü, kaide ve diorama parçaları." }
                 },
                 {
                   "@type": "Offer",
@@ -149,50 +145,82 @@
             "mainEntity": [
               {
                 "@type": "Question",
-                "name": "STL dosyam yok, sadece fotoğraf göndersem yeter mi?",
+                "name": "STL dosyam yok. Fotoğraf yeterli mi?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Evet! Fotoğraf, referans görsel, hatta el çizimi bile yeterli. Kendimiz modelleyip onayınıza sunarız. STL/OBJ/3MF dosyanız varsa direkt kullanabiliriz — dilimleme ve destek bizden."
+                  "text": "Evet. Fotoğraf, referans görsel ya da el çizimi yeter. Modeli biz hazırlar, baskıdan önce onayınıza sunarız. STL, OBJ ya da 3MF dosyanız varsa doğrudan onu kullanırız; dilimleme ve destekler bizde."
                 }
               },
               {
                 "@type": "Question",
-                "name": "DnD/FRP figür baskısı yapıyor musunuz?",
+                "name": "Hangi figürleri basıyorsunuz?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "32mm, 75mm karakter figürü, boss yaratık, terrain ve aksesuar basıyoruz. Telifsiz STL veya özel tasarım figürlerle çalışıyoruz."
+                  "text": "Kişiye özel figürler, özgün tasarımlar ve ticari kullanım izni olan dosyalarla çalışıyoruz: 32 mm ve 75 mm masa oyunu figürleri, kaideler, dekor heykelleri. Hak sahibinin izni olmayan karakter ve marka tasarımlarını basmıyoruz."
                 }
               },
               {
                 "@type": "Question",
-                "name": "Sanayi prototip için hangi reçine kullanılıyor?",
+                "name": "Sanayi prototipi için hangi reçineyi kullanıyorsunuz?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Tough (ABS-like) reçine kullanıyoruz — kırılgan değil, darbe dayanıklı. Mockup, sunum modeli, kalıp öncesi kontrol ve elektronik kapak prototipi için uygun."
+                  "text": "Tough (ABS benzeri) reçine. Darbeye dayanıklıdır; sunum modeli, elektronik kapak ve kalıp öncesi kontrol numunesi için uygundur. Standart reçine kırılabildiği için sanayi işlerinde önermiyoruz."
                 }
               },
               {
                 "@type": "Question",
-                "name": "Mimarlık öğrencisi için acil baskı olur mu?",
+                "name": "Mimarlık öğrencisiyim, acil baskı olur mu?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Evet, Manisa CBÜ ve İzmir mimarlık öğrencilerine 24-48 saat express teslim yapabiliyoruz. 1/100, 1/200, 1/500 ölçek insan, ağaç, mobilya ve cephe detayı basıyoruz."
+                  "text": "Olur. Manisa CBÜ ve İzmir'deki öğrencilere 24-48 saatte ekspres baskı yapıyoruz. 1/100, 1/200 ve 1/500 ölçekte insan, ağaç, mobilya ve cephe detayı basıyoruz. Jüri tarihinizi ilk mesajda yazın."
                 }
               },
               {
                 "@type": "Question",
-                "name": "Baskı boyutu sınırı ne kadar?",
+                "name": "En büyük parça ne kadar olabilir?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Maksimum tek parça 218 x 123 x 250 mm (Saturn 4 Ultra 16K MSLA). Daha büyük parçalar için parçalı baskı + montaj çözümümüz var."
+                  "text": "Tek parçada 218 × 123 × 250 mm. Daha büyük işleri parçalara bölüp basıyor, ardından birleştiriyoruz."
                 }
               },
               {
                 "@type": "Question",
-                "name": "Fiyat teklifi nasıl alabilirim?",
+                "name": "Parça boyalı mı gelir?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "En hızlı yol: WhatsApp'tan fotoğraf gönderin, 30 dakika içinde tahmini fiyat ve süre alın. Sitedeki Foto Yükle bölümünden de talep oluşturabilirsiniz."
+                  "text": "Standart teslimde parça yıkanmış, UV ile kürlenmiş ve destekleri temizlenmiş olur. Astarlı teslim ek ücretlidir. Boyalı teslimi iş özelinde konuşuyoruz; çok ayrıntılı boyama işlerinde başka bir yol önerebiliriz."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Fiyatı nasıl öğrenirim?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "En hızlısı WhatsApp'tan fotoğraf göndermek. Çalışma saatlerinde yaklaşık 30 dakika içinde tahmini fiyat ve süreyi yazarız. Kesin fiyat, model onaylandıktan sonra belli olur."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Baskı hatalı çıkarsa ne olur?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Baskı hatası bizden kaynaklanıyorsa parçayı ücretsiz yeniden basarız. Her parçayı paketlemeden önce tek tek kontrol ediyoruz."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Gönderdiğim dosyalar ne olacak?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yalnızca sizin işiniz için kullanılır. Özel tasarımları ve prototipleri izniniz olmadan kimseyle paylaşmıyor, çoğaltmıyoruz."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Teslimat nasıl?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Manisa ve İzmir'de elden teslim ediyoruz. Türkiye'nin geri kalanına kargo ile gönderiyoruz; kırılgan parçaları buna göre paketliyoruz."
                 }
               }
             ]

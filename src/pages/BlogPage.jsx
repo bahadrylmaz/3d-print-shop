@@ -1,9 +1,8 @@
 import { BookOpenText, Building2, Factory, Gift, MapPin, PenTool } from 'lucide-react'
 import BlogCard from '../components/blog/BlogCard'
-import Footer from '../components/ui/Footer'
-import Navbar from '../components/ui/Navbar'
-import ScrollProgress from '../components/ui/ScrollProgress'
-import WhatsAppFab from '../components/ui/WhatsAppFab'
+import Footer from '../components/yerlesim/Footer'
+import Navbar from '../components/yerlesim/Navbar'
+import WhatsAppFab from '../components/yerlesim/WhatsAppDugmesi'
 import { blogCollectionJsonLd, blogPosts } from '../data/blogPosts'
 import useJsonLd from '../hooks/useJsonLd'
 import usePageSeo from '../hooks/usePageSeo'
@@ -27,7 +26,6 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen bg-surface">
-      <ScrollProgress />
       <Navbar />
 
       <main>
