@@ -6,7 +6,7 @@ export const blogPosts = [
     title: 'Manisa 3D Baskı Hizmeti: Figürden Sanayi Prototipine Doğru Seçim',
     seoTitle: 'Manisa 3D Baskı Hizmeti | SLA Reçine Baskı Rehberi',
     description:
-      'Manisa’da 3D baskı yaptırmadan önce dosya, reçine, ölçü, kullanım amacı ve teklif sürecinde bilmeniz gerekenler. Figür, maket ve prototip için yerel rehber.',
+      'Manisa’da 3D baskı yaptırmadan önce dosya, reçine, ölçü, kullanım amacı ve teklif süreci hakkında bilmeniz gerekenler. Figür, maket ve prototip için.',
     excerpt:
       'Figür, mimari maket ya da hassas prototip… Doğru sonuç, önce parçanın nerede kullanılacağını netleştirmekle başlar.',
     category: 'Manisa 3D Baskı',

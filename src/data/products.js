@@ -1,5 +1,7 @@
 // Mağaza ürün kataloğu — hem liste (Shop) hem ürün detay sayfası bunu kullanır.
 // Fiyatlar standart boyut/tek renk içindir; boyut, adet ve boyama ile değişir.
+import { waBaglanti } from './iletisim'
+
 export const SITE = 'https://micronforge.shop'
 
 export const products = [
@@ -228,29 +230,30 @@ export const products = [
   },
 ]
 
+// Mağaza filtreleri (METIN §4.1). id = ürünün category alanı; kategori = paylaşılabilir adres (/magaza?kategori=dekor).
+// Ürünü olmayan kategori listede gösterilmez.
 export const filters = [
   { id: 'all', label: 'Tümü' },
-  { id: 'figur', label: 'Film & Oyun' },
-  { id: 'dekor', label: 'Dekoratif & Sanat' },
-  { id: 'set', label: 'Set & Koleksiyon' },
-  { id: 'ozel', label: 'Kişiye Özel' },
+  { id: 'dekor', label: 'Dekor', kategori: 'dekor' },
+  { id: 'figur', label: 'Koleksiyon', kategori: 'koleksiyon' },
+  { id: 'ozel', label: 'Kişiye özel', kategori: 'kisiye-ozel' },
+  { id: 'set', label: 'Setler', kategori: 'setler' },
 ]
 
 export const getProduct = (slug) => products.find((p) => p.id === slug)
 
 export const fmt = (n) => new Intl.NumberFormat('tr-TR').format(n)
 
+// METIN §4.2: ürün sayfasından giden önceden doldurulmuş WhatsApp sipariş mesajı
 export const waOrder = (name) =>
-  `https://wa.me/905311034535?text=${encodeURIComponent(
-    `Merhaba! "${name}" ürününü sipariş vermek istiyorum. Fiyat ve teslim bilgisi alabilir miyim?`
-  )}`
+  waBaglanti(`Merhaba, "${name}" için sipariş vermek istiyorum. Fiyat ve teslim süresini öğrenebilir miyim?`)
 
 // Google zengin sonuçları için Product yapılandırılmış verisi.
 export const productJsonLd = (p) => ({
   '@context': 'https://schema.org',
   '@type': 'Product',
   name: p.name,
-  image: p.photos.map((ph) => `${SITE}${ph}`),
+  ...(p.photos?.length ? { image: p.photos.map((ph) => `${SITE}${ph}`) } : {}),
   description: p.desc,
   category: p.categoryLabel,
   brand: { '@type': 'Brand', name: 'MicronForge' },

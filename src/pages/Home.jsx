@@ -23,9 +23,9 @@ const sonYazilar = [...blogPosts].sort((a, b) => b.published.localeCompare(a.pub
 
 export default function Home() {
   usePageSeo({
-    title: 'MicronForge | Manisa & İzmir SLA Reçine 3D Baskı — Figür, Maket, Prototip',
+    title: 'SLA Reçine 3D Baskı Manisa ve İzmir | MicronForge',
     description:
-      'Manisa & İzmir bölgesinde profesyonel SLA reçine 3D baskı. DnD/FRP minyatür, kişiye özel figür, mimari maket ve sanayi prototip. 16K MSLA, 25 mikron detay, 48 saatte teslim. Fotoğraf gönder, teklif al.',
+      "Manisa'da SLA reçine 3D baskı atölyesi: kişiye özel figür, mimari maket, sanayi prototipi, dekor. Fotoğraf gönderin, fiyat ve süreyi yazalım.",
     path: '/',
   })
 

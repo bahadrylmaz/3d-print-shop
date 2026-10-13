@@ -1,119 +1,137 @@
-import { BookOpenText, Building2, Factory, Gift, MapPin, PenTool } from 'lucide-react'
-import BlogCard from '../components/blog/BlogCard'
-import Footer from '../components/yerlesim/Footer'
-import Navbar from '../components/yerlesim/Navbar'
-import WhatsAppFab from '../components/yerlesim/WhatsAppDugmesi'
+import { Link } from 'react-router-dom'
+import SayfaIskeleti from '../components/yerlesim/SayfaIskeleti'
+import Bolum from '../components/temel/Bolum'
+import { Buton, MetinBaglanti } from '../components/temel/Buton'
+import UrunGorseli from '../components/temel/UrunGorseli'
+import YaziSatiri from '../components/blog/YaziSatiri'
+import { kunye } from '../components/blog/yaziBilgisi'
 import { blogCollectionJsonLd, blogPosts } from '../data/blogPosts'
+import { BLOG_LISTE_SEO, BLOG_WA_MESAJ } from '../data/blogSeo'
+import { waBaglanti } from '../data/iletisim'
 import useJsonLd from '../hooks/useJsonLd'
 import usePageSeo from '../hooks/usePageSeo'
 
-const intents = [
-  { icon: MapPin, label: 'Manisa’da 3D baskı', text: 'Yerel teklif ve üretim rehberleri' },
-  { icon: Factory, label: 'OSB & prototip', text: 'Hassas numune ve teknik kararlar' },
-  { icon: Gift, label: 'Figür & hediyelik', text: 'Kişiye özel ve özgün ürün fikirleri' },
-  { icon: Building2, label: 'Mimari maket', text: 'Ölçek, cephe ve dosya hazırlığı' },
-]
+// Blog listesi (YON §6.5, METIN §4.3): giriş + konu satırları, öne çıkan yazı (16:9, 8 kol), sakin liste (4:5), soru bölümü.
+// Aynı bileşen scripts/prerender-blog.mjs ile build'de statik HTML'e de basılır: render sırasında tarayıcı API'si kullanılmaz.
+
+// METIN §4.3 konu etiketleri: kart değil düz satır; her biri o konunun yazısına gider.
+const KONULAR = [
+  { ad: "Manisa'da 3D baskı", aciklama: 'teklif ve üretim', slug: 'manisa-3d-baski-hizmeti-rehberi' },
+  { ad: 'OSB ve prototip', aciklama: 'numune ve ölçü kontrolü', slug: 'manisa-osb-hassas-prototip-3d-baski' },
+  { ad: 'Figür ve hediye', aciklama: 'fotoğraftan modelleme', slug: 'manisa-kisiye-ozel-figur-fotograftan-3d-baski' },
+  { ad: 'Mimari maket', aciklama: 'ölçek ve cephe detayı', slug: 'manisa-mimari-maket-sla-3d-baski' },
+].filter((k) => blogPosts.some((p) => p.slug === k.slug))
 
 export default function BlogPage() {
+  const [oneCikan, ...digerleri] = blogPosts
+
   usePageSeo({
-    title: '3D Baskı Blogu | Manisa Figür, Maket & Prototip Rehberleri',
-    description:
-      'MicronForge 3D baskı rehberi: Manisa’da SLA reçine baskı, OSB prototip, kırtasiye ürünleri, kişiye özel figür ve mimari maket yazıları.',
+    ...BLOG_LISTE_SEO,
     path: '/blog',
-    image: blogPosts[0].image,
+    image: oneCikan?.image,
   })
   useJsonLd('blog-collection-jsonld', blogCollectionJsonLd)
 
   return (
-    <div className="min-h-screen bg-surface">
-      <Navbar />
+    <SayfaIskeleti whatsappMesaj={BLOG_WA_MESAJ}>
+      {/* Giriş: başlık 7 kol, konu satırları 4 kol alta hizalı */}
+      <Bolum cizgi={false} bosluk="kucuk" baslikId="blog-baslik" icClassName="gap-y-10">
+        <div className="col-span-full md:col-span-7">
+          <p className="m-0 text-small text-sis">Rehber</p>
+          <h1 id="blog-baslik" className="m-0 mt-3 font-serif text-h1 font-[400]">
+            Atölyeden notlar
+          </h1>
+          <p className="m-0 mt-6 max-w-[44ch] text-lead text-grafit-2">
+            Sipariş vermeden önce sorulan soruların yazılı cevapları. Hangi reçine, hangi ölçek, dosya nasıl hazırlanır,
+            OSB numunesi nasıl istenir.
+          </p>
+        </div>
 
-      <main>
-        <header className="theme-dark bg-surface pt-32 pb-20 px-6 relative overflow-hidden">
-          <div className="absolute inset-0 bg-grid opacity-60" />
-          <div className="absolute -top-44 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-primary/20 rounded-full blur-[170px]" />
+        {KONULAR.length > 0 && (
+          <nav aria-label="Konular" className="col-span-full md:col-span-5 md:col-start-8 md:self-end lg:col-span-4 lg:col-start-9">
+            <ul className="m-0 list-none border-b border-cizgi p-0">
+              {KONULAR.map((k) => (
+                <li key={k.slug} className="border-t border-cizgi">
+                  <Link
+                    to={`/blog/${k.slug}`}
+                    className="flex min-h-11 flex-wrap items-baseline gap-x-2 py-2.5 text-grafit no-underline transition-colors duration-(--mf-sure-hizli) ease-mf hover:text-recine"
+                  >
+                    <span className="font-[500]">{k.ad}:</span>
+                    <span className="text-grafit-2">{k.aciklama}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+      </Bolum>
 
-          <div className="max-w-5xl mx-auto text-center relative z-10">
-            <span className="badge badge-accent">
-              <BookOpenText size={14} /> MicronForge Blog
-            </span>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-heading mt-6 mb-6 leading-[1.05]">
-              Manisa’da 3D baskıyı
-              {' '}
-              <span className="text-gradient block">doğru iş için seçin</span>
-            </h1>
-            <p className="text-text-secondary text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
-              Bireysel figürden kırtasiye rafına, mimari maketten OSB prototipine kadar gerçek üretim sorularına açık ve uygulanabilir yanıtlar.
-            </p>
-          </div>
-        </header>
+      {!oneCikan && (
+        <Bolum bosluk="kucuk">
+          <p className="col-span-full m-0 text-grafit-2">Yeni yazılar hazırlanıyor.</p>
+        </Bolum>
+      )}
 
-        <section className="px-6 -mt-8 relative z-20" aria-label="Blog konu başlıkları">
-          <div className="max-w-6xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {intents.map(({ icon: Icon, label, text }) => (
-              <div key={label} className="glass-strong rounded-2xl p-5 flex items-start gap-3">
-                <span className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
-                  <Icon size={19} />
-                </span>
-                <div>
-                  <div className="font-heading font-bold text-sm mb-1">{label}</div>
-                  <div className="text-text-secondary text-xs leading-relaxed">{text}</div>
-                </div>
-              </div>
+      {/* Öne çıkan yazı: 16:9 görsel 8 kol, metin 4 kol alta hizalı (lg); altında tek sütun */}
+      {oneCikan && (
+        <Bolum bosluk="kucuk" baslikId="one-cikan-baslik">
+          <article className="col-span-full grid grid-cols-subgrid gap-y-6">
+            <Link to={`/blog/${oneCikan.slug}`} aria-label={oneCikan.title} className="col-span-full block lg:col-span-8">
+              <UrunGorseli
+                src={oneCikan.image}
+                alt={oneCikan.imageAlt}
+                oran="genis"
+                oncelikli
+                sizes="(min-width: 1024px) 62vw, 100vw"
+              />
+            </Link>
+            <div className="col-span-full lg:col-span-4 lg:self-end">
+              <p className="m-0 text-small text-sis">{kunye(oneCikan)}</p>
+              <h2 id="one-cikan-baslik" className="m-0 mt-3 font-serif text-h2 font-[400]">
+                <Link
+                  to={`/blog/${oneCikan.slug}`}
+                  className="text-grafit no-underline decoration-1 underline-offset-[0.16em] hover:underline"
+                >
+                  {oneCikan.title}
+                </Link>
+              </h2>
+              <p className="m-0 mt-4 max-w-[52ch] text-grafit-2">{oneCikan.excerpt}</p>
+              <MetinBaglanti to={`/blog/${oneCikan.slug}`} className="mt-3" aria-label={`${oneCikan.title}: yazıyı okuyun`}>
+                Yazıyı okuyun
+              </MetinBaglanti>
+            </div>
+          </article>
+        </Bolum>
+      )}
+
+      {/* Diğer yazılar: iki sütunlu sakin liste */}
+      {digerleri.length > 0 && (
+        <Bolum bosluk="kucuk" baslikId="butun-yazilar" icClassName="gap-y-10">
+          <h2 id="butun-yazilar" className="col-span-full m-0 font-serif text-h2 font-[400]">
+            Bütün yazılar
+          </h2>
+          <div className="col-span-full grid grid-cols-1 gap-x-(--mf-oluk) gap-y-10 md:grid-cols-2">
+            {digerleri.map((yazi) => (
+              <YaziSatiri key={yazi.slug} yazi={yazi} />
             ))}
           </div>
-        </section>
+        </Bolum>
+      )}
 
-        <section className="py-24 px-6" aria-labelledby="all-posts-title">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
-              <div>
-                <span className="badge badge-primary">
-                  <PenTool size={13} /> Güncel Rehberler
-                </span>
-                <h2 id="all-posts-title" className="text-3xl md:text-5xl font-heading font-bold mt-4">
-                  İhtiyacınıza göre <span className="text-gradient">okuyun</span>
-                </h2>
-              </div>
-              <p className="text-text-secondary max-w-md leading-relaxed">
-                Her yazı tek bir arama niyetine odaklanır; gereksiz teknik kalabalık yerine karar vermenize yarayan bilgiyi sunar.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-7">
-              {blogPosts.map((post, index) => (
-                <BlogCard key={post.slug} post={post} eager={index < 2} />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="px-6 pb-24">
-          <div className="max-w-5xl mx-auto theme-dark bg-surface rounded-3xl p-8 md:p-12 relative overflow-hidden">
-            <div className="absolute -right-20 -top-24 w-80 h-80 bg-primary/25 rounded-full blur-[100px]" />
-            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-7">
-              <div className="max-w-2xl">
-                <span className="badge badge-accent">Aradığınız cevap yok mu?</span>
-                <h2 className="font-heading text-3xl md:text-4xl font-bold mt-4 mb-3">Parçanızı birlikte değerlendirelim</h2>
-                <p className="text-text-secondary leading-relaxed">
-                  Fotoğrafı veya model dosyasını, ölçüyü, adedi ve kullanım amacını gönderin. Uygun üretim yolunu netleştirelim.
-                </p>
-              </div>
-              <a
-                href="https://wa.me/905311034535?text=Merhaba%2C%20blogdaki%20rehberlerden%20geldim.%20Bir%203D%20bask%C4%B1%20talebim%20var."
-                target="_blank"
-                rel="noreferrer"
-                className="btn-primary whitespace-nowrap text-center"
-              >
-                WhatsApp’tan Sor
-              </a>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <Footer />
-      <WhatsAppFab />
-    </div>
+      {/* Liste altı: cevabı bulamayanlar için */}
+      <Bolum baslikId="blog-soru-baslik" icClassName="gap-y-6">
+        <h2 id="blog-soru-baslik" className="col-span-full m-0 font-serif text-h2 font-[400] md:col-span-5">
+          Cevabı burada bulamadınız mı?
+        </h2>
+        <div className="col-span-full md:col-span-5 md:col-start-7">
+          <p className="m-0 max-w-[52ch] text-grafit-2">
+            Fotoğrafı ya da dosyayı, ölçüyü, adedi ve kullanım amacını gönderin. Nasıl basılacağını birlikte netleştirelim.
+          </p>
+          <Buton href={waBaglanti(BLOG_WA_MESAJ)} className="mt-6">
+            WhatsApp'tan yazın
+          </Buton>
+        </div>
+      </Bolum>
+    </SayfaIskeleti>
   )
 }

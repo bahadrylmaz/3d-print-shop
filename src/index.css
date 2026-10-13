@@ -78,6 +78,38 @@
 
   /* Fiyat ve rakamlar: astar rakam, orantılı (tabular nokta aralığını dağıtıyor, YON §2) */
   .mf-rakam { font-variant-numeric: lining-nums proportional-nums; }
+
+  /* Blog yazısı gövdesi (YON §6.6): Schibsted gövde, Bodoni yalnız ara başlık ve not.
+     Ölçüyü sarmalayan öğe verir (max-w-[62ch]); burada yalnız dikey ritim ve liste işareti. */
+  .mf-yazi { color: var(--mf-grafit); }
+  .mf-yazi > p,
+  .mf-yazi > section > p { margin: 1.25em 0 0; }
+  .mf-yazi > :first-child { margin-top: 0; }
+  .mf-yazi > section > h2 {
+    margin: 3.5rem 0 0;
+    font-family: var(--mf-font-serif);
+    font-size: var(--mf-fs-h3);
+    line-height: 1.2;
+    font-weight: 500;
+    letter-spacing: var(--mf-tr-heading);
+  }
+  .mf-yazi > section > h2 + p { margin-top: 1rem; }
+  .mf-yazi > section > ul { margin: 1.25em 0 0; padding: 0; list-style: none; }
+  .mf-yazi > section > ul > li { position: relative; padding-left: 1.5rem; }
+  .mf-yazi > section > ul > li + li { margin-top: 0.5em; }
+  /* Madde işareti: 6 px kare, Grafit 2, ilk satırın ortasında */
+  .mf-yazi > section > ul > li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: calc(0.8em - 3px);
+    width: 6px;
+    height: 6px;
+    background: var(--mf-grafit-2);
+  }
+  /* Not / alıntı: Bodoni italik 24 px, solda 2 px Reçine çizgi */
+  .mf-yazi-not { margin: 2.5rem 0 0; padding-left: 1.5rem; border-left: var(--mf-cizgi-kalin) solid var(--mf-recine); }
+  .mf-yazi-not p { margin: 0; font-family: var(--mf-font-serif); font-style: italic; font-size: 1.5rem; line-height: 1.35; }
 }
 
 @keyframes mf-katman {

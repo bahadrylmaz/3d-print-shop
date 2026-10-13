@@ -1,195 +1,261 @@
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { ShoppingBag, ChevronLeft, MessageCircle, ArrowLeft } from 'lucide-react'
-import { getProduct, products, fmt, waOrder, productJsonLd } from '../data/products'
+import { getProduct, products, filters, fmt, waOrder, productJsonLd, SITE } from '../data/products'
+import { waBaglanti } from '../data/iletisim'
 import usePageSeo from '../hooks/usePageSeo'
 import useJsonLd from '../hooks/useJsonLd'
-import Navbar from '../components/yerlesim/Navbar'
-import Footer from '../components/yerlesim/Footer'
-import WhatsAppFab from '../components/yerlesim/WhatsAppDugmesi'
+import SayfaIskeleti from '../components/yerlesim/SayfaIskeleti'
+import { Kapsayici, Izgara } from '../components/temel/Kapsayici'
+import Bolum from '../components/temel/Bolum'
+import { Buton, MetinBaglanti } from '../components/temel/Buton'
+import Ikon from '../components/temel/Ikon'
+import UrunGorseli from '../components/temel/UrunGorseli'
+import UrunGalerisi from '../components/magaza/UrunGalerisi'
+import UrunKarti from '../components/magaza/UrunKarti'
+
+// Ürün detayı (/magaza/:slug): YON §6.4, METIN §4.2 ve §6.
+// 1280: kırıntı → galeri (7 kol) | ad, açıklama, fiyat, sipariş, Ayrıntılar (4 kol, yapışkan) → Nasıl basılır → Benzer parçalar.
+// 375: tek sütun; altta yapışkan çubuk (fiyat + sipariş), genel WhatsApp düğmesi yalnız mobilde gizli.
+// Sipariş akışı bugünkü gibi: "WhatsApp'tan sipariş verin" -> waOrder(ürün adı) (wa.me, METIN §4.2 mesajı);
+// "Farklı ölçüde isteyin" -> ana sayfadaki teklif formu (/#order).
+// Bulunamayan slug: aynı iskelet, METIN §2 404 metni; kanonik /magaza (eski davranış).
+const cumleDuzeni = (s = '') => s.charAt(0) + s.slice(1).toLocaleLowerCase('tr')
+const kategoriFiltresi = (urun) => filters.find((f) => f.id === urun.category && f.kategori)
+
+const SEO_EK = "Manisa ve İzmir'de elden teslim, Türkiye geneline kargo."
+
+// METIN §6: başlık "{ad} | MicronForge Mağaza", ad 29 karakteri geçerse "{ad} | MicronForge"
+const seoBaslik = (u) => (u.name.length > 29 ? `${u.name} | MicronForge` : `${u.name} | MicronForge Mağaza`)
+
+// METIN §6: "{ad}: {desc} {Malzeme}, SLA reçine 3D baskı. Manisa ve İzmir'de ..."; 155'i geçerse desc kısaltılır
+function seoAciklama(u) {
+  const malzeme = `${cumleDuzeni(u.material)}, SLA reçine 3D baskı.`
+  const tam = `${u.name}: ${u.desc} ${malzeme} ${SEO_EK}`
+  if (tam.length <= 155) return tam
+  const yer = 155 - (tam.length - u.desc.length) - 1
+  const kisa = u.desc.slice(0, Math.max(0, yer)).replace(/[\s,.;:]+\S*$/, '')
+  return `${u.name}: ${kisa}… ${malzeme} ${SEO_EK}`
+}
+
+// METIN §4.2 bilgi tablosu: veri yoksa sağ sütundaki varsayılan yazılır
+function ayrintilar(u) {
+  const olcu = Array.isArray(u.dimensions) ? `${u.dimensions.join(' × ')} mm` : u.dimensions
+  const sure = typeof u.leadTime === 'number' ? `${u.leadTime} iş günü` : u.leadTime
+  const yuzey = u.finish ?? (/boyal/i.test(u.material ?? '') ? 'Boyalı' : 'Boyasız, destekleri temizlenmiş.')
+  return [
+    ['Malzeme', u.material && cumleDuzeni(u.material)],
+    ['Ölçü', olcu || 'Ölçüyü siparişte birlikte belirliyoruz.'],
+    ['Katman', '25 mikron (Tough reçinede 50 mikron)'],
+    ['Üretim süresi', sure || 'Baskı ve kürleme 6-24 saat, teslim 1-2 gün.'],
+    ['Yüzey', yuzey],
+    ['Teslim', "Manisa ve İzmir'de elden, Türkiye geneline kargo"],
+  ].filter(([, deger]) => deger)
+}
+
+const fiyatMetni = (u) => {
+  const deger = u.price ?? u.priceFrom
+  return deger != null ? `${fmt(deger)} ₺` : null
+}
 
 export default function ProductDetail() {
   const { slug } = useParams()
   const product = getProduct(slug)
-  const [idx, setIdx] = useState(0)
 
   usePageSeo({
-    title: product
-      ? `${product.name} — 3D Baskı | MicronForge Mağaza`
-      : 'Ürün Bulunamadı | MicronForge',
+    title: product ? seoBaslik(product) : 'Ürün bulunamadı | MicronForge',
     description: product
-      ? `${product.name}: ${product.desc} ${product.material}. WhatsApp'tan sipariş ver — Manisa & İzmir SLA reçine 3D baskı.`
-      : 'Aradığın ürün bulunamadı. MicronForge mağazasındaki tüm baskıları incele.',
+      ? seoAciklama(product)
+      : 'Bu ürün mağazada artık yok. Atölyede basılan diğer parçalara mağazadan bakabilirsiniz.',
     path: product ? `/magaza/${product.id}` : '/magaza',
   })
 
   const jsonLd = useMemo(() => (product ? productJsonLd(product) : null), [product])
   useJsonLd('product-jsonld', jsonLd)
 
-  if (!product) {
-    return (
-      <div className="min-h-screen bg-surface">
-        <Navbar />
-        <section className="theme-dark bg-surface min-h-screen flex items-center justify-center px-6 text-center">
-          <div>
-            <h1 className="text-3xl font-bold font-heading mb-4">Ürün bulunamadı</h1>
-            <p className="text-text-secondary mb-8">Aradığın ürün kaldırılmış olabilir.</p>
-            <Link to="/magaza" className="btn-primary px-7 py-3.5 inline-flex items-center gap-2">
-              <ArrowLeft size={16} /> Mağazaya Dön
-            </Link>
-          </div>
-        </section>
-        <Footer />
-        <WhatsAppFab />
-      </div>
-    )
-  }
+  const kirintiLd = useMemo(
+    () =>
+      product
+        ? {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'MicronForge', item: `${SITE}/` },
+              { '@type': 'ListItem', position: 2, name: 'Mağaza', item: `${SITE}/magaza` },
+              { '@type': 'ListItem', position: 3, name: product.name, item: `${SITE}/magaza/${product.id}` },
+            ],
+          }
+        : null,
+    [product]
+  )
+  useJsonLd('product-breadcrumb-jsonld', kirintiLd)
 
-  const priceValue = product.price ?? product.priceFrom
-  const related = products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4)
+  if (!product) return <Bulunamadi />
+
+  const kategori = kategoriFiltresi(product)
+  const fiyat = fiyatMetni(product)
+  const benzerler = products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 3)
 
   return (
-    <div className="min-h-screen bg-surface">
-      <Navbar />
+    <SayfaIskeleti whatsappGizli="mobil">
+      <Kirinti kategori={kategori} />
 
-      <section className="theme-dark bg-surface pt-28 pb-24 px-6 relative">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/12 rounded-full blur-[130px]" />
-
-        <div className="max-w-6xl mx-auto relative z-10">
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-sm text-text-secondary mb-8">
-            <Link to="/magaza" className="hover:text-text-primary transition-colors inline-flex items-center gap-1">
-              <ChevronLeft size={15} /> Mağaza
-            </Link>
-            <span className="text-text-muted">/</span>
-            <span className="text-text-primary">{product.name}</span>
-          </nav>
-
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-            {/* Galeri */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="rounded-3xl overflow-hidden glass-card aspect-[4/5] bg-surface-light/40">
-                <img
-                  src={product.photos[idx]}
-                  alt={`${product.name} — SLA reçine 3D baskı`}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              {product.photos.length > 1 && (
-                <div className="flex gap-3 mt-4">
-                  {product.photos.map((ph, i) => (
-                    <button
-                      key={ph}
-                      onClick={() => setIdx(i)}
-                      className={`w-20 h-20 rounded-xl overflow-hidden border-2 transition-colors ${
-                        i === idx ? 'border-primary' : 'border-transparent opacity-60 hover:opacity-100'
-                      }`}
-                    >
-                      <img src={ph} alt="" className="w-full h-full object-cover" />
-                    </button>
-                  ))}
-                </div>
-              )}
-            </motion.div>
-
-            {/* Bilgi */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="flex flex-col"
-            >
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-[11px] px-3 py-1 rounded-full bg-primary/15 text-primary-light font-semibold uppercase tracking-wider border border-primary/20">
-                  {product.categoryLabel}
-                </span>
-                <span className="text-[11px] px-3 py-1 rounded-full bg-surface-light/60 text-text-secondary font-mono uppercase tracking-wider border border-border-light">
-                  {product.material}
-                </span>
-              </div>
-
-              <h1 className="text-3xl md:text-4xl font-bold font-heading mb-4 tracking-tight">{product.name}</h1>
-              <p className="text-text-secondary text-lg leading-relaxed mb-6">{product.desc}</p>
-
-              <div className="glass-card rounded-2xl p-6 mb-6">
-                <div className="text-xs text-text-secondary uppercase tracking-wider mb-1">
-                  {product.price != null ? 'Fiyat' : 'Başlangıç fiyatı'}
-                </div>
-                <div className="text-4xl font-bold text-gradient font-heading tracking-tight mb-1">
-                  {fmt(priceValue)} ₺{product.price == null && "'den"}
-                </div>
-                <p className="text-text-secondary/70 text-xs">
-                  Standart boyut içindir; boyut, renk ve adet ile değişir.
-                </p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-3 mb-6">
-                <a
-                  href={waOrder(product.name)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn-primary flex-1 py-4 flex items-center justify-center gap-2"
-                >
-                  <ShoppingBag size={17} /> WhatsApp'tan Sipariş Ver
-                </a>
-                <a
-                  href="https://wa.me/905311034535"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn-outline py-4 px-6 flex items-center justify-center gap-2"
-                >
-                  <MessageCircle size={17} /> Soru Sor
-                </a>
-              </div>
-
-              <ul className="text-sm text-text-secondary space-y-2">
-                <li>• 16K MSLA, 25 mikron katman — pürüzsüz yüzey</li>
-                <li>• Farklı boyut, renk ve reçine seçeneği</li>
-                <li>• Manisa & İzmir teslim + Türkiye geneli kargo</li>
-              </ul>
-            </motion.div>
+      <Kapsayici className="pt-6 pb-(--mf-bolum) md:pt-8">
+        <Izgara className="gap-y-10">
+          <div className="col-span-full md:col-span-7">
+            <UrunGalerisi key={product.id} urun={product} />
           </div>
 
-          {/* İlgili ürünler */}
-          {related.length > 0 && (
-            <div className="mt-20">
-              <h2 className="text-2xl font-bold font-heading mb-6">Benzer Ürünler</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {related.map((p) => (
-                  <Link
-                    key={p.id}
-                    to={`/magaza/${p.id}`}
-                    className="group glass-card rounded-2xl overflow-hidden lift transition-all duration-500"
-                  >
-                    <div className="aspect-[4/5] overflow-hidden bg-surface-light/40">
-                      <img
-                        src={p.photos[0]}
-                        alt={p.name}
-                        loading="lazy"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    </div>
-                    <div className="p-3">
-                      <div className="text-sm font-semibold font-heading leading-tight mb-1">{p.name}</div>
-                      <div className="text-sm text-gradient font-bold font-heading">
-                        {fmt(p.price ?? p.priceFrom)} ₺{p.price == null && "'den"}
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
+          <div className="col-span-full md:sticky md:top-[calc(68px+2rem)] md:col-span-5 md:col-start-8 md:self-start lg:col-span-4 lg:col-start-9">
+            <h1 className="m-0 font-serif text-h2 font-[400]">{product.name}</h1>
+            {product.desc && <p className="m-0 mt-4 max-w-[46ch] text-grafit-2">{product.desc}</p>}
 
-      <Footer />
-      <WhatsAppFab />
-    </div>
+            {fiyat && (
+              <div className="mt-8">
+                <p className="m-0 text-small text-sis">{product.price != null ? 'Fiyat' : 'Başlangıç fiyatı'}</p>
+                <p className="mf-rakam m-0 mt-1 text-[1.5rem] leading-[1.2] font-[500]">{fiyat}</p>
+                <p className="m-0 mt-2 text-small text-sis">
+                  Standart ölçü ve tek renk içindir. Ölçü, renk ve adet fiyatı değiştirir.
+                </p>
+              </div>
+            )}
+
+            <div className="mt-8 flex flex-col items-start gap-2">
+              <Buton href={waOrder(product.name)} genis>
+                <Ikon ad="whatsapp" />
+                WhatsApp'tan sipariş verin
+              </Buton>
+              <MetinBaglanti href={waBaglanti()}>Soru sorun</MetinBaglanti>
+            </div>
+            <p className="m-0 mt-3 max-w-[46ch] text-small text-grafit-2">
+              Sipariş WhatsApp'tan alınır. Ölçü, renk ve teslim tarihini orada netleştirip baskıya öyle geçeriz. Aynı
+              parçayı farklı ölçüde ya da reçinede de basabiliriz.
+            </p>
+
+            <section aria-labelledby="ayrintilar-baslik" className="mt-12">
+              <h2 id="ayrintilar-baslik" className="m-0 mb-4 font-serif text-h3 font-[400]">
+                Ayrıntılar
+              </h2>
+              <dl className="m-0 border-b border-cizgi">
+                {ayrintilar(product).map(([ad, deger]) => (
+                  <div key={ad} className="grid grid-cols-[7.5rem_1fr] gap-x-4 border-t border-cizgi py-3">
+                    <dt className="text-small text-sis">{ad}</dt>
+                    <dd className="m-0 text-small text-grafit">{deger}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          </div>
+        </Izgara>
+      </Kapsayici>
+
+      <Bolum baslikId="nasil-basilir-baslik" icClassName="gap-y-6">
+        <h2 id="nasil-basilir-baslik" className="col-span-full m-0 font-serif text-h2 font-[400] md:col-span-4">
+          Nasıl basılır
+        </h2>
+        <div className="col-span-full md:col-span-7 md:col-start-6">
+          {/* kaynak: METIN.md §4.2 "Nasıl basılır" (yazıcı ve katman bilgisi YON §9'da doğrulanacak olarak işaretli) */}
+          <p className="m-0 max-w-[62ch] text-lead text-grafit-2">
+            Saturn 4 Ultra 16K yazıcıda 25 mikron katmanla basılır. IPA ile yıkanır, UV ile kürlenir, destekleri elde
+            temizlenir ve paketlenmeden önce kontrol edilir.
+          </p>
+          <Buton href="/#order" tur="cerceve" className="mt-8">
+            Farklı ölçüde isteyin
+          </Buton>
+        </div>
+      </Bolum>
+
+      {benzerler.length > 0 && (
+        <Bolum baslikId="benzer-baslik" icClassName="gap-y-12">
+          <h2 id="benzer-baslik" className="col-span-full m-0 font-serif text-h2 font-[400]">
+            Benzer parçalar
+          </h2>
+          {benzerler.map((urun, i) => (
+            <UrunKarti
+              key={urun.id}
+              urun={urun}
+              baslik="h3"
+              sizes="(min-width: 768px) 30vw, 46vw"
+              className={`col-span-2 md:col-span-4 ${i === 2 ? 'max-md:hidden' : ''} ${i === 1 ? 'md:mt-24' : ''}`}
+            />
+          ))}
+        </Bolum>
+      )}
+
+      {/* Mobil yapışkan sipariş çubuğu (YON §6.4): main içinde sticky, footer'ın üstünü örtmez */}
+      <div className="sticky bottom-0 z-(--mf-z-yapiskan) border-t border-cizgi bg-kirec md:hidden">
+        <div className="flex min-h-16 items-center justify-between gap-4 px-(--mf-kenar) py-2">
+          {fiyat ? (
+            <p className="mf-rakam m-0 text-[1.0625rem] font-[500] whitespace-nowrap">
+              {product.price == null && <span className="sr-only">Başlangıç fiyatı </span>}
+              {fiyat}
+            </p>
+          ) : (
+            <span />
+          )}
+          <Buton href={waOrder(product.name)} className="px-4">
+            WhatsApp'tan sipariş verin
+          </Buton>
+        </div>
+      </div>
+    </SayfaIskeleti>
+  )
+}
+
+function Kirinti({ kategori }) {
+  return (
+    <Kapsayici as="nav" aria-label="Konum" className="pt-4 md:pt-6">
+      <ol className="m-0 flex list-none flex-wrap items-center gap-x-3 p-0 text-small text-grafit-2">
+        <li>
+          <Link
+            to="/magaza"
+            className="inline-flex min-h-11 items-center gap-2 text-grafit-2 no-underline transition-colors duration-(--mf-sure-hizli) hover:text-recine"
+          >
+            <Ikon ad="geri" boyut={16} />
+            Mağaza
+          </Link>
+        </li>
+        {kategori && (
+          <>
+            <li aria-hidden="true" className="text-sis">
+              /
+            </li>
+            <li>
+              <Link
+                to={`/magaza?kategori=${kategori.kategori}`}
+                className="inline-flex min-h-11 items-center text-grafit-2 no-underline transition-colors duration-(--mf-sure-hizli) hover:text-recine"
+              >
+                {kategori.label}
+              </Link>
+            </li>
+          </>
+        )}
+      </ol>
+    </Kapsayici>
+  )
+}
+
+// METIN §2 "Ürün 404"; YON §6.4: aynı iskelet (kırıntı, sol metin, sağda boş 3:4 kaide)
+function Bulunamadi() {
+  return (
+    <SayfaIskeleti>
+      <Kirinti />
+      <Kapsayici className="pt-6 pb-(--mf-bolum) md:pt-8">
+        <Izgara className="gap-y-12">
+          <div className="col-span-full md:col-span-5 md:self-center">
+            <h1 className="m-0 font-serif text-h1 font-[400]">Bu ürün artık mağazada yok</h1>
+            <p className="m-0 mt-6 max-w-[38ch] text-lead text-grafit-2">
+              Aynı parçayı ya da benzerini sipariş üzerine basabiliriz.
+            </p>
+            <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3">
+              <Buton to="/magaza">Mağazaya dönün</Buton>
+              <MetinBaglanti to="/">Ana sayfa</MetinBaglanti>
+            </div>
+          </div>
+          <div className="col-span-full md:col-span-5 md:col-start-8">
+            <UrunGorseli />
+          </div>
+        </Izgara>
+      </Kapsayici>
+    </SayfaIskeleti>
   )
 }

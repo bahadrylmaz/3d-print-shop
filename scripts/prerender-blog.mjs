@@ -7,7 +7,8 @@ import {
   blogPostJsonLd,
   blogPosts,
 } from '../src/data/blogPosts.js'
-import { products } from '../src/data/products.js'
+import { BLOG_LISTE_SEO } from '../src/data/blogSeo.js'
+import { createServer } from 'vite'
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const distRoot = resolve(projectRoot, 'dist')
@@ -59,62 +60,25 @@ const setPageMeta = ({ html, title, description, url, image, type = 'website', p
 const wrapStaticRoot = (content) =>
   `<div id="root" data-prerendered="true">${content}</div>`
 
-const blogListMarkup = () => `
-  <main class="min-h-screen bg-surface">
-    <header class="theme-dark bg-surface pt-32 pb-16 px-6">
-      <div class="max-w-5xl mx-auto text-center">
-        <p class="text-primary-light font-semibold mb-4">MicronForge Blog</p>
-        <h1 class="text-4xl md:text-6xl font-bold font-heading mb-6">Manisa 3D Baskı Rehberi</h1>
-        <p class="text-text-secondary text-lg max-w-3xl mx-auto">Figürden kırtasiye rafına, mimari maketten OSB prototipine kadar SLA reçine 3D baskı rehberleri.</p>
-      </div>
-    </header>
-    <section class="max-w-7xl mx-auto px-6 py-16">
-      <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-7">
-        ${blogPosts.map((post) => `
-          <article class="glass-card rounded-3xl overflow-hidden">
-            <a href="/blog/${escapeHtml(post.slug)}">
-              <img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.imageAlt)}" width="1440" height="960" class="w-full aspect-[3/2] object-cover" />
-            </a>
-            <div class="p-6">
-              <p class="text-primary text-sm font-semibold mb-3">${escapeHtml(post.category)}</p>
-              <h2 class="font-heading text-2xl font-bold mb-3"><a href="/blog/${escapeHtml(post.slug)}">${escapeHtml(post.title)}</a></h2>
-              <p class="text-text-secondary leading-relaxed">${escapeHtml(post.excerpt)}</p>
-            </div>
-          </article>`).join('')}
-      </div>
-    </section>
-  </main>`
-
-const blogPostMarkup = (post) => `
-  <main class="min-h-screen bg-surface">
-    <article>
-      <header class="theme-dark bg-surface pt-28 pb-14 px-6">
-        <div class="max-w-5xl mx-auto">
-          <nav class="text-text-secondary text-sm mb-8"><a href="/">Anasayfa</a> / <a href="/blog">Blog</a> / ${escapeHtml(post.category)}</nav>
-          <p class="text-primary-light font-semibold mb-4">${escapeHtml(post.category)} · ${escapeHtml(post.readTime)} okuma</p>
-          <h1 class="text-4xl md:text-6xl font-bold font-heading mb-6">${escapeHtml(post.title)}</h1>
-          <p class="text-text-secondary text-lg max-w-3xl">${escapeHtml(post.excerpt)}</p>
-        </div>
-      </header>
-      <div class="max-w-6xl mx-auto px-6 py-10">
-        <img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.imageAlt)}" width="1440" height="960" class="w-full rounded-3xl" />
-      </div>
-      <div class="max-w-3xl mx-auto px-6 pb-20">
-        ${post.intro.map((paragraph) => `<p class="text-text-secondary text-lg leading-8 mb-5">${escapeHtml(paragraph)}</p>`).join('')}
-        ${post.sections.map((section) => `
-          <section class="mt-12">
-            <h2 class="font-heading text-3xl font-bold mb-5">${escapeHtml(section.heading)}</h2>
-            ${(section.paragraphs || []).map((paragraph) => `<p class="text-text-secondary text-lg leading-8 mb-5">${escapeHtml(paragraph)}</p>`).join('')}
-            ${section.bullets ? `<ul class="text-text-secondary text-lg leading-8 list-disc pl-6">${section.bullets.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}
-            ${section.note ? `<p class="mt-6 p-5 bg-surface-light rounded-2xl font-semibold">${escapeHtml(section.note)}</p>` : ''}
-          </section>`).join('')}
-        <section class="mt-14">
-          <h2 class="font-heading text-3xl font-bold mb-5">Sıkça sorulanlar</h2>
-          ${post.faqs.map((faq) => `<div class="mb-5"><h3 class="font-heading text-xl font-bold mb-2">${escapeHtml(faq.question)}</h3><p class="text-text-secondary leading-7">${escapeHtml(faq.answer)}</p></div>`).join('')}
-        </section>
-      </div>
-    </article>
-  </main>`
+// Statik gövde: tarayıcıdaki BlogPage/BlogPost bileşenleri Vite SSR ile HTML'e çevrilir (scripts/blog-ssr.js).
+// Böylece Navbar, Footer ve yazı tipografisi build çıktısında da yeni tasarımla aynı; sınıflar dist CSS'inde zaten var.
+const vite = await createServer({
+  root: projectRoot,
+  configFile: resolve(projectRoot, 'vite.config.js'),
+  logLevel: 'error',
+  appType: 'custom',
+  server: { middlewareMode: true, hmr: false, ws: false },
+})
+// products.js de Vite üzerinden yüklenir: uzantısız iç import'ları (ör. '../data/iletisim') düz Node çözemez.
+let blogSayfaHtml
+let products
+try {
+  ;({ blogSayfaHtml } = await vite.ssrLoadModule('/scripts/blog-ssr.js'))
+  ;({ products } = await vite.ssrLoadModule('/src/data/products.js'))
+} catch (hata) {
+  await vite.close()
+  throw hata
+}
 
 const writePage = async (relativePath, html, content, jsonLd, jsonLdId) => {
   const outputPath = resolve(distRoot, relativePath, 'index.html')
@@ -130,12 +94,11 @@ const writePage = async (relativePath, html, content, jsonLd, jsonLdId) => {
 const blogUrl = `${SITE_URL}/blog`
 const listHtml = setPageMeta({
   html: baseHtml,
-  title: '3D Baskı Blogu | Manisa Figür, Maket & Prototip Rehberleri',
-  description: 'MicronForge 3D baskı rehberi: Manisa’da SLA reçine baskı, OSB prototip, kırtasiye ürünleri, kişiye özel figür ve mimari maket yazıları.',
+  ...BLOG_LISTE_SEO,
   url: blogUrl,
   image: `${SITE_URL}${blogPosts[0].image}`,
 })
-await writePage('blog', listHtml, blogListMarkup(), blogCollectionJsonLd, 'blog-collection-jsonld')
+await writePage('blog', listHtml, blogSayfaHtml('/blog'), blogCollectionJsonLd, 'blog-collection-jsonld')
 
 for (const post of blogPosts) {
   const url = `${blogUrl}/${post.slug}`
@@ -149,8 +112,9 @@ for (const post of blogPosts) {
     published: post.published,
     modified: post.updated,
   })
-  await writePage(`blog/${post.slug}`, html, blogPostMarkup(post), blogPostJsonLd(post), 'blog-post-jsonld')
+  await writePage(`blog/${post.slug}`, html, blogSayfaHtml(`/blog/${post.slug}`), blogPostJsonLd(post), 'blog-post-jsonld')
 }
+await vite.close()
 
 const urls = [
   { loc: `${SITE_URL}/`, changefreq: 'weekly', priority: '1.0' },
