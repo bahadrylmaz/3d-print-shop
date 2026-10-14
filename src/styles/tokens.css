@@ -102,8 +102,10 @@
   --mf-b-8: 4rem;     /* 64 */
   --mf-b-9: 6rem;     /* 96 */
   --mf-b-10: 8rem;    /* 128 */
-  --mf-bolum: clamp(4.5rem, 2.9rem + 6.8vw, 9rem);   /* bölümler arası dikey: 72 -> 144 */
-  --mf-bolum-kucuk: clamp(3rem, 2.3rem + 3vw, 5rem); /* aynı bölüm içi büyük ara: 48 -> 80 */
+  /* 3. aşama: mobilde 72 px bölüm boşluğu + çizgi, 13.500 px'lik bir ana sayfada nefes değil boşluk yaratıyordu.
+     Alt uç 56 px'e, üst uç 128 px'e çekildi; oran (büyük ekranda cömert, küçükte sıkı) korunur. */
+  --mf-bolum: clamp(3.5rem, 1.5rem + 8vw, 8rem);        /* bölümler arası dikey: 56 -> 128 */
+  --mf-bolum-kucuk: clamp(2.5rem, 1.9rem + 2.6vw, 4.5rem); /* aynı bölüm içi büyük ara: 40 -> 72 */
 
   /* Izgara */
   --mf-kolon: 12;

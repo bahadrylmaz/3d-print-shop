@@ -163,7 +163,7 @@ export default function TeklifFormu() {
 
   return (
     <Bolum id="order" baslikId="teklif-baslik">
-      <div className="col-span-full mb-12 md:col-span-4 md:mb-0">
+      <div className="col-span-full mb-10 md:col-span-4 md:mb-0">
         <h2 id="teklif-baslik" className="m-0 font-serif text-h2 font-[400]">
           Parçanızı anlatın
         </h2>
@@ -172,7 +172,8 @@ export default function TeklifFormu() {
           yazarız.
         </p>
 
-        <ol className="m-0 mt-8 list-none space-y-4 p-0">
+        {/* Üç adım giriş paragrafını tekrar ediyor (fotoğraf uyarısı formun içinde de var); mobilde gizli, masaüstünde yan sütunu dolduruyor */}
+        <ol className="m-0 mt-8 hidden list-none space-y-4 p-0 md:block">
           {[
             ['Fotoğrafları ekleyin.', 'En fazla 5 tane. Farklı açılardan, gün ışığında, filtresiz.'],
             ['Birkaç bilgi verin.', 'Ne olduğu, yaklaşık boyu ve size nasıl ulaşacağımız.'],
@@ -187,7 +188,7 @@ export default function TeklifFormu() {
           ))}
         </ol>
 
-        <div className="mt-8 text-grafit-2">
+        <div className="mt-6 text-grafit-2 md:mt-8">
           <p className="m-0">Form doldurmak istemezseniz:</p>
           <p className="m-0 flex flex-wrap gap-x-6">
             <MetinBaglanti href={waBaglanti(WA_GENEL_MESAJ)}>WhatsApp</MetinBaglanti>
@@ -195,7 +196,7 @@ export default function TeklifFormu() {
           </p>
         </div>
 
-        <div id="pricing" className="mt-10 border-t border-cizgi pt-6">
+        <div id="pricing" className="mt-8 border-t border-cizgi pt-6 md:mt-10">
           <h3 className="m-0 font-serif text-h3 font-[500]">Fiyat ölçüye göre</h3>
           <p className="m-0 mt-3 text-small text-grafit-2">Her parçanın fiyatını ayrı hesaplıyoruz.</p>
           <p className="m-0 mt-2 text-small text-grafit-2">
@@ -206,7 +207,7 @@ export default function TeklifFormu() {
         </div>
       </div>
 
-      <div className="col-span-full bg-kirec p-6 md:col-span-7 md:col-start-6 md:p-10">
+      <div className="col-span-full bg-kirec p-5 md:col-span-7 md:col-start-6 md:p-10">
         {submitted ? (
           <div aria-live="polite">
             <h3 ref={sonucRef} tabIndex={-1} className="m-0 font-serif text-h2 font-[400] outline-none">

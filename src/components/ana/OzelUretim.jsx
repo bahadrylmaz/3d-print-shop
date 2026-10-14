@@ -38,7 +38,7 @@ const ISLER = [
 export default function OzelUretim() {
   return (
     <Bolum ekCapalar={['services']} id="ozel-uretim" baslikId="ozel-uretim-baslik">
-      <div className="col-span-full mb-12 md:col-span-4 md:mb-0">
+      <div className="col-span-full mb-8 md:col-span-4 md:mb-0">
         <h2 id="ozel-uretim-baslik" className="m-0 font-serif text-h2 font-[400]">
           Atölyede basılanlar
         </h2>
@@ -52,12 +52,13 @@ export default function OzelUretim() {
           <li
             key={is.id}
             id={is.id}
-            className="grid grid-cols-1 gap-x-(--mf-oluk) gap-y-3 border-t border-cizgi pt-6 pb-10 md:grid-cols-8"
+            className="grid grid-cols-1 gap-x-(--mf-oluk) gap-y-3 border-t border-cizgi pt-6 pb-8 md:grid-cols-8 md:pb-10"
           >
             <h3 className="m-0 font-serif text-h3 font-[500] md:col-span-4">{is.baslik}</h3>
             <div className="md:col-span-4">
               <p className="m-0 text-grafit-2">{is.metin}</p>
-              <p className="m-0 mt-3 text-small text-sis">{is.alt}</p>
+              {/* İkincil künye: bilgisi metinde ya da Malzemeler/SSS bölümünde var; mobilde sayfayı uzatmasın */}
+              <p className="m-0 mt-3 hidden text-small text-sis md:block">{is.alt}</p>
             </div>
           </li>
         ))}

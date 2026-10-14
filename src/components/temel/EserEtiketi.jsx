@@ -29,7 +29,8 @@ export default function EserEtiketi({
   kartIcinde = false,
   className = '',
 }) {
-  const fiyat = price != null ? `${fmt(price)} ₺` : priceFrom != null ? `${fmt(priceFrom)} ₺'den başlayan` : null
+  // Para birimi "TL": Schibsted Grotesk'in ₺ glifi £ ile karışıyor (INCELEME.md, tipografi)
+  const fiyat = price != null ? `${fmt(price)} TL` : priceFrom != null ? `${fmt(priceFrom)} TL'den başlayan` : null
   const satirlar = [
     ['Malzeme', material && cumleDuzeni(material)],
     ['Ölçü', dimensions && olcuMetni(dimensions)],
@@ -47,11 +48,12 @@ export default function EserEtiketi({
       )}
       {satirlar.length > 0 && (
         <dl
-          className={`col-span-full mt-2 mb-0 grid-cols-[auto_1fr] gap-x-4 gap-y-0.5 text-small ${detayMobildeGizli ? 'hidden md:grid' : 'grid'}`}
+          className={`col-span-full mt-2 mb-0 gap-x-4 gap-y-0.5 text-small ${kucuk ? 'grid-cols-1 md:grid-cols-[auto_1fr]' : 'grid-cols-[auto_1fr]'} ${detayMobildeGizli ? 'hidden md:grid' : 'grid'}`}
         >
+          {/* Küçük kartta mobil sütun ~160 px: "Malzeme | Şeffaf / reçine" iki satıra kırılıyordu. Mobilde başlık yalnız ekran okuyucuda. */}
           {satirlar.map(([ad, deger]) => (
             <div key={ad} className="contents">
-              <dt className="text-sis">{ad}</dt>
+              <dt className={`text-sis ${kucuk ? 'max-md:sr-only' : ''}`}>{ad}</dt>
               <dd className="m-0 text-grafit-2">{deger}</dd>
             </div>
           ))}

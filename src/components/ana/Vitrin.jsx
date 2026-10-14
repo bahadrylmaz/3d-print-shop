@@ -36,8 +36,8 @@ export default function Vitrin({ urunler }) {
 
   return (
     <Bolum id="vitrin" baslikId="vitrin-baslik">
-      <div className="col-span-full mb-12 md:col-span-5">
-        <h2 id="vitrin-baslik" className="m-0 font-serif text-h1 font-[400]">
+      <div className="col-span-full mb-8 md:col-span-5 md:mb-12">
+        <h2 id="vitrin-baslik" className="m-0 font-serif text-h2 font-[400]">
           Atölyeden hazır parçalar
         </h2>
         <p className="m-0 mt-4 max-w-[62ch] text-grafit-2">
@@ -46,7 +46,7 @@ export default function Vitrin({ urunler }) {
         </p>
       </div>
 
-      <Kart urun={birinci} buyuk className="col-span-full mb-16 md:col-span-5 md:row-span-2 md:row-start-2 md:mb-0" />
+      <Kart urun={birinci} buyuk className="col-span-full mb-10 md:col-span-5 md:row-span-2 md:row-start-2 md:mb-0" />
       <Kart
         urun={ikinci}
         className="col-span-2 mb-8 md:col-span-3 md:col-start-7 md:row-start-2 md:mt-32 md:mb-0 md:self-start"

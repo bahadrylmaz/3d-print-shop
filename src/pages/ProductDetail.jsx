@@ -54,7 +54,7 @@ function ayrintilar(u) {
 
 const fiyatMetni = (u) => {
   const deger = u.price ?? u.priceFrom
-  return deger != null ? `${fmt(deger)} ₺` : null
+  return deger != null ? `${fmt(deger)} TL` : null // ₺ yerine TL: bkz. EserEtiketi
 }
 
 export default function ProductDetail() {
@@ -106,7 +106,7 @@ export default function ProductDetail() {
           </div>
 
           <div className="col-span-full md:sticky md:top-[calc(68px+2rem)] md:col-span-5 md:col-start-8 md:self-start lg:col-span-4 lg:col-start-9">
-            <h1 className="m-0 font-serif text-h2 font-[400]">{product.name}</h1>
+            <h1 className="m-0 font-serif text-h1 font-[400]">{product.name}</h1>
             {product.desc && <p className="m-0 mt-4 max-w-[46ch] text-grafit-2">{product.desc}</p>}
 
             {fiyat && (
@@ -251,7 +251,8 @@ function Bulunamadi() {
               <MetinBaglanti to="/">Ana sayfa</MetinBaglanti>
             </div>
           </div>
-          <div className="col-span-full md:col-span-5 md:col-start-8">
+          {/* Boş kaide yalnız md üstünde; mobilde içeriksiz 3:4 blok butonların altında sayfayı uzatıyordu */}
+          <div className="col-span-full max-md:hidden md:col-span-5 md:col-start-8">
             <UrunGorseli />
           </div>
         </Izgara>

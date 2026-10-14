@@ -43,8 +43,7 @@ export default function Hero({ urun }) {
           <figure className="col-span-full m-0 mt-4 md:col-span-5 md:col-start-8 md:mt-0">
             <UrunGorseli
               product={urun}
-              oran="urun"
-              oranMd="dikey"
+              oran="dikey"
               oncelikli
               katmanKatman={katmanKatman}
               sizes="(min-width: 768px) 38vw, 100vw"
@@ -64,14 +63,10 @@ export default function Hero({ urun }) {
           </figure>
         </Izgara>
 
-        <ul className="m-0 mt-(--mf-bolum-kucuk) grid list-none grid-cols-2 border-t border-cizgi p-0 md:grid-cols-4">
-          {TEKNIK.map((t, i) => (
-            <li
-              key={t}
-              className={`py-5 pr-4 text-small text-grafit-2 ${i % 2 ? 'border-l border-cizgi pl-4' : ''} ${
-                i > 1 ? 'border-t border-cizgi md:border-t-0' : ''
-              } ${i === 2 ? 'md:border-l md:pl-4' : ''}`}
-            >
+        {/* Teknik satır: kutulu "güven şeridi" değil, tek çizgi altında sakin bir künye (YON §8.8) */}
+        <ul className="m-0 mt-(--mf-bolum-kucuk) grid list-none grid-cols-2 gap-x-(--mf-oluk) gap-y-2 border-t border-cizgi p-0 pt-5 pb-6 md:flex md:flex-wrap md:gap-x-12">
+          {TEKNIK.map((t) => (
+            <li key={t} className="text-small text-grafit-2">
               {t}
             </li>
           ))}

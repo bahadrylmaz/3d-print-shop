@@ -54,13 +54,13 @@ export default function Magaza() {
 
   return (
     <>
-      <section aria-labelledby="magaza-baslik" className="pt-12 pb-(--mf-bolum-kucuk) md:pt-18">
+      <section aria-labelledby="magaza-baslik" className="py-(--mf-bolum-kucuk)">
         <Kapsayici>
           <Izgara className="gap-y-6">
-            <h1 id="magaza-baslik" className="col-span-full m-0 font-serif text-display font-[400] md:col-span-5">
+            <h1 id="magaza-baslik" className="col-span-full m-0 font-serif text-h1 font-[400] md:col-span-5">
               Mağaza
             </h1>
-            <div className="col-span-full md:col-span-5 md:col-start-7 md:self-end">
+            <div className="col-span-full md:col-span-5 md:col-start-7 md:pt-3">
               <p className="m-0 max-w-[46ch] text-lead text-grafit-2">
                 Atölyede basılmış dekor ve koleksiyon parçaları. Her birini farklı ölçü, renk ya da reçineyle yeniden
                 basabiliriz. Siparişler WhatsApp'tan alınır.

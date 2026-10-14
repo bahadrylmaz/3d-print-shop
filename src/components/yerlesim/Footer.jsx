@@ -56,6 +56,19 @@ const SUTUNLAR = [
 const BAGLANTI =
   'inline-flex min-h-11 items-center text-grafit-2 no-underline transition-colors duration-(--mf-sure-hizli) hover:text-grafit hover:underline hover:decoration-1 hover:underline-offset-[0.25em]'
 
+// Telefon numarası mobilde ikiye bölünmesin ("+90 531 103 / 45 35"): numara tek parça, satır iki noktadan sonra kırılır.
+function Metin({ etiket }) {
+  const i = etiket.indexOf(TELEFON_GORUNEN)
+  if (i < 0) return etiket
+  return (
+    <>
+      {etiket.slice(0, i)}
+      <span className="whitespace-nowrap">{TELEFON_GORUNEN}</span>
+      {etiket.slice(i + TELEFON_GORUNEN.length)}
+    </>
+  )
+}
+
 function Oge({ o }) {
   if (o.to) {
     return (
@@ -67,7 +80,9 @@ function Oge({ o }) {
   if (o.href) {
     return (
       <a href={o.href} className={BAGLANTI} {...(o.dis ? { target: '_blank', rel: 'noreferrer' } : {})}>
-        {o.etiket}
+        <span>
+          <Metin etiket={o.etiket} />
+        </span>
       </a>
     )
   }
@@ -76,20 +91,20 @@ function Oge({ o }) {
 
 export default function Footer() {
   return (
-    <footer className="bg-tas pt-24 pb-8">
+    <footer className="bg-tas pt-16 pb-8 md:pt-24">
       <Kapsayici>
         <Izgara>
-          <p className="col-span-full m-0 mb-10 overflow-hidden font-serif text-[clamp(3rem,1rem+9vw,9rem)] pb-[0.14em] leading-[0.9] font-[400] tracking-[-0.03em] whitespace-nowrap md:mb-12">
+          <p className="col-span-full m-0 mb-6 overflow-hidden font-serif text-[clamp(3rem,1rem+9vw,9rem)] pb-[0.14em] leading-[0.9] font-[400] tracking-[-0.03em] whitespace-nowrap md:mb-12">
             MicronForge
           </p>
-          <p className="col-span-full m-0 mb-12 max-w-[62ch] text-grafit-2">
+          <p className="col-span-full m-0 mb-10 max-w-[62ch] text-grafit-2 md:mb-12">
             Manisa&apos;da SLA reçine 3D baskı atölyesi. Kişiye özel figür, mimari maket, sanayi prototipi ve dekor
             parçaları basıyoruz. Manisa ve İzmir&apos;e elden teslim, Türkiye&apos;ye kargo.
           </p>
           {SUTUNLAR.map((s) => (
             <div
               key={s.baslik}
-              className={`mb-8 text-small md:col-span-3 ${s.baslik === 'İletişim' ? 'col-span-full' : 'col-span-2'}`}
+              className="col-span-2 mb-8 text-small md:col-span-3"
             >
               <h2 className="m-0 mb-2 font-sans text-small font-[500] text-grafit">{s.baslik}</h2>
               <ul className="m-0 list-none p-0">

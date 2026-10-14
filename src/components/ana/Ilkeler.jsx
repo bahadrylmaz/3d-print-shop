@@ -11,14 +11,14 @@ const ILKELER = [
 export default function Ilkeler() {
   return (
     <Bolum id="ilkeler" baslikId="ilkeler-baslik">
-      <h2 id="ilkeler-baslik" className="col-span-full m-0 mb-10 font-serif text-h2 font-[400] md:col-span-9 md:col-start-4">
+      <h2 id="ilkeler-baslik" className="col-span-full m-0 mb-6 font-serif text-h2 font-[400] md:col-span-9 md:col-start-4 md:mb-10">
         Atölyenin kuralları
       </h2>
       <ul className="col-span-full m-0 list-none p-0 md:col-span-9 md:col-start-4">
         {ILKELER.map(([baslik, metin]) => (
           <li
             key={baslik}
-            className="grid gap-x-(--mf-oluk) gap-y-2 border-t border-cizgi py-8 md:grid-cols-9 md:items-baseline"
+            className="grid gap-x-(--mf-oluk) gap-y-2 border-t border-cizgi py-6 md:grid-cols-9 md:py-8 md:items-baseline"
           >
             <h3 className="m-0 font-serif text-h2 font-[400] md:col-span-5">{baslik}</h3>
             <p className="m-0 text-grafit-2 md:col-span-4">{metin}</p>

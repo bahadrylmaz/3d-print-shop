@@ -46,11 +46,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://micronforge.shop/magaza/grinch</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://micronforge.shop/magaza/kirpi</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -67,51 +62,6 @@
   </url>
   <url>
     <loc>https://micronforge.shop/magaza/atlas</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://micronforge.shop/magaza/hulk</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://micronforge.shop/magaza/spiderman</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://micronforge.shop/magaza/gandalf</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://micronforge.shop/magaza/gollum</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://micronforge.shop/magaza/yoda</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://micronforge.shop/magaza/grogu</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://micronforge.shop/magaza/galatasaray-aslani</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://micronforge.shop/magaza/sirinler</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://micronforge.shop/magaza/grogu-ikili</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

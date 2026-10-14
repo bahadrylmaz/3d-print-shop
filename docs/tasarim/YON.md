@@ -44,6 +44,7 @@ Seçim gerekçesi:
   Playfair gibi her yerde görülen seçimlerden uzak.
 - **Schibsted Grotesk**: gazete için çizilmiş, küçük boyda sıkı ve net; Inter/Geist değil. `case`, `tnum`, `frac`
   özellikleri var. **₺ glifi Schibsted'de var, Bodoni'de yok**: fiyat her zaman Schibsted ile dizilir.
+  *3. aşama:* Schibsted'in ₺ glifi £ ile neredeyse aynı çizilmiş; fiyatlar artık `1.480 TL` biçiminde (INCELEME.md).
 
 Ölçek (375 px'te alt uç, 1440 px'te üst uç; `tokens.css` `--mf-fs-*`):
 
@@ -63,10 +64,14 @@ Kurallar:
 - Başlıklar cümle düzeninde. **Büyük harf + açık aralıklı "eyebrow" etiketi yok.** Başlıkta tek kelimeyi italik/renkli yapmak yok.
 - Fiyat: `font-variant-numeric: lining-nums proportional-nums`. `tabular-nums` yalnız hizalı sütunlarda (sipariş özeti);
   Schibsted'in tabular nokta genişliği fiyatı "1 . 480" gibi dağıtıyor (önizlemede denendi, kaldırıldı).
+- Başlık ölçeği sayfalar arasında sabit (3. aşama): `display` yalnız ana sayfa hero'su; her iç sayfanın H1'i
+  (Mağaza, Blog, yazı, ürün adı, 404) `h1`; bölüm başlıkları (H2) her yerde `h2`; liste içi başlıklar `h3`.
 - `text-wrap: balance` başlıklarda, `pretty` paragraflarda. Paragraf genişliği en fazla `62ch`, giriş metni `38ch`.
 - İtalik ürün adında `y g j p ş ç` alt uzantıları var: satır aralığı en az 1.2.
 - Bodoni Moda büyük boyda bazı çiftlerde (ör. "V" + "i", önizlemede "Vitrindekiler") geniş boşluk bırakıyor.
   Başlık V/W/Y/T ile başlıyorsa göz ile kontrol edin; gerekirse ilk harfe `margin-right: -0.04em` verin.
+  *3. aşama:* yazı tipinin kendisine eksik kerning çiftleri eklendi (V/Y/T + i ı j m n p r, W + bütün küçük harfler;
+  `scripts/bodoni-kerning.py`, `public/fonts/KAYNAK.txt`). Elle `margin-right` gerekmez.
 
 ## 3. Renk
 
@@ -107,7 +112,8 @@ Kurallar:
   bir sayfada en fazla bir kez.
 
 **Boşluk ölçeği** (4 px tabanlı): 4, 8, 12, 16, 24, 32, 48, 64, 96, 128.
-Bölümler arası: `--mf-bolum` = 72 → 144 px. Bölüm içi büyük ara: `--mf-bolum-kucuk` = 48 → 80 px.
+Bölümler arası: `--mf-bolum` = 56 → 128 px. Bölüm içi büyük ara: `--mf-bolum-kucuk` = 40 → 72 px.
+(3. aşamada 72 → 144 / 48 → 80'den indirildi: mobil ana sayfa 13.500 px'e çıkıyordu.)
 Tailwind'de aralık birimi 4 px olarak kaldı (`p-6` = 24 px); bölüm için `py-(--mf-bolum)`.
 
 **Köşe**: tek kural. Görseller, kartlar, paneller, bantlar **keskin (0)**. Dokunulan kontroller (buton, input,
@@ -167,7 +173,7 @@ kartları), Pricing (paket kartları; bkz. not), CTA bandı, Testimonials (içer
    1280: | H1 display, 2-3 satır        (7 kol)  |  4:5 ürün fotoğrafı (5 kol)   |
          | giriş metni ≤20 kelime                |  eser etiketi: ad · fiyat     |
          | [Teklif iste]  Mağazaya bak           |  malzeme / ölçü               |
-    375:  H1 (44 px) → giriş → butonlar → 3:4 görsel tam genişlik → etiket
+    375:  H1 (44 px) → giriş → butonlar → 4:5 görsel tam genişlik → etiket
    ```
    Metin bloğu alta hizalı, görselin tepesi navbarın 64 px altında. Üst boşluk en çok 72 px. Rozet, istatistik,
    kategori çipi yok. Görsel: öne çıkan tek bir ürün (`featured`).
@@ -317,8 +323,8 @@ Yasal bağlantılar (Gizlilik, Kullanım şartları, Çerezler) korunur.
 ## 7. Ürün görseli alanları ve yer tutucu
 
 Oranlar (`--mf-oran-*`):
-- **3:4 dikey**: bütün ürün kartları, ürün detay ana görseli, hero (mobil).
-- **4:5**: hero (masaüstü), blog listesindeki küçük görseller.
+- **3:4 dikey**: bütün ürün kartları, ürün detay ana görseli.
+- **4:5**: hero (her genişlikte; 3. aşamada mobil de 4:5 oldu), blog listesindeki küçük görseller.
 - **16:9**: editoryal (atölye, blog kapağı, mağaza ara görseli).
 
 Yer tutucu tarifi ("stüdyo fonu", önizlemede `.gorsel`):
@@ -335,7 +341,7 @@ Her üründe en az 1 ana kare + 1 yakın detay. Görseller WebP/AVIF, uzun kenar
 
 1. Krem/bej zemine (#F4F1EA ailesi) ya da terrakota/pirinç vurguya kayma. Zemin Alçı `#E7E8E3`'tür.
 2. Reçine yeşilini bölüm zemini, büyük düğme alanı ya da degrade olarak kullanma. En fazla ~%2.
-3. Bodoni'yi 22 px altında, gövde metninde ya da büyük harfle kullanma. Bodoni'de fiyat yazma (₺ yok).
+3. Bodoni'yi 22 px altında, gövde metninde ya da büyük harfle kullanma. Bodoni'de fiyat yazma.
 4. Büyük harf + harf aralıklı küçük etiket (eyebrow), mono yazı tipi, "A · B · C" künye zinciri, `→` ekli buton metni.
 5. Görsel üstüne rozet/etiket/kalp ikonu/"XL" yazısı. Etiket görselin **altında**.
 6. Kart kutusu (çerçeve + gölge + yuvarlak köşe). Ürünler kutuya girmez; görsel + etiket yeter.

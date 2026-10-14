@@ -9,7 +9,7 @@ import { CALISMA_SAATLERI, WA_GENEL_MESAJ, waBaglanti } from '../../data/iletisi
 export default function Sorular() {
   return (
     <Bolum ekCapalar={['sorular']} id="faq" baslikId="sss-baslik">
-      <h2 id="sss-baslik" className="col-span-full m-0 mb-10 font-serif text-h1 font-[400] md:col-span-8">
+      <h2 id="sss-baslik" className="col-span-full m-0 mb-6 font-serif text-h2 font-[400] md:col-span-8 md:mb-10">
         Sık sorulanlar
       </h2>
       <SSSAkordeon sorular={sorular} className="col-span-full md:col-span-9" />

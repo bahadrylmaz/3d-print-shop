@@ -121,7 +121,7 @@ export default function BlogPost() {
     <SayfaIskeleti whatsappMesaj={BLOG_WA_MESAJ}>
       <article aria-labelledby="yazi-baslik">
         {/* Baş: geri bağlantı, künye, başlık, giriş, kapak */}
-        <Kapsayici as="header" className="pt-6 md:pt-10">
+        <Kapsayici as="header" className="pt-4 md:pt-6">
           <Izgara className="gap-y-0">
             <nav aria-label="Sayfa yolu" className="col-span-full">
               <Link
@@ -219,7 +219,7 @@ export default function BlogPost() {
               </div>
 
               {/* Tek, sakin teklif çağrısı (METIN §4.3) */}
-              <div className="mt-(--mf-bolum-kucuk) max-w-[62ch] border-t border-grafit pt-6">
+              <div className="mt-(--mf-bolum-kucuk) max-w-[62ch] border-t border-cizgi pt-6">
                 <p className="m-0 text-lead text-grafit">
                   Bu yazıdaki parçayı bastırmak isterseniz fotoğrafını gönderin.
                 </p>

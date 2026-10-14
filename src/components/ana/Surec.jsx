@@ -32,7 +32,7 @@ const ADIMLAR = [
 export default function Surec() {
   return (
     <Bolum id="process" baslikId="surec-baslik" bosluk="kucuk">
-      <div className="col-span-full mb-12 md:col-span-6">
+      <div className="col-span-full mb-8 md:col-span-6 md:mb-12">
         <h2 id="surec-baslik" className="m-0 font-serif text-h2 font-[400]">
           Fotoğraftan teslime
         </h2>
@@ -43,11 +43,15 @@ export default function Surec() {
 
       <ol className="col-span-full m-0 grid list-none grid-cols-1 gap-x-(--mf-oluk) p-0 md:grid-cols-12">
         {ADIMLAR.map((a, i) => (
-          <li key={a.baslik} className="border-t border-cizgi pt-5 pb-10 md:col-span-3 md:pb-0">
-            <span aria-hidden="true" className="mf-rakam block font-serif text-[2.75rem] leading-none font-[400]">
+          // Mobil: numara solda kendi sütununda (alt alta numara + başlık 4 adımda ~250 px boşluk yiyordu). md: numara üstte.
+          <li
+            key={a.baslik}
+            className="grid grid-cols-[2.75rem_1fr] gap-x-3 border-t border-cizgi pt-5 pb-8 md:col-span-3 md:block md:pb-0"
+          >
+            <span aria-hidden="true" className="mf-rakam row-span-3 block font-serif text-[2.75rem] leading-none font-[400]">
               {i + 1}
             </span>
-            <h3 className="m-0 mt-5 font-serif text-h3 font-[500]">{a.baslik}</h3>
+            <h3 className="m-0 mt-1 font-serif text-h3 font-[500] md:mt-5">{a.baslik}</h3>
             <p className="m-0 mt-3 text-grafit-2">{a.metin}</p>
             <p className="m-0 mt-3 text-small text-sis">{a.sure}</p>
           </li>
@@ -55,7 +59,7 @@ export default function Surec() {
       </ol>
 
       {/* DOĞRULA: toplam yaklaşık 48 saat (METIN.md §3.3 bölüm altı) */}
-      <p className="col-span-full m-0 mt-12 max-w-[62ch] text-grafit-2 md:col-span-8">
+      <p className="col-span-full m-0 mt-8 max-w-[62ch] md:mt-12 text-grafit-2 md:col-span-8">
         Dosyası hazır, onaylanmış bir işte toplam süre yaklaşık 48 saat. Modelleme gereken işlerde süreyi teklifte
         ayrıca yazarız.
       </p>

@@ -14,7 +14,7 @@ export default function Blogdan({ yazilar }) {
 
   return (
     <Bolum id="rehber" baslikId="rehber-baslik">
-      <div className="col-span-full mb-12 flex flex-wrap items-end justify-between gap-x-8 gap-y-2">
+      <div className="col-span-full mb-8 flex flex-wrap md:mb-12 items-end justify-between gap-x-8 gap-y-2">
         <div>
           <h2 id="rehber-baslik" className="m-0 font-serif text-h2 font-[400]">
             Atölyeden notlar
@@ -41,7 +41,7 @@ export default function Blogdan({ yazilar }) {
       </article>
 
       {ikinci && (
-        <article className="col-span-full mt-12 border-t border-cizgi pt-6 md:col-span-4 md:col-start-9 md:mt-0 md:self-end">
+        <article className="col-span-full mt-10 border-t border-cizgi pt-6 md:col-span-4 md:col-start-9 md:mt-0 md:self-end">
           <p className="m-0 text-small text-sis">{kunye(ikinci)}</p>
           <h3 className="m-0 mt-2 font-serif text-h3 font-[500]">
             <Link

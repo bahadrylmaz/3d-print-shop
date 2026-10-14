@@ -20,3 +20,11 @@ değişken eksenler (opsz, wght) korundu; woff2'ye dönüştürüldü. Unicode a
 U+0000-017F, U+0192, U+02C6-02DC, U+0300-0329, U+2000-206F, U+20A0-20C0, U+2100-2122,
 U+2190-2199, U+2212, U+2215, U+FB01-FB02
 Not: Bodoni Moda'da ₺ glifi yok; fiyatlar Schibsted Grotesk ile dizilir.
+
+Değişiklik (3. aşama, Tasarımcı, 2026-10): Bodoni Moda'nın iki dosyasına (düz + italik) eksik kerning
+çiftleri eklendi. Özgün yazı tipinde V, Y, T + i/ı/j/m/n/p/r gibi çiftler ve W'nin bütün küçük harf
+çiftleri 0'dı; büyük boyda "V itrin", "W ave" gibi boşluk açılıyordu. Latin 'kern' özelliğinin
+çift konumlandırma arama tablosunun başına biçim 1 bir alt tablo eklendi (yalnız değeri 0 olan çiftler,
+UPM 2000'de -50 ile -200 arası). Glifler ve diğer özellikler değişmedi. OFL 1.1 değişikliğe izin verir,
+Reserved Font Name yok. Yeniden üretmek için: scripts/bodoni-kerning.py <özgün.woff2> <çıktı.woff2>
+(fontTools + brotli gerekir; özgün alt küme dosyaları git geçmişinde).
