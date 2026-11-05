@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
 
 const SITE = 'https://micronforge.shop'
+// index.html'deki varsayılan robots değeri; noindex sayfadan çıkınca geri yazılır.
+const ROBOTS_VARSAYILAN = 'index, follow, max-image-preview:large, max-snippet:-1'
 
 const setMeta = (attribute, key, value) => {
   let el = document.head.querySelector(`meta[${attribute}="${key}"]`)
@@ -14,6 +16,10 @@ const setMeta = (attribute, key, value) => {
 
 const removeMeta = (attribute, key) => {
   document.head.querySelector(`meta[${attribute}="${key}"]`)?.remove()
+}
+
+const removeCanonical = () => {
+  document.head.querySelector('link[rel="canonical"]')?.remove()
 }
 
 const setCanonical = (value) => {
@@ -36,6 +42,7 @@ export default function usePageSeo({
   type = 'website',
   publishedTime,
   modifiedTime,
+  noindex = false,
 }) {
   useEffect(() => {
     const url = `${SITE}${path}`
@@ -50,7 +57,11 @@ export default function usePageSeo({
       setMeta('property', 'og:description', description)
       setMeta('name', 'twitter:description', description)
     }
-    setCanonical(url)
+    // noindex + başka sayfaya kanonik çelişkili sinyaldir (Google): bulunamadı sayfalarında kanonik kaldırılır.
+    if (noindex) removeCanonical()
+    else setCanonical(url)
+    // 404 / bulunamadı durumları: arama motoru dizine eklemesin, bağlantıları izlesin.
+    setMeta('name', 'robots', noindex ? 'noindex, follow' : ROBOTS_VARSAYILAN)
     setMeta('property', 'og:url', url)
     setMeta('property', 'og:type', type)
     setMeta('property', 'og:image', imageUrl)
@@ -60,5 +71,5 @@ export default function usePageSeo({
     else removeMeta('property', 'article:published_time')
     if (modifiedTime) setMeta('property', 'article:modified_time', modifiedTime)
     else removeMeta('property', 'article:modified_time')
-  }, [title, description, path, image, type, publishedTime, modifiedTime])
+  }, [title, description, path, image, type, publishedTime, modifiedTime, noindex])
 }

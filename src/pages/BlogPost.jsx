@@ -104,6 +104,7 @@ export default function BlogPost() {
     type: post ? 'article' : 'website',
     publishedTime: post?.published,
     modifiedTime: post?.updated,
+    noindex: !post,
   })
   useJsonLd('blog-post-jsonld', jsonLd)
 

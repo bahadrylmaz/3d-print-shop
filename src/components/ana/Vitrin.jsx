@@ -11,7 +11,6 @@ function Kart({ urun, buyuk, className }) {
   return (
     <Link
       to={`/magaza/${urun.id}`}
-      aria-label={`${urun.name} ayrıntıları`}
       className={`group block text-grafit no-underline ${className}`}
     >
       <UrunGorseli product={urun} sizes={buyuk ? '(min-width: 768px) 40vw, 100vw' : '(min-width: 768px) 24vw, 50vw'} />

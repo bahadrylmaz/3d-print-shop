@@ -97,7 +97,8 @@ export default function Magaza() {
                       key={urun.id}
                       className={`col-span-2 md:col-span-4 ${i % 2 === 1 ? 'max-md:mt-12' : ''} ${i % 3 === 1 ? 'md:mt-24' : ''}`}
                     >
-                      <UrunKarti urun={urun} sizes="(min-width: 1440px) 440px, (min-width: 768px) 31vw, 46vw" />
+                      {/* İlk satır ekranın üstünde (LCP adayı): lazy yerine eager + fetchpriority high */}
+                      <UrunKarti urun={urun} oncelikli={i < 3} sizes="(min-width: 1440px) 440px, (min-width: 768px) 31vw, 46vw" />
                     </li>
                   ))}
                 </Izgara>

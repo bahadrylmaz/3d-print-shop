@@ -67,6 +67,9 @@ export default function ProductDetail() {
       ? seoAciklama(product)
       : 'Bu ürün mağazada artık yok. Atölyede basılan diğer parçalara mağazadan bakabilirsiniz.',
     path: product ? `/magaza/${product.id}` : '/magaza',
+    // Paylaşım/arama önizlemesi ürünün kendi fotoğrafı (yoksa varsayılan og-image)
+    ...(product?.photos?.[0] ? { image: product.photos[0] } : {}),
+    noindex: !product,
   })
 
   const kirintiLd = useMemo(

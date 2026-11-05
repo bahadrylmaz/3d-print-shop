@@ -57,6 +57,16 @@ const setPageMeta = ({ html, title, description, url, image, type = 'website', p
   return result
 }
 
+// index.html'deki statik @graph ana sayfanın SSS'sini (FAQPage) de taşır. Yapılandırılmış veri sayfada görünen içeriği
+// anlatmalı; blog ve 404 sayfalarında o SSS görünmediği için FAQPage düğümü çıkarılır (blog yazısının kendi FAQPage'i ayrı blokta).
+const anaSayfaSssCikar = (html) =>
+  html.replace(/(<script type="application\/ld\+json">)([\s\S]*?)(<\/script>)/i, (tum, ac, govde, kapa) => {
+    const veri = JSON.parse(govde)
+    if (!Array.isArray(veri['@graph'])) return tum
+    veri['@graph'] = veri['@graph'].filter((dugum) => dugum['@type'] !== 'FAQPage')
+    return `${ac}${JSON.stringify(veri).replaceAll('<', '\\u003c')}${kapa}`
+  })
+
 const wrapStaticRoot = (content) =>
   `<div id="root" data-prerendered="true">${content}</div>`
 
@@ -83,7 +93,7 @@ try {
 const writePage = async (relativePath, html, content, jsonLd, jsonLdId) => {
   const outputPath = resolve(distRoot, relativePath, 'index.html')
   await mkdir(dirname(outputPath), { recursive: true })
-  const withoutNoscript = html.replace(/\s*<noscript>[\s\S]*?<\/noscript>/i, '')
+  const withoutNoscript = anaSayfaSssCikar(html).replace(/\s*<noscript>[\s\S]*?<\/noscript>/i, '')
   const withJsonLd = withoutNoscript.replace(
     '</head>',
     `    <script type="application/ld+json" id="${jsonLdId}">${JSON.stringify(jsonLd).replaceAll('<', '\\u003c')}</script>\n  </head>`,
@@ -115,6 +125,13 @@ for (const post of blogPosts) {
   await writePage(`blog/${post.slug}`, html, blogSayfaHtml(`/blog/${post.slug}`), blogPostJsonLd(post), 'blog-post-jsonld')
 }
 await vite.close()
+
+// 404.html: Vercel, rewrite hedefi bulunamayan istekte (ör. olmayan /blog/:slug, /dosya.png) bunu HTTP 404 ile sunar.
+// Uygulama yüklenip NotFound/BlogPost "bulunamadı" görünümünü çizer; JS çalışmadan önce de noindex, kanoniksiz.
+let html404 = setTitle(anaSayfaSssCikar(baseHtml), 'Sayfa bulunamadı | MicronForge')
+html404 = setMeta(html404, 'name', 'robots', 'noindex, follow')
+html404 = html404.replace(/\s*<link[^>]+rel=["']canonical["'][^>]*>/i, '').replace(/\s*<noscript>[\s\S]*?<\/noscript>/i, '')
+await writeFile(resolve(distRoot, '404.html'), html404, 'utf8')
 
 const urls = [
   { loc: `${SITE_URL}/`, changefreq: 'weekly', priority: '1.0' },
@@ -164,4 +181,4 @@ ${blogPosts.map((post) => `    <item>
 `
 await writeFile(resolve(distRoot, 'feed.xml'), rss, 'utf8')
 
-console.log(`Prerendered ${blogPosts.length + 1} blog pages, sitemap.xml and feed.xml.`)
+console.log(`Prerendered ${blogPosts.length + 1} blog pages, 404.html, sitemap.xml and feed.xml.`)

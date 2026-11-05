@@ -8,6 +8,7 @@ const ShopPage = lazy(() => import('./pages/ShopPage'))
 const ProductDetail = lazy(() => import('./pages/ProductDetail'))
 const BlogPage = lazy(() => import('./pages/BlogPage'))
 const BlogPost = lazy(() => import('./pages/BlogPost'))
+const NotFound = lazy(() => import('./pages/NotFound'))
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation()
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/magaza/:slug" element={<ProductDetail />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
       <Analytics />

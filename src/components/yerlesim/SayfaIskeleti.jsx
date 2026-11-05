@@ -19,7 +19,10 @@ export default function SayfaIskeleti({ children, whatsappGizli = false, whatsap
         {children}
       </main>
       <Footer />
-      <WhatsAppDugmesi gizli={whatsappGizli} {...(whatsappMesaj ? { mesaj: whatsappMesaj } : {})} />
+      {/* Sabit düğme de bir landmark içinde kalsın (axe: region) */}
+      <aside aria-label="Hızlı iletişim">
+        <WhatsAppDugmesi gizli={whatsappGizli} {...(whatsappMesaj ? { mesaj: whatsappMesaj } : {})} />
+      </aside>
     </>
   )
 }
