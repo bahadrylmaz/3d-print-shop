@@ -1,5 +1,5 @@
 // Mağaza ürün kataloğu — hem liste (Shop) hem ürün detay sayfası bunu kullanır.
-// Fiyatlar standart boyut/tek renk içindir; boyut, adet ve boyama ile değişir.
+// Ürünlerde fiyat gösterilmiyor: fiyat WhatsApp'tan ölçü, adet ve boyaya göre veriliyor.
 import { waBaglanti } from './iletisim'
 
 export const SITE = 'https://micronforge.shop'
@@ -12,7 +12,6 @@ export const products = [
     category: 'dekor',
     categoryLabel: 'Kristal Sanat',
     material: 'Şeffaf Reçine',
-    price: 1480,
     featured: true,
     photos: ['/shop/urun-02.jpg'],
   },
@@ -23,7 +22,6 @@ export const products = [
     category: 'dekor',
     categoryLabel: 'Kristal Sanat',
     material: 'Şeffaf Reçine',
-    price: 1320,
     featured: true,
     photos: ['/shop/urun-03.jpg'],
   },
@@ -34,7 +32,6 @@ export const products = [
     category: 'dekor',
     categoryLabel: 'Dekoratif',
     material: 'Şeffaf Reçine',
-    price: 240,
     photos: ['/shop/urun-01.jpg', '/shop/urun-10.jpg'],
   },
   {
@@ -44,7 +41,6 @@ export const products = [
     category: 'dekor',
     categoryLabel: 'Dekoratif',
     material: 'Renkli Reçine',
-    price: 240,
     photos: ['/shop/urun-31.jpg', '/shop/urun-32.jpg', '/shop/urun-33.jpg'],
   },
   {
@@ -54,7 +50,6 @@ export const products = [
     category: 'dekor',
     categoryLabel: 'Dekoratif',
     material: 'Renkli Reçine',
-    price: 210,
     photos: ['/shop/urun-28.jpg', '/shop/urun-27.jpg', '/shop/urun-34.jpg'],
   },
   {
@@ -64,7 +59,6 @@ export const products = [
     category: 'dekor',
     categoryLabel: 'Dekoratif',
     material: 'Renkli Reçine',
-    price: 200,
     photos: ['/shop/urun-26.jpg', '/shop/urun-37.jpg'],
   },
   {
@@ -74,7 +68,6 @@ export const products = [
     category: 'dekor',
     categoryLabel: 'Kristal Sanat',
     material: 'Şeffaf Reçine',
-    price: 190,
     photos: ['/shop/urun-35.jpg', '/shop/urun-36.jpg'],
   },
   {
@@ -84,7 +77,6 @@ export const products = [
     category: 'dekor',
     categoryLabel: 'Dekoratif',
     material: 'Renkli Reçine',
-    price: 120,
     photos: ['/shop/urun-25.jpg'],
   },
   {
@@ -94,7 +86,6 @@ export const products = [
     category: 'dekor',
     categoryLabel: 'Dekoratif',
     material: 'Şeffaf Reçine',
-    price: 300,
     photos: ['/shop/urun-05.jpg', '/shop/urun-04.jpg'],
   },
   {
@@ -104,7 +95,6 @@ export const products = [
     category: 'dekor',
     categoryLabel: 'Dekoratif',
     material: 'Metalik Boyalı',
-    price: 540,
     photos: ['/shop/urun-15.jpg'],
   },
   {
@@ -114,7 +104,6 @@ export const products = [
     category: 'dekor',
     categoryLabel: 'Dekoratif',
     material: 'Boyalı Reçine',
-    price: 580,
     photos: ['/shop/urun-21.jpg', '/shop/urun-23.jpg'],
   },
   {
@@ -124,8 +113,6 @@ export const products = [
     category: 'ozel',
     categoryLabel: 'Kişiye Özel',
     material: 'Boyalı Reçine',
-    price: null,
-    priceFrom: 240,
     photos: ['/shop/urun-38.jpg', '/shop/urun-40.jpg', '/shop/urun-39.jpg', '/shop/urun-45.jpg', '/shop/urun-08.jpg'],
   },
 ]
@@ -148,21 +135,6 @@ export const fmt = (n) => new Intl.NumberFormat('tr-TR').format(n)
 export const waOrder = (name) =>
   waBaglanti(`Merhaba, "${name}" için sipariş vermek istiyorum. Fiyat ve teslim süresini öğrenebilir miyim?`)
 
-// Google zengin sonuçları için Product yapılandırılmış verisi.
-export const productJsonLd = (p) => ({
-  '@context': 'https://schema.org',
-  '@type': 'Product',
-  name: p.name,
-  ...(p.photos?.length ? { image: p.photos.map((ph) => `${SITE}${ph}`) } : {}),
-  description: p.desc,
-  category: p.categoryLabel,
-  brand: { '@type': 'Brand', name: 'MicronForge' },
-  offers: {
-    '@type': 'Offer',
-    price: p.price ?? p.priceFrom,
-    priceCurrency: 'TRY',
-    availability: 'https://schema.org/InStock',
-    url: `${SITE}/magaza/${p.id}`,
-    seller: { '@type': 'Organization', name: 'MicronForge' },
-  },
-})
+// Product yapılandırılmış verisi (JSON-LD) fiyatlar kaldırıldığında çıkarıldı: Google'ın ürün sonucu
+// offers (fiyat), review ya da aggregateRating istiyor; fiyatsız Product Search Console'da hata verir.
+// Fiyat geri gelirse git geçmişindeki productJsonLd'yi (offers.price + priceCurrency: 'TRY') geri alın.

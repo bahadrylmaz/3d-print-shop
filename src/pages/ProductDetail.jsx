@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { getProduct, products, filters, fmt, waOrder, productJsonLd, SITE } from '../data/products'
+import { getProduct, products, filters, fmt, waOrder, SITE } from '../data/products'
 import { waBaglanti } from '../data/iletisim'
 import usePageSeo from '../hooks/usePageSeo'
 import useJsonLd from '../hooks/useJsonLd'
@@ -69,9 +69,6 @@ export default function ProductDetail() {
     path: product ? `/magaza/${product.id}` : '/magaza',
   })
 
-  const jsonLd = useMemo(() => (product ? productJsonLd(product) : null), [product])
-  useJsonLd('product-jsonld', jsonLd)
-
   const kirintiLd = useMemo(
     () =>
       product
@@ -127,7 +124,7 @@ export default function ProductDetail() {
               <MetinBaglanti href={waBaglanti()}>Soru sorun</MetinBaglanti>
             </div>
             <p className="m-0 mt-3 max-w-[46ch] text-small text-grafit-2">
-              Sipariş WhatsApp'tan alınır. Ölçü, renk ve teslim tarihini orada netleştirip baskıya öyle geçeriz. Aynı
+              Sipariş WhatsApp'tan alınır. Ölçü, renk, fiyat ve teslim tarihini orada netleştirip baskıya öyle geçeriz. Aynı
               parçayı farklı ölçüde ya da reçinede de basabiliriz.
             </p>
 
@@ -184,15 +181,14 @@ export default function ProductDetail() {
       {/* Mobil yapışkan sipariş çubuğu (YON §6.4): main içinde sticky, footer'ın üstünü örtmez */}
       <div className="sticky bottom-0 z-(--mf-z-yapiskan) border-t border-cizgi bg-kirec md:hidden">
         <div className="flex min-h-16 items-center justify-between gap-4 px-(--mf-kenar) py-2">
-          {fiyat ? (
+          {fiyat && (
             <p className="mf-rakam m-0 text-[1.0625rem] font-[500] whitespace-nowrap">
               {product.price == null && <span className="sr-only">Başlangıç fiyatı </span>}
               {fiyat}
             </p>
-          ) : (
-            <span />
           )}
-          <Buton href={waOrder(product.name)} className="px-4">
+          {/* Fiyat yoksa (ürünlerde fiyat gösterilmiyor) düğme çubuğu tam genişlikte doldurur */}
+          <Buton href={waOrder(product.name)} genis={!fiyat} className="px-4">
             WhatsApp'tan sipariş verin
           </Buton>
         </div>

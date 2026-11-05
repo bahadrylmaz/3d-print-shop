@@ -55,7 +55,7 @@ export default function Vitrin({ urunler }) {
 
       <div className="col-span-full flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-cizgi pt-3 md:col-span-6 md:col-start-7 md:row-start-3 md:mt-16 md:self-end">
         <p className="m-0 text-small text-sis">
-          Fiyatlar standart ölçü ve tek renk içindir. Ölçü, adet ve boya fiyatı değiştirir.
+          Fiyat için WhatsApp'tan yazın. Ölçü, adet ve boyaya göre hesaplıyoruz.
         </p>
         <MetinBaglanti to="/magaza">Mağazaya bakın</MetinBaglanti>
       </div>

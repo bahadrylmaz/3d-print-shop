@@ -66,7 +66,7 @@ export default function Magaza() {
                 basabiliriz. Siparişler WhatsApp'tan alınır.
               </p>
               <p className="m-0 mt-4 text-small text-sis">
-                Fiyatlar standart ölçü ve tek renk içindir. Ölçü, adet ve boya fiyatı değiştirir.
+                Fiyat için WhatsApp'tan yazın. Ölçü, adet ve boyaya göre hesaplıyoruz.
               </p>
             </div>
           </Izgara>
