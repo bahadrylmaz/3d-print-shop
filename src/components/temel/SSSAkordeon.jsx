@@ -1,9 +1,9 @@
 import { useId, useState } from 'react'
 import Ikon from './Ikon'
 
-// SSSAkordeon: kutusuz soru-cevap listesi. Satırlar 1 px üst çizgi, soru Schibsted 500 18 px, sağda +/−, satır ≥ 56 px.
+// SSSAkordeon: soru-cevap listesi. Her soru beyaz, yuvarlak köşeli bir satır; sağda yuvarlak +/− düğmesi, satır ≥ 64 px.
 // Props: sorular [{ soru, cevap }], baslikSeviyesi ('h3' varsayılan; soru düğmesini saran başlık), ilkAcik (açık başlayan sıra, yoksa hepsi kapalı).
-// Açılma CSS grid satırıyla (0fr -> 1fr), 280 ms; hareket azaltmada anında. Birden fazla soru aynı anda açık olabilir.
+// Açılma CSS grid satırıyla (0fr -> 1fr), 300 ms; hareket azaltmada anında. Birden fazla soru aynı anda açık olabilir.
 export default function SSSAkordeon({ sorular, baslikSeviyesi: Baslik = 'h3', ilkAcik = null, className = '' }) {
   const kok = useId()
   const [acik, setAcik] = useState(() => new Set(ilkAcik == null ? [] : [ilkAcik]))
@@ -17,13 +17,13 @@ export default function SSSAkordeon({ sorular, baslikSeviyesi: Baslik = 'h3', il
     })
 
   return (
-    <div className={`border-b border-cizgi ${className}`}>
+    <div className={`grid gap-2 ${className}`}>
       {sorular.map((s, i) => {
         const acikMi = acik.has(i)
         const dugmeId = `${kok}-s${i}`
         const panelId = `${kok}-c${i}`
         return (
-          <div key={s.soru} className="border-t border-cizgi">
+          <div key={s.soru} className="rounded-kart bg-kirec px-5 shadow-kart md:px-7">
             <Baslik className="m-0">
               <button
                 type="button"
@@ -31,10 +31,16 @@ export default function SSSAkordeon({ sorular, baslikSeviyesi: Baslik = 'h3', il
                 aria-expanded={acikMi}
                 aria-controls={panelId}
                 onClick={() => degistir(i)}
-                className="flex min-h-14 w-full cursor-pointer items-center justify-between gap-6 bg-transparent py-4 text-left font-sans text-[1.125rem] leading-[1.4] font-[500] text-grafit transition-colors duration-(--mf-sure-hizli) hover:text-recine"
+                className="group flex min-h-16 w-full cursor-pointer items-center justify-between gap-5 border-0 bg-transparent p-0 py-4 text-left font-sans text-[1.0625rem] leading-[1.35] font-[600] tracking-[-0.01em] text-grafit"
               >
                 <span>{s.soru}</span>
-                <Ikon ad={acikMi ? 'eksi' : 'arti'} boyut={16} className="flex-none" />
+                <span
+                  className={`grid h-9 w-9 flex-none place-items-center rounded-hap transition-colors duration-(--mf-sure-hizli) ${
+                    acikMi ? 'bg-grafit text-kirec' : 'bg-tas text-grafit group-hover:bg-recine-acik'
+                  }`}
+                >
+                  <Ikon ad={acikMi ? 'eksi' : 'arti'} boyut={16} />
+                </span>
               </button>
             </Baslik>
             <div

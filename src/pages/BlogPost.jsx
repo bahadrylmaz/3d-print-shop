@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import SayfaIskeleti from '../components/yerlesim/SayfaIskeleti'
+import SayfaBasligi from '../components/yerlesim/SayfaBasligi'
 import Bolum from '../components/temel/Bolum'
 import { Buton, MetinBaglanti } from '../components/temel/Buton'
 import { Kapsayici, Izgara } from '../components/temel/Kapsayici'
@@ -13,8 +14,8 @@ import { BLOG_WA_MESAJ, BLOG_YAZI_YOK_SEO } from '../data/blogSeo'
 import useJsonLd from '../hooks/useJsonLd'
 import usePageSeo from '../hooks/usePageSeo'
 
-// Blog yazısı (YON §6.6, METIN §4.3): künye, Bodoni başlık, giriş, 16:9 kapak (10 kol), içindekiler (lg'de 3 kol yapışkan,
-// altında açılır-kapanır) + 62ch okuma sütunu (Schibsted gövde; Bodoni yalnız başlık ve not), SSS, tek teklif çağrısı, 2 ilgili yazı.
+// Blog yazısı: kısa gök bandı üstünde künye, kalın başlık, giriş, yuvarlak köşeli 16:9 kapak (10 kol), içindekiler (lg'de 3 kol yapışkan,
+// altında açılır-kapanır) + 62ch okuma sütunu, SSS kartları, tek teklif çağrısı, 2 ilgili yazı.
 // scripts/prerender-blog.mjs aynı bileşeni build'de statik HTML'e basar: render sırasında tarayıcı API'si kullanılmaz.
 // Bölüm çapaları (#bolum-1, #sikca-sorulanlar) eski yazıdakiyle aynı; dışarıdan verilmiş bağlantılar çalışmaya devam eder.
 
@@ -32,7 +33,7 @@ const ilgiliYazilar = (slug, adet = 2) => {
 
 function Icindekiler({ baglantilar, mobil = false }) {
   const liste = (
-    <ol className="m-0 list-none border-l border-cizgi p-0 pl-4">
+    <ol className="m-0 list-none border-l-2 border-cizgi p-0 pl-4">
       {baglantilar.map(({ href, etiket }) => (
         <li key={href}>
           <a
@@ -48,8 +49,8 @@ function Icindekiler({ baglantilar, mobil = false }) {
 
   if (mobil) {
     return (
-      <details className="group border-y border-cizgi lg:hidden">
-        <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 font-[500] text-grafit [&::-webkit-details-marker]:hidden">
+      <details className="group rounded-kart bg-tas px-5 lg:hidden">
+        <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 font-[600] text-grafit [&::-webkit-details-marker]:hidden">
           Bu yazıda
           <Ikon ad="arti" boyut={16} className="flex-none group-open:hidden" />
           <Ikon ad="eksi" boyut={16} className="hidden flex-none group-open:block" />
@@ -63,7 +64,7 @@ function Icindekiler({ baglantilar, mobil = false }) {
 
   return (
     <nav aria-label="İçindekiler">
-      <p className="m-0 mb-3 text-small font-[500] text-grafit">Bu yazıda</p>
+      <p className="m-0 mb-3 text-small font-[700] text-grafit">Bu yazıda</p>
       {liste}
     </nav>
   )
@@ -72,20 +73,17 @@ function Icindekiler({ baglantilar, mobil = false }) {
 function YaziBulunamadi() {
   return (
     <SayfaIskeleti whatsappMesaj={BLOG_WA_MESAJ}>
-      <Bolum cizgi={false} baslikId="yazi-yok-baslik">
-        <div className="col-span-full md:col-span-8">
-          <h1 id="yazi-yok-baslik" className="m-0 font-serif text-h1 font-[400]">
-            Bu yazıyı bulamadık
-          </h1>
-          <p className="m-0 mt-6 max-w-[44ch] text-lead text-grafit-2">
-            Yayından kaldırılmış olabilir. Diğer rehberler blog sayfasında.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
-            <Buton to="/blog">Rehbere dönün</Buton>
-            <MetinBaglanti to="/">Ana sayfa</MetinBaglanti>
-          </div>
+      <SayfaBasligi baslikId="yazi-yok-baslik" baslik="Bu yazıyı" vurgu="bulamadık" className="pb-(--mf-bolum)!">
+        <p className="m-0 mt-6 max-w-[44ch] text-lead text-grafit-2">
+          Yayından kaldırılmış olabilir. Diğer rehberler blog sayfasında.
+        </p>
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <Buton to="/blog">Rehbere dönün</Buton>
+          <Buton to="/" tur="cerceve">
+            Ana sayfa
+          </Buton>
         </div>
-      </Bolum>
+      </SayfaBasligi>
     </SayfaIskeleti>
   )
 }
@@ -121,8 +119,9 @@ export default function BlogPost() {
   return (
     <SayfaIskeleti whatsappMesaj={BLOG_WA_MESAJ}>
       <article aria-labelledby="yazi-baslik">
-        {/* Baş: geri bağlantı, künye, başlık, giriş, kapak */}
-        <Kapsayici as="header" className="pt-4 md:pt-6">
+        {/* Baş: geri bağlantı, künye, başlık, giriş, kapak. Gök bandı yüzen menünün arkasında kalır. */}
+        <div className="mf-gok-kisa h-72" aria-hidden="true" />
+        <Kapsayici as="header" className="-mt-72 pt-[5.5rem]">
           <Izgara className="gap-y-0">
             <nav aria-label="Sayfa yolu" className="col-span-full">
               <Link
@@ -134,13 +133,13 @@ export default function BlogPost() {
               </Link>
             </nav>
 
-            <p className="col-span-full m-0 mt-8 flex flex-wrap gap-x-6 gap-y-1 text-small text-sis md:mt-12">
+            <p className="col-span-full m-0 mt-4 flex flex-wrap gap-x-6 gap-y-1 text-small text-grafit-2 md:mt-8">
               <span>{kunye(post)}</span>
               <time dateTime={post.published}>{tarihMetni(post.published)}</time>
             </p>
             <h1
               id="yazi-baslik"
-              className="col-span-full m-0 mt-4 max-w-[22ch] font-serif text-h1 font-[400] md:col-span-10 lg:col-span-8"
+              className="col-span-full m-0 mt-4 max-w-[22ch] text-h1 font-[700] md:col-span-10 lg:col-span-9"
             >
               {post.title}
             </h1>
@@ -153,8 +152,10 @@ export default function BlogPost() {
                 src={post.image}
                 alt={post.imageAlt}
                 oran="genis"
+                kose="panel"
                 oncelikli
                 sizes="(min-width: 768px) 82vw, 100vw"
+                className="shadow-kart"
               />
             </div>
           </Izgara>
@@ -205,10 +206,10 @@ export default function BlogPost() {
                 {post.faqs?.length > 0 && (
                   <section id="sikca-sorulanlar" aria-labelledby="sikca-sorulanlar-baslik">
                     <h2 id="sikca-sorulanlar-baslik">Sıkça sorulanlar</h2>
-                    <div className="mt-6 border-b border-cizgi">
+                    <div className="mt-6 grid gap-2">
                       {post.faqs.map((sss) => (
-                        <div key={sss.question} className="border-t border-cizgi py-5">
-                          <h3 className="m-0 font-sans text-[1.125rem] leading-[1.4] font-[500] text-grafit">
+                        <div key={sss.question} className="rounded-kart bg-tas p-5 md:p-6">
+                          <h3 className="m-0 font-sans text-[1.0625rem] leading-[1.35] font-[600] tracking-[-0.01em] text-grafit">
                             {sss.question}
                           </h3>
                           <p className="m-0 mt-2 text-grafit-2">{sss.answer}</p>
@@ -219,9 +220,9 @@ export default function BlogPost() {
                 )}
               </div>
 
-              {/* Tek, sakin teklif çağrısı (METIN §4.3) */}
-              <div className="mt-(--mf-bolum-kucuk) max-w-[62ch] border-t border-cizgi pt-6">
-                <p className="m-0 text-lead text-grafit">
+              {/* Tek, sakin teklif çağrısı */}
+              <div className="mt-(--mf-bolum-kucuk) max-w-[62ch] rounded-panel bg-recine-acik p-6 md:p-8">
+                <p className="m-0 text-lead font-[600] text-grafit">
                   Bu yazıdaki parçayı bastırmak isterseniz fotoğrafını gönderin.
                 </p>
                 <Buton href="/#order" className="mt-6">
@@ -234,14 +235,14 @@ export default function BlogPost() {
       </article>
 
       {ilgili.length > 0 && (
-        <Bolum bosluk="kucuk" baslikId="ilgili-baslik" icClassName="gap-y-10">
+        <Bolum bosluk="kucuk" baslikId="ilgili-baslik" icClassName="gap-y-6">
           <div className="col-span-full flex flex-wrap items-end justify-between gap-x-8 gap-y-2">
-            <h2 id="ilgili-baslik" className="m-0 font-serif text-h2 font-[400]">
-              İlgili yazılar
+            <h2 id="ilgili-baslik" className="m-0 text-h2 font-[700]">
+              İlgili <em className="mf-italik">yazılar</em>
             </h2>
             <MetinBaglanti to="/blog">Bütün yazılar</MetinBaglanti>
           </div>
-          <div className="col-span-full grid grid-cols-1 gap-x-(--mf-oluk) gap-y-10 md:grid-cols-2">
+          <div className="col-span-full grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
             {ilgili.map((yazi) => (
               <YaziSatiri key={yazi.slug} yazi={yazi} />
             ))}

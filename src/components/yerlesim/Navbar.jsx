@@ -1,17 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Link, useLocation } from 'react-router-dom'
-import { Kapsayici } from '../temel/Kapsayici'
 import { Buton } from '../temel/Buton'
 import Ikon from '../temel/Ikon'
 import { WA_GENEL_MESAJ, waBaglanti } from '../../data/iletisim'
 
-// Navbar: yapışkan üst çubuk (68 px masaüstü, 60 px mobil), Alçı zemin, alt 1 px çizgi. Cam/küçülme yok.
-// lg (1024 px) altında ≡ düğmesi tam ekran Kireç paneli açar: Esc kapatır, odak panelde döner, sayfa kaydırması kilitlenir.
+// Navbar: sayfanın üstünde yüzen cam hap (56 px), ortalanmış; sayfa zemini (gök) arkasından görünür.
+// Konumu fixed olduğu için her sayfanın ilk bölümü üstten ~96 px boşluk bırakır (Hero, SayfaBasligi, ürün sayfası).
+// lg (1024 px) altında ≡ düğmesi tam ekran menü açar: Esc kapatır, odak panelde döner, sayfa kaydırması kilitlenir.
 // Kullanım: <Navbar /> (props yok). Genelde doğrudan değil SayfaIskeleti içinden gelir.
 const BAGLANTILAR = [
   { etiket: 'Mağaza', to: '/magaza' },
   { etiket: 'İşler', href: '/#services' },
+  { etiket: 'Süreç', href: '/#process' },
   { etiket: 'Rehber', to: '/blog' },
   { etiket: 'SSS', href: '/#faq' },
 ]
@@ -29,6 +30,19 @@ function NavBaglanti({ b, yol, className, onClick }) {
     <a href={b.href} {...ortak}>
       {b.etiket}
     </a>
+  )
+}
+
+function Marka({ onClick }) {
+  return (
+    <Link
+      to="/"
+      onClick={onClick}
+      className="flex min-h-11 items-center gap-2.5 rounded-hap pr-3 text-[1.0625rem] leading-none font-[700] tracking-[-0.03em] text-grafit no-underline"
+    >
+      <img src="/logo-kristal.jpg" alt="" width="36" height="36" className="h-9 w-9 rounded-[11px]" />
+      MicronForge
+    </Link>
   )
 }
 
@@ -79,20 +93,18 @@ export default function Navbar() {
   }, [acik])
 
   const masaustuBaglanti =
-    'inline-flex min-h-11 items-center text-[0.9375rem] text-grafit-2 no-underline transition-colors duration-(--mf-sure-hizli) hover:text-grafit aria-[current=page]:text-grafit aria-[current=page]:shadow-[inset_0_-1px_0_var(--mf-grafit)]'
+    'inline-flex min-h-11 items-center rounded-hap px-3.5 text-[0.9375rem] font-[500] text-grafit-2 no-underline transition-colors duration-(--mf-sure-hizli) hover:bg-tas hover:text-grafit aria-[current=page]:bg-tas aria-[current=page]:text-grafit'
 
   return (
-    <header className="sticky top-0 z-(--mf-z-yapiskan) border-b border-cizgi bg-alci">
-      <Kapsayici className="flex h-[60px] items-center justify-between gap-8 lg:h-[68px]">
-        <Link
-          to="/"
-          className="py-2.5 font-serif text-[1.5rem] leading-none font-[500] tracking-[-0.01em] text-grafit no-underline"
-        >
-          MicronForge
-        </Link>
+    // Menü açıkken başlık WhatsApp düğmesinin (z 30) üstüne çıkar; yoksa düğme tam ekran menünün üstünde kalır
+    <header
+      className={`pointer-events-none fixed inset-x-0 top-0 px-3 pt-3 ${acik ? 'z-(--mf-z-menu)' : 'z-(--mf-z-yapiskan)'}`}
+    >
+      <div className="mf-cam pointer-events-auto mx-auto flex h-14 w-full max-w-[940px] items-center justify-between gap-3 rounded-hap pr-1.5 pl-2.5">
+        <Marka />
 
-        <nav aria-label="Ana menü" className="mr-auto ml-16 hidden lg:block">
-          <ul className="m-0 flex list-none gap-8 p-0">
+        <nav aria-label="Ana menü" className="hidden lg:block">
+          <ul className="m-0 flex list-none gap-0.5 p-0">
             {BAGLANTILAR.map((b) => (
               <li key={b.etiket}>
                 <NavBaglanti b={b} yol={pathname} className={masaustuBaglanti} />
@@ -101,17 +113,14 @@ export default function Navbar() {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-6">
-          <div className="hidden items-center gap-6 lg:flex">
-            <a href={waBaglanti(WA_GENEL_MESAJ)} target="_blank" rel="noreferrer" className={masaustuBaglanti}>
-              WhatsApp
-            </a>
-            <Buton href="/#order">Teklif isteyin</Buton>
-          </div>
+        <div className="flex items-center gap-1">
+          <Buton href="/#order" className="min-h-11! px-5 max-[420px]:hidden">
+            Teklif isteyin
+          </Buton>
           <button
             ref={dugmeRef}
             type="button"
-            className="-mr-2.5 inline-grid h-11 w-11 cursor-pointer place-items-center bg-transparent text-grafit lg:hidden"
+            className="inline-grid h-11 w-11 cursor-pointer place-items-center rounded-hap border-0 bg-transparent text-grafit transition-colors duration-(--mf-sure-hizli) hover:bg-tas lg:hidden"
             aria-label="Menüyü aç"
             aria-expanded={acik}
             aria-controls="mobil-menu"
@@ -120,7 +129,7 @@ export default function Navbar() {
             <Ikon ad="menu" boyut={22} />
           </button>
         </div>
-      </Kapsayici>
+      </div>
 
       <AnimatePresence>
         {acik && (
@@ -130,30 +139,24 @@ export default function Navbar() {
             role="dialog"
             aria-modal="true"
             aria-label="Menü"
-            className="fixed inset-0 z-(--mf-z-menu) flex flex-col overflow-y-auto bg-kirec shadow-katman lg:hidden"
+            className="mf-gok pointer-events-auto fixed inset-0 z-(--mf-z-menu) flex flex-col overflow-y-auto px-3 pt-3 lg:hidden"
             initial={azHareket ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={azHareket ? { opacity: 0, transition: { duration: 0 } } : { opacity: 0, y: 8 }}
             transition={{ duration: azHareket ? 0 : 0.28, ease: [0.2, 0, 0, 1] }}
           >
-            <Kapsayici className="flex h-[60px] flex-none items-center justify-between border-b border-cizgi">
-              <Link
-                to="/"
-                onClick={kapat}
-                className="py-2.5 font-serif text-[1.5rem] leading-none font-[500] tracking-[-0.01em] text-grafit no-underline"
-              >
-                MicronForge
-              </Link>
+            <div className="mf-cam flex h-14 flex-none items-center justify-between rounded-hap pr-1.5 pl-2.5">
+              <Marka onClick={kapat} />
               <button
                 type="button"
-                className="-mr-2.5 inline-grid h-11 w-11 cursor-pointer place-items-center bg-transparent text-grafit"
+                className="inline-grid h-11 w-11 cursor-pointer place-items-center rounded-hap border-0 bg-transparent text-grafit hover:bg-tas"
                 aria-label="Menüyü kapat"
                 onClick={kapat}
               >
                 <Ikon ad="kapat" boyut={22} />
               </button>
-            </Kapsayici>
-            <Kapsayici className="flex flex-1 flex-col justify-between pt-8 pb-8">
+            </div>
+            <div className="flex flex-1 flex-col justify-between px-3 pt-8 pb-6">
               <nav aria-label="Ana menü">
                 <ul className="m-0 list-none p-0">
                   {BAGLANTILAR.map((b) => (
@@ -162,7 +165,7 @@ export default function Navbar() {
                         b={b}
                         yol={pathname}
                         onClick={kapat}
-                        className="flex min-h-14 items-center font-serif text-[2.25rem] leading-[1.15] text-grafit no-underline aria-[current=page]:underline aria-[current=page]:decoration-1 aria-[current=page]:underline-offset-[0.18em]"
+                        className="flex min-h-16 items-center text-[2.5rem] leading-[1.1] font-[700] tracking-[-0.04em] text-grafit no-underline aria-[current=page]:text-recine"
                       />
                     </li>
                   ))}
@@ -173,10 +176,11 @@ export default function Navbar() {
                   Teklif isteyin
                 </Buton>
                 <Buton href={waBaglanti(WA_GENEL_MESAJ)} tur="cerceve" genis onClick={kapat}>
+                  <Ikon ad="whatsapp" />
                   WhatsApp&apos;tan yazın
                 </Buton>
               </div>
-            </Kapsayici>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

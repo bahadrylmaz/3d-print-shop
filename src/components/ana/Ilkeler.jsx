@@ -1,7 +1,8 @@
 import Bolum from '../temel/Bolum'
+import UrunGorseli from '../temel/UrunGorseli'
 
-// Ana sayfa 6. bölüm "Atölyenin kuralları" (YON §6.2-6, METIN §3.4; eski Testimonials yerine).
-// Tek sütun, sol 3 kolon boş; büyük Bodoni başlık + kısa metin, aralarında 1 px çizgi. Müşteri yorumu yok.
+// Ana sayfa 7. bölüm "Atölyenin kuralları": solda yakın plan detay fotoğrafı (5 kol), sağda üç ilke kartı (7 kol).
+// Müşteri yorumu ya da uydurma sayı yok; üç söz var.
 const ILKELER = [
   ['Önce onay.', 'Boyut, renk ve detay konusunda anlaşmadan yazıcıyı çalıştırmıyoruz.'],
   ['Hata bizdense yeniden basarız.', 'Baskı hatası atölyeden kaynaklanıyorsa parçayı ücretsiz yeniden basıyoruz.'],
@@ -10,21 +11,43 @@ const ILKELER = [
 
 export default function Ilkeler() {
   return (
-    <Bolum id="ilkeler" baslikId="ilkeler-baslik">
-      <h2 id="ilkeler-baslik" className="col-span-full m-0 mb-6 font-serif text-h2 font-[400] md:col-span-9 md:col-start-4 md:mb-10">
-        Atölyenin kuralları
-      </h2>
-      <ul className="col-span-full m-0 list-none p-0 md:col-span-9 md:col-start-4">
-        {ILKELER.map(([baslik, metin]) => (
-          <li
-            key={baslik}
-            className="grid gap-x-(--mf-oluk) gap-y-2 border-t border-cizgi py-6 md:grid-cols-9 md:py-8 md:items-baseline"
-          >
-            <h3 className="m-0 font-serif text-h2 font-[400] md:col-span-5">{baslik}</h3>
-            <p className="m-0 text-grafit-2 md:col-span-4">{metin}</p>
+    <Bolum id="ilkeler" baslikId="ilkeler-baslik" icClassName="gap-y-8">
+      <div className="col-span-full text-center md:mb-4">
+        <h2 id="ilkeler-baslik" className="m-0 text-h2 font-[700]">
+          Atölyenin <em className="mf-italik">kuralları</em>
+        </h2>
+      </div>
+
+      <ul className="col-span-full m-0 grid list-none gap-3 p-0 md:col-span-7 md:gap-4">
+        {ILKELER.map(([baslik, metin], i) => (
+          <li key={baslik} className="grid grid-cols-[auto_1fr] gap-x-5 rounded-panel bg-kirec p-6 shadow-kart md:p-8">
+            <span
+              aria-hidden="true"
+              className="mf-rakam grid h-10 w-10 place-items-center rounded-hap bg-tas text-[1.0625rem] font-[700] text-grafit"
+            >
+              {i + 1}
+            </span>
+            <div>
+              <h3 className="m-0 text-h3 font-[700]">{baslik}</h3>
+              <p className="m-0 mt-2 max-w-[48ch] text-grafit-2">{metin}</p>
+            </div>
           </li>
         ))}
       </ul>
+
+      <figure className="relative col-span-full m-0 md:col-span-5">
+        <UrunGorseli
+          src="/shop/kirmizi-hulk-2.jpg"
+          alt="Kırmızı Hulk figürünün kolu ve omzu yakından: parlak yüzeyde kas hatları"
+          oran="dikey"
+          kose="panel"
+          sizes="(min-width: 768px) 40vw, 100vw"
+          className="md:h-full md:aspect-auto"
+        />
+        <figcaption className="mf-cam absolute bottom-4 left-4 inline-flex min-h-9 items-center rounded-hap px-4 text-small font-[600] text-grafit">
+          Paketlemeden önce tek tek kontrol
+        </figcaption>
+      </figure>
     </Bolum>
   )
 }

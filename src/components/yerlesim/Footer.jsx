@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { Kapsayici, Izgara } from '../temel/Kapsayici'
+import { Buton } from '../temel/Buton'
+import Ikon from '../temel/Ikon'
 import {
   CALISMA_SAATLERI,
   INSTAGRAM_KULLANICI,
@@ -10,8 +11,8 @@ import {
   waBaglanti,
 } from '../../data/iletisim'
 
-// Footer: sayfanın kapanışı (ayrı CTA bandı yok). Taş zemin, kenardan kenara büyük "MicronForge", 4 sütun, telif satırı.
-// Bağlantılar Grafit 2 ve en az 44 px yüksek. Metinler METIN.md §4.4. Yasal bağlantılar sayfaları yazılınca eklenecek.
+// Footer: sayfanın kapanışı. Gök gradyanlı yuvarlak panel: üstte kapanış cümlesi + iki eylem, 4 sütun bağlantı,
+// altta kenardan kenara soluk "MicronForge" ve telif satırı. Bağlantılar en az 44 px yüksek.
 // Kullanım: <Footer /> (props yok).
 const SUTUNLAR = [
   {
@@ -91,34 +92,51 @@ function Oge({ o }) {
 
 export default function Footer() {
   return (
-    <footer className="bg-tas pt-16 pb-8 md:pt-24">
-      <Kapsayici>
-        <Izgara>
-          <p className="col-span-full m-0 mb-6 overflow-hidden font-serif text-[clamp(3rem,1rem+9vw,9rem)] pb-[0.14em] leading-[0.9] font-[400] tracking-[-0.03em] whitespace-nowrap md:mb-12">
-            MicronForge
+    <footer className="px-3 pt-(--mf-bolum-kucuk) pb-3 md:px-4 md:pb-4">
+      <div className="mf-gok-ters mx-auto w-full max-w-[calc(var(--mf-max)+2*var(--mf-kenar))] overflow-hidden rounded-panel">
+        <div className="px-(--mf-panel-ic) pt-[calc(var(--mf-panel-ic)*1.3)]">
+          <p className="m-0 max-w-[18ch] text-h2 font-[700]">
+            Aklınızdaki figürü yazın, <em className="mf-italik">basıp boyayalım.</em>
           </p>
-          <p className="col-span-full m-0 mb-10 max-w-[62ch] text-grafit-2 md:mb-12">
-            Manisa&apos;da SLA reçine 3D baskı atölyesi. Kişiye özel figür, mimari maket, sanayi prototipi ve dekor
-            parçaları basıyoruz. Manisa ve İzmir&apos;e elden teslim, Türkiye&apos;ye kargo.
+          <p className="m-0 mt-5 max-w-[56ch] text-grafit-2">
+            Manisa&apos;da SLA reçine 3D baskı atölyesi. Boyalı koleksiyon figürü, kişiye özel figür, mimari maket ve
+            sanayi prototipi basıyoruz. Manisa ve İzmir&apos;e elden teslim, Türkiye&apos;ye kargo.
           </p>
-          {SUTUNLAR.map((s) => (
-            <div
-              key={s.baslik}
-              className="col-span-2 mb-8 text-small md:col-span-3"
-            >
-              <h2 className="m-0 mb-2 font-sans text-small font-[500] text-grafit">{s.baslik}</h2>
-              <ul className="m-0 list-none p-0">
-                {s.ogeler.map((o) => (
-                  <li key={o.etiket}>
-                    <Oge o={o} />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-          <p className="col-span-full m-0 mt-4 border-t border-cizgi pt-4 text-small text-grafit-2">© 2026 MicronForge</p>
-        </Izgara>
-      </Kapsayici>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Buton href={waBaglanti(WA_GENEL_MESAJ)}>
+              <Ikon ad="whatsapp" />
+              WhatsApp&apos;tan yazın
+            </Buton>
+            <Buton to="/magaza" tur="cerceve">
+              Koleksiyonu görün
+            </Buton>
+          </div>
+
+          <div className="mt-14 grid grid-cols-2 gap-x-(--mf-oluk) gap-y-8 text-small md:mt-20 md:grid-cols-4">
+            {SUTUNLAR.map((s) => (
+              <div key={s.baslik}>
+                <h2 className="m-0 mb-2 text-small font-[700] tracking-[-0.01em] text-grafit">{s.baslik}</h2>
+                <ul className="m-0 list-none p-0">
+                  {s.ogeler.map((o) => (
+                    <li key={o.etiket}>
+                      <Oge o={o} />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          <p className="m-0 mt-10 text-small text-grafit-2">© 2026 MicronForge</p>
+        </div>
+        {/* Süs: marka adı zaten yukarıda ve menüde geçiyor */}
+        <p
+          aria-hidden="true"
+          className="m-0 -mb-[0.16em] px-(--mf-panel-ic) text-[clamp(3.25rem,0.6rem+12.4vw,11.5rem)] leading-[0.9] font-[800] tracking-[-0.065em] whitespace-nowrap text-kirec/70 select-none"
+        >
+          MicronForge
+        </p>
+      </div>
     </footer>
   )
 }

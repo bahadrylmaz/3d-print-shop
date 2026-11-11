@@ -3,7 +3,7 @@ import Bolum from '../temel/Bolum'
 import { Buton, MetinBaglanti } from '../temel/Buton'
 import { TELEFON_GORUNEN, TELEFON_HREF, WA_GENEL_MESAJ, waBaglanti } from '../../data/iletisim'
 
-// Ana sayfa 5. bölüm: teklif/sipariş formu (YON §6.2-5 ve §6.7, METIN §3.9 ve §5). Çapa: #order (+ #pricing fiyat notu).
+// Ana sayfa 6. bölüm: teklif/sipariş formu. Açık panel içinde solda anlatım + fiyat notu, sağda beyaz form kartı. Çapa: #order (+ #pricing fiyat notu).
 // Davranış eski OrderForm ile aynı: form hiçbir yere veri göndermez; "Talebi hazırla" -> "Bir adım kaldı" ekranı ->
 // "WhatsApp'ta gönderin" bilgileri wa.me mesajına doldurur. Fotoğraflar yalnız önizlenir, WhatsApp'a aktarılmaz (uyarı görünür).
 const KATEGORILER = [
@@ -33,14 +33,14 @@ const HATA = {
 
 const ALAN =
   'min-h-12 w-full rounded-kontrol border border-cizgi-guclu bg-kirec px-4 font-sans text-[1rem] text-grafit placeholder:text-sis focus-visible:border-recine focus-visible:outline-offset-1 aria-[invalid=true]:border-hata'
-const ETIKET = 'text-small font-[500] text-grafit'
+const ETIKET = 'text-small font-[600] text-grafit'
 
-// Alt çizgili sekme görünümünde radyo grubu (gerçek <input type="radio">, klavyeyle oklarla gezilir)
+// Hap görünümünde radyo grubu (gerçek <input type="radio">, klavyeyle oklarla gezilir); seçili olan mürekkep dolu
 function RadyoGrubu({ ad, baslik, secenekler, deger, onChange }) {
   return (
     <fieldset className="m-0 min-w-0 border-0 p-0">
       <legend className={`${ETIKET} mb-2 p-0`}>{baslik}</legend>
-      <div className="flex flex-wrap gap-x-6 border-b border-cizgi">
+      <div className="flex flex-wrap gap-2">
         {secenekler.map((s) => (
           <label key={s.id} className="relative inline-flex min-h-11 cursor-pointer items-center">
             <input
@@ -51,7 +51,7 @@ function RadyoGrubu({ ad, baslik, secenekler, deger, onChange }) {
               onChange={() => onChange(s.id)}
               className="peer absolute inset-0 m-0 cursor-pointer opacity-0"
             />
-            <span className="text-[0.9375rem] text-grafit-2 shadow-[inset_0_-2px_0_transparent] transition-colors duration-(--mf-sure-hizli) peer-checked:font-[500] peer-checked:text-grafit peer-checked:shadow-[inset_0_-2px_0_var(--mf-grafit)] peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3 peer-focus-visible:outline-recine peer-focus-visible:outline-solid hover:text-grafit leading-[2.75rem]">
+            <span className="inline-flex min-h-11 items-center rounded-hap bg-tas px-4 text-[0.9375rem] text-grafit-2 transition-colors duration-(--mf-sure-hizli) peer-checked:bg-grafit peer-checked:font-[600] peer-checked:text-kirec peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3 peer-focus-visible:outline-recine peer-focus-visible:outline-solid hover:text-grafit peer-checked:hover:text-kirec">
               {s.etiket}
             </span>
           </label>
@@ -162,10 +162,10 @@ export default function TeklifFormu() {
   const dolu = images.length >= EN_COK
 
   return (
-    <Bolum id="order" baslikId="teklif-baslik">
+    <Bolum id="order" baslikId="teklif-baslik" panel="tas" bosluk="dar">
       <div className="col-span-full mb-10 md:col-span-4 md:mb-0">
-        <h2 id="teklif-baslik" className="m-0 font-serif text-h2 font-[400]">
-          Parçanızı anlatın
+        <h2 id="teklif-baslik" className="m-0 text-h2 font-[700]">
+          Parçanızı <em className="mf-italik">anlatın</em>
         </h2>
         <p className="m-0 mt-4 text-grafit-2">
           Fotoğraf yükleyin, birkaç bilgi ekleyin. Form mesajı hazırlar; WhatsApp&apos;tan gönderdiğinizde fiyatı
@@ -180,9 +180,9 @@ export default function TeklifFormu() {
             ['WhatsApp\'tan gönderin.', 'Form mesajı hazırlar. Fotoğrafları aynı sohbete ekleyip gönderin.'],
           ].map(([baslik, metin], i) => (
             <li key={baslik} className="grid grid-cols-[1.5rem_1fr] gap-x-2 text-grafit-2">
-              <span className="mf-rakam text-grafit">{i + 1}.</span>
+              <span className="mf-rakam font-[700] text-grafit">{i + 1}.</span>
               <span>
-                <span className="font-[500] text-grafit">{baslik}</span> {metin}
+                <span className="font-[600] text-grafit">{baslik}</span> {metin}
               </span>
             </li>
           ))}
@@ -196,21 +196,21 @@ export default function TeklifFormu() {
           </p>
         </div>
 
-        <div id="pricing" className="mt-8 border-t border-cizgi pt-6 md:mt-10">
-          <h3 className="m-0 font-serif text-h3 font-[500]">Fiyat ölçüye göre</h3>
+        <div id="pricing" className="mt-8 rounded-kart bg-kirec p-5 md:mt-10 md:p-6">
+          <h3 className="m-0 text-h3 font-[700]">Fiyat ölçüye göre</h3>
           <p className="m-0 mt-3 text-small text-grafit-2">Her parçanın fiyatını ayrı hesaplıyoruz.</p>
           <p className="m-0 mt-2 text-small text-grafit-2">
-            <span className="font-[500] text-grafit">Fiyatı belirleyenler:</span> Parçanın boyu ve hacmi, seçilen
+            <span className="font-[600] text-grafit">Fiyatı belirleyenler:</span> Parçanın boyu ve hacmi, seçilen
             reçine, yüzey işlemi (boyasız, astarlı ya da boyalı), adet ve modelleme ihtiyacı. Çok adetli işlerde aynı
             tablaya birden fazla parça yerleştiği için birim fiyat düşebilir.
           </p>
         </div>
       </div>
 
-      <div className="col-span-full bg-kirec p-5 md:col-span-7 md:col-start-6 md:p-10">
+      <div className="col-span-full rounded-panel bg-kirec p-5 shadow-kart md:col-span-7 md:col-start-6 md:p-10">
         {submitted ? (
           <div aria-live="polite">
-            <h3 ref={sonucRef} tabIndex={-1} className="m-0 font-serif text-h2 font-[400] outline-none">
+            <h3 ref={sonucRef} tabIndex={-1} className="m-0 text-h2 font-[700] outline-none">
               Bir adım kaldı
             </h3>
             {/* DOĞRULA: "yaklaşık 30 dakika" dönüş süresi */}
@@ -272,7 +272,7 @@ export default function TeklifFormu() {
                 onClick={() => fileRef.current?.click()}
                 onDrop={handleDrop}
                 onDragOver={(e) => e.preventDefault()}
-                className="flex min-h-40 w-full cursor-pointer items-center justify-center rounded-kontrol border border-dashed border-cizgi-guclu bg-kirec px-6 text-center text-grafit-2 transition-colors duration-(--mf-sure-hizli) hover:border-grafit hover:text-grafit disabled:cursor-default disabled:hover:border-cizgi-guclu"
+                className="flex min-h-40 w-full cursor-pointer items-center justify-center rounded-kart border border-dashed border-cizgi-guclu bg-alci px-6 text-center font-sans text-[1rem] text-grafit-2 transition-colors duration-(--mf-sure-hizli) hover:border-recine hover:bg-recine-acik hover:text-grafit disabled:cursor-default disabled:hover:border-cizgi-guclu disabled:hover:bg-alci"
               >
                 <span id="foto-bos" className="max-w-[30ch]">
                   {dolu
@@ -297,7 +297,7 @@ export default function TeklifFormu() {
                       key={img.url}
                       className="grid grid-cols-[3rem_minmax(0,1fr)_auto] items-center gap-x-4 border-b border-cizgi py-2"
                     >
-                      <img src={img.url} alt="" className="h-12 w-12 object-cover" />
+                      <img src={img.url} alt="" className="h-12 w-12 rounded-[10px] object-cover" />
                       <span className="min-w-0 text-small">
                         <span className="block truncate text-grafit">{img.name}</span>
                         <span className="mf-rakam text-sis">{img.size} KB</span>
@@ -306,7 +306,7 @@ export default function TeklifFormu() {
                         type="button"
                         onClick={() => removeImage(i)}
                         aria-label={`${img.name} fotoğrafını kaldır`}
-                        className="min-h-11 cursor-pointer bg-transparent px-2 text-small font-[500] text-grafit underline decoration-cizgi-guclu underline-offset-[0.3em] hover:text-recine"
+                        className="min-h-11 cursor-pointer border-0 bg-transparent px-2 font-sans text-small font-[600] text-grafit underline decoration-cizgi-guclu underline-offset-[0.3em] hover:text-recine"
                       >
                         Kaldır
                       </button>
@@ -315,7 +315,7 @@ export default function TeklifFormu() {
                 </ul>
               )}
 
-              <p id="foto-uyari" className="m-0 border-l-2 border-cizgi-guclu pl-3 text-small text-grafit-2">
+              <p id="foto-uyari" className="m-0 rounded-kontrol bg-tas px-4 py-3 text-small text-grafit-2">
                 Fotoğraflar bu sayfadan bize iletilmez. Gönder dediğinizde WhatsApp açılır; fotoğrafları oradan ekleyin.
               </p>
             </div>

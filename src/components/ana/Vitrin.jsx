@@ -1,62 +1,41 @@
-import { Link } from 'react-router-dom'
 import Bolum from '../temel/Bolum'
-import { MetinBaglanti } from '../temel/Buton'
-import UrunGorseli from '../temel/UrunGorseli'
-import EserEtiketi from '../temel/EserEtiketi'
+import { Buton } from '../temel/Buton'
+import Ikon from '../temel/Ikon'
+import UrunKarti from '../magaza/UrunKarti'
 
-// Ana sayfa 2. bölüm "Vitrin" (YON §6.2-2, METIN §3.7): asimetrik raf, tam 3 ürün.
-// 1280: büyük kart 5 kol (2 satır) + iki küçük kart 3'er kol (ilki 128 px aşağıda) + sağ altta fiyat notu ve bağlantı.
-// 375: büyük kart tam genişlik, iki küçük kart yan yana (detay gizli). Props: urunler (en az 3 kayıt beklenir).
-function Kart({ urun, buyuk, className }) {
-  return (
-    <Link
-      to={`/magaza/${urun.id}`}
-      className={`group block text-grafit no-underline ${className}`}
-    >
-      <UrunGorseli product={urun} sizes={buyuk ? '(min-width: 768px) 40vw, 100vw' : '(min-width: 768px) 24vw, 50vw'} />
-      <EserEtiketi
-        name={urun.name}
-        price={urun.price}
-        priceFrom={urun.priceFrom}
-        material={urun.material}
-        dimensions={urun.dimensions}
-        leadTime={urun.leadTime}
-        boyut={buyuk ? 'buyuk' : 'kucuk'}
-        detayMobildeGizli={!buyuk}
-        kartIcinde
-      />
-    </Link>
-  )
-}
-
-export default function Vitrin({ urunler }) {
-  const [birinci, ikinci, ucuncu] = urunler
-  if (!ucuncu) return null
+// Ana sayfa 2. bölüm "Vitrin": açık panel içinde ortalanmış başlık + 8 ürün kartı (mobil 2, masaüstü 4 sütun) + mağaza bağlantısı.
+// Props: urunler (gösterilecek ürünler), toplam (mağazadaki ürün sayısı; düğme metninde yazar).
+export default function Vitrin({ urunler, toplam }) {
+  if (!urunler?.length) return null
 
   return (
-    <Bolum id="vitrin" baslikId="vitrin-baslik">
-      <div className="col-span-full mb-8 md:col-span-5 md:mb-12">
-        <h2 id="vitrin-baslik" className="m-0 font-serif text-h2 font-[400]">
-          Atölyeden hazır parçalar
+    <Bolum id="vitrin" baslikId="vitrin-baslik" panel="tas" bosluk="dar" izgara={false}>
+      <div className="mx-auto mb-8 max-w-[44rem] text-center md:mb-12">
+        <h2 id="vitrin-baslik" className="m-0 text-h2 font-[700]">
+          Raftan seçin, <em className="mf-italik">ya da karakterinizi söyleyin.</em>
         </h2>
-        <p className="m-0 mt-4 max-w-[62ch] text-grafit-2">
-          Bastığımız dekor ve koleksiyon parçalarından seçin. Her birini farklı ölçü, renk ya da reçineyle yeniden
-          basabiliriz.
+        <p className="m-0 mx-auto mt-5 max-w-[52ch] text-grafit-2">
+          Aşağıdakiler atölyede basılıp boyanmış parçalar. Her birini farklı ölçüde yeniden basabiliriz; listede olmayan
+          bir karakteri de yazabilirsiniz.
         </p>
       </div>
 
-      <Kart urun={birinci} buyuk className="col-span-full mb-10 md:col-span-5 md:row-span-2 md:row-start-2 md:mb-0" />
-      <Kart
-        urun={ikinci}
-        className="col-span-2 mb-8 md:col-span-3 md:col-start-7 md:row-start-2 md:mt-32 md:mb-0 md:self-start"
-      />
-      <Kart urun={ucuncu} className="col-span-2 mb-8 md:col-span-3 md:col-start-10 md:row-start-2 md:mb-0 md:self-start" />
+      <ul className="m-0 grid list-none grid-cols-2 gap-2.5 p-0 md:gap-4 lg:grid-cols-4">
+        {urunler.map((urun) => (
+          <li key={urun.id}>
+            <UrunKarti urun={urun} baslik="h3" />
+          </li>
+        ))}
+      </ul>
 
-      <div className="col-span-full flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-cizgi pt-3 md:col-span-6 md:col-start-7 md:row-start-3 md:mt-16 md:self-end">
-        <p className="m-0 text-small text-sis">
-          Fiyat için WhatsApp'tan yazın. Ölçü, adet ve boyaya göre hesaplıyoruz.
+      <div className="mt-8 flex flex-col items-center gap-3 text-center md:mt-12">
+        <Buton to="/magaza">
+          Bütün koleksiyon{toplam ? ` (${toplam})` : ''}
+          <Ikon ad="ok" boyut={18} />
+        </Buton>
+        <p className="m-0 max-w-[46ch] text-small text-sis">
+          Fiyat için WhatsApp&apos;tan yazın. Ölçü, adet ve boyaya göre hesaplıyoruz.
         </p>
-        <MetinBaglanti to="/magaza">Mağazaya bakın</MetinBaglanti>
       </div>
     </Bolum>
   )

@@ -1,15 +1,17 @@
 import { useRef, useState } from 'react'
 import UrunGorseli from '../temel/UrunGorseli'
+import { genisMi } from '../temel/gorsel'
 
-// UrunGalerisi: ürün detayında 3:4 ana görsel + küçük görseller (YON §6.4).
-// Bütün fotoğraflar aynı kutuda üst üste durur; seçim değişince 140 ms çapraz geçiş (hareket azaltmada anında, tokens.css).
+// UrunGalerisi: ürün detayında ana görsel + küçük görseller. Kutu dikey fotoğrafta 3:4, yatay fotoğrafta ("-genis-") 4:3.
+// Bütün fotoğraflar aynı kutuda üst üste durur; seçim değişince 160 ms çapraz geçiş (hareket azaltmada anında, tokens.css).
 // Küçük görseller <button aria-pressed>: Tab ile her birine gelinir, Enter/Boşluk seçer, ok tuşları / Home / End
-// komşuya geçip seçer. 1280: 88×117 sıra; 375: 72 px genişlikte yatay kaydırılan şerit. Fotoğraf yoksa yer tutucu.
+// komşuya geçip seçer. 1280: 76 px kare sıra; 375: yatay kaydırılan şerit. Fotoğraf yoksa yer tutucu.
 // Props: urun (products.js kaydı). Ürün değişince state sıfırlansın diye çağıran taraf key={urun.id} verir.
 export default function UrunGalerisi({ urun }) {
   const fotolar = urun.photos ?? []
   const [secili, setSecili] = useState(0)
   const dugmeler = useRef([])
+  const yatay = genisMi(fotolar[secili])
 
   const git = (i) => {
     const n = (i + fotolar.length) % fotolar.length
@@ -33,9 +35,9 @@ export default function UrunGalerisi({ urun }) {
 
   return (
     <div>
-      <div className="relative aspect-[3/4] w-full">
+      <div className={`relative w-full overflow-hidden rounded-panel bg-tas ${yatay ? 'aspect-[4/3]' : 'aspect-[3/4]'}`}>
         {fotolar.length === 0 ? (
-          <UrunGorseli product={urun} oncelikli className="absolute inset-0" />
+          <UrunGorseli product={urun} oncelikli kose="yok" oran="serbest" className="absolute inset-0 h-full" />
         ) : (
           fotolar.map((src, i) => (
             <div
@@ -48,8 +50,11 @@ export default function UrunGalerisi({ urun }) {
               <UrunGorseli
                 product={urun}
                 src={src}
+                oran="serbest"
+                kose="yok"
                 oncelikli={i === 0}
-                sizes="(min-width: 1440px) 780px, (min-width: 768px) 56vw, 100vw"
+                sizes="(min-width: 1280px) 720px, (min-width: 768px) 56vw, 100vw"
+                className="h-full"
               />
             </div>
           ))
@@ -60,7 +65,7 @@ export default function UrunGalerisi({ urun }) {
         <div
           role="group"
           aria-label={`${urun.name} fotoğrafları`}
-          className="-mr-(--mf-kenar) mt-4 flex gap-3 overflow-x-auto pt-1 pr-(--mf-kenar) pb-1 pl-1 [scrollbar-width:none] md:mr-0 md:flex-wrap md:overflow-visible md:pr-0 [&::-webkit-scrollbar]:hidden"
+          className="mf-serit -mx-(--mf-kenar) mt-3 flex gap-2 overflow-x-auto px-(--mf-kenar) py-1 md:mx-0 md:flex-wrap md:overflow-visible md:px-1"
         >
           {fotolar.map((src, i) => (
             <button
@@ -73,13 +78,13 @@ export default function UrunGalerisi({ urun }) {
               aria-label={`${i + 1}. fotoğrafı göster (${fotolar.length} fotoğraftan)`}
               onClick={() => setSecili(i)}
               onKeyDown={(e) => tus(e, i)}
-              className={`w-[72px] flex-none cursor-pointer border-0 bg-transparent p-0 pb-1.5 transition-[opacity,box-shadow] duration-(--mf-sure-hizli) ease-mf focus-visible:outline-offset-[-2px] md:w-[88px] ${
+              className={`w-[68px] flex-none cursor-pointer rounded-[1.125rem] border-0 bg-transparent p-[3px] transition-[opacity,box-shadow] duration-(--mf-sure-hizli) ease-mf md:w-[76px] ${
                 i === secili
-                  ? 'opacity-100 shadow-[inset_0_-2px_0_var(--mf-grafit)]'
-                  : 'opacity-60 shadow-[inset_0_-2px_0_transparent] hover:opacity-100'
+                  ? 'opacity-100 shadow-[0_0_0_2px_var(--mf-grafit)]'
+                  : 'opacity-70 shadow-[0_0_0_2px_transparent] hover:opacity-100'
               }`}
             >
-              <UrunGorseli src={src} alt="" sizes="88px" />
+              <UrunGorseli src={src} alt="" oran="kare" kose="kontrol" sizes="76px" />
             </button>
           ))}
         </div>

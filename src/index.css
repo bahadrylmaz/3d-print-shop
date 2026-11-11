@@ -4,7 +4,7 @@
 /* =====================================================================
    Genel taban + Tailwind ile yazması zahmetli birkaç bileşen sınıfı.
    Renk, ölçü ve süreler tokens.css'ten gelir; burada yeni değer uydurulmaz.
-   Sıra kuralı (YON §11.8): taban kural önce, medya sorgusu sonra.
+   Sıra kuralı: taban kural önce, medya sorgusu sonra.
    ===================================================================== */
 
 @layer base {
@@ -12,7 +12,7 @@
     -webkit-text-size-adjust: 100%;
     /* clip: yatay kaydırmayı keser ama html'i kaydırma kabına çevirmez */
     overflow-x: clip;
-    scroll-padding-top: 76px; /* yapışkan navbar çapanın üstünü örtmesin */
+    scroll-padding-top: 96px; /* yüzen menü çapanın üstünü örtmesin */
   }
   @media (prefers-reduced-motion: no-preference) {
     html:focus-within { scroll-behavior: smooth; }
@@ -39,16 +39,46 @@
 }
 
 @layer components {
-  /* Görsel yer tutucu: "stüdyo fonu" (YON §7). Fotoğraf gelince aynı kutuya img oturur. */
+  /* Gök: hero zemini. Üstte dolu mavi, aşağıda sayfa zeminine erir; iki soluk beyaz leke bulut hissi verir. */
+  .mf-gok {
+    background:
+      radial-gradient(46% 30% at 14% 20%, rgba(255, 255, 255, 0.6), transparent 72%),
+      radial-gradient(40% 28% at 88% 34%, rgba(255, 255, 255, 0.5), transparent 72%),
+      linear-gradient(180deg, var(--mf-gok-1) 0%, var(--mf-gok-2) 38%, var(--mf-gok-3) 72%, var(--mf-alci) 100%);
+  }
+  /* Aynı gök, iç sayfa başlıkları için kısa ve soluk */
+  .mf-gok-kisa {
+    background: linear-gradient(180deg, var(--mf-gok-2) 0%, var(--mf-gok-3) 46%, var(--mf-alci) 100%);
+  }
+  /* Footer paneli: gök aşağıdan yukarı */
+  .mf-gok-ters {
+    background:
+      radial-gradient(50% 40% at 82% 78%, rgba(255, 255, 255, 0.5), transparent 72%),
+      linear-gradient(0deg, var(--mf-gok-1) 0%, var(--mf-gok-2) 44%, var(--mf-gok-3) 100%);
+  }
+
+  /* Başlıktaki italik vurgu: kalın groteskin yanında ince Bodoni italik ("Reçineden basılır. *Elde boyanır.*") */
+  .mf-italik {
+    font-family: var(--mf-font-serif);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.025em;
+  }
+
+  /* Cam: yüzen menü ve görsel üstü rozetler */
+  .mf-cam {
+    background: rgba(255, 255, 255, 0.78);
+    -webkit-backdrop-filter: saturate(180%) blur(18px);
+    backdrop-filter: saturate(180%) blur(18px);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7), var(--mf-golge-kart);
+  }
+
+  /* Görsel yer tutucu: fotoğraf yokken ya da yüklenemezse açık panel */
   .mf-fon {
     position: relative;
-    background:
-      linear-gradient(to bottom, transparent 0 74%, rgba(28, 32, 30, 0.035) 74% 100%),
-      radial-gradient(120% 80% at 50% 34%, #E1E3DD 0%, var(--mf-tas) 52%, var(--mf-tas-koyu) 100%);
-    box-shadow: inset 0 0 0 var(--mf-cizgi-ince) var(--mf-cizgi);
+    background: radial-gradient(120% 80% at 50% 30%, var(--mf-kirec) 0%, var(--mf-tas) 55%, var(--mf-tas-koyu) 100%);
     overflow: hidden;
   }
-  /* Kaide gölgesi: ürünün duracağı yeri ima eder */
   .mf-fon::after {
     content: "";
     position: absolute;
@@ -58,13 +88,21 @@
     height: 3.2%;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    background: radial-gradient(closest-side, rgba(28, 32, 30, 0.13), transparent);
+    background: radial-gradient(closest-side, rgba(13, 18, 38, 0.12), transparent);
   }
   .mf-fon[data-oran="genis"]::after { width: 22%; height: 4%; }
 
-  /* Tek açılış anı: hero görseli katman katman belirir (yalnız ana sayfa, ilk yükleme) */
+  /* Hero açılışı (yalnız ana sayfa, ilk yükleme): metin bulanıktan nete, kartlar aşağıdan yukarı.
+     Gecikme --mf-gecikme ile verilir. Hareket azaltmada hiç çalışmaz. */
   @media (prefers-reduced-motion: no-preference) {
-    .mf-katman-katman { animation: mf-katman var(--mf-sure-yavas) steps(18, end) 120ms both; }
+    .mf-belir {
+      animation: mf-belir var(--mf-sure-yavas) var(--mf-egri) both;
+      animation-delay: var(--mf-gecikme, 0ms);
+    }
+    .mf-yuksel {
+      animation: mf-yuksel 1100ms var(--mf-egri) both;
+      animation-delay: var(--mf-gecikme, 0ms);
+    }
   }
 
   /* Akordeon: yükseklik yerine grid satırı 0fr -> 1fr */
@@ -76,43 +114,55 @@
   .mf-akordeon-panel[data-acik="true"] { grid-template-rows: 1fr; }
   .mf-akordeon-panel > div { overflow: hidden; min-height: 0; }
 
-  /* Fiyat ve rakamlar: astar rakam, orantılı (tabular nokta aralığını dağıtıyor, YON §2) */
+  /* Rakamlar: astar rakam, orantılı */
   .mf-rakam { font-variant-numeric: lining-nums proportional-nums; }
 
-  /* Blog yazısı gövdesi (YON §6.6): Schibsted gövde, Bodoni yalnız ara başlık ve not.
-     Ölçüyü sarmalayan öğe verir (max-w-[62ch]); burada yalnız dikey ritim ve liste işareti. */
+  /* Yatay kaydırılan şeritler: kaydırma çubuğu gizli */
+  .mf-serit { scrollbar-width: none; }
+  .mf-serit::-webkit-scrollbar { display: none; }
+
+  /* Blog yazısı gövdesi: ölçüyü sarmalayan öğe verir (max-w-[62ch]); burada dikey ritim, ara başlık ve liste. */
   .mf-yazi { color: var(--mf-grafit); }
   .mf-yazi > p,
   .mf-yazi > section > p { margin: 1.25em 0 0; }
   .mf-yazi > :first-child { margin-top: 0; }
   .mf-yazi > section > h2 {
     margin: 3.5rem 0 0;
-    font-family: var(--mf-font-serif);
     font-size: var(--mf-fs-h3);
-    line-height: 1.2;
-    font-weight: 500;
-    letter-spacing: var(--mf-tr-heading);
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: var(--mf-tr-h3);
   }
   .mf-yazi > section > h2 + p { margin-top: 1rem; }
   .mf-yazi > section > ul { margin: 1.25em 0 0; padding: 0; list-style: none; }
   .mf-yazi > section > ul > li { position: relative; padding-left: 1.5rem; }
   .mf-yazi > section > ul > li + li { margin-top: 0.5em; }
-  /* Madde işareti: 6 px kare, Grafit 2, ilk satırın ortasında */
+  /* Madde işareti: 7 px yuvarlak, vurgu rengi, ilk satırın ortasında */
   .mf-yazi > section > ul > li::before {
     content: "";
     position: absolute;
-    left: 0;
-    top: calc(0.8em - 3px);
-    width: 6px;
-    height: 6px;
-    background: var(--mf-grafit-2);
+    left: 0.125rem;
+    top: calc(0.8em - 3.5px);
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--mf-recine);
   }
-  /* Not / alıntı: Bodoni italik 24 px, solda 2 px Reçine çizgi */
-  .mf-yazi-not { margin: 2.5rem 0 0; padding-left: 1.5rem; border-left: var(--mf-cizgi-kalin) solid var(--mf-recine); }
+  /* Not / alıntı: açık vurgu zeminli yuvarlak kutu, Bodoni italik */
+  .mf-yazi-not {
+    margin: 2.5rem 0 0;
+    padding: 1.5rem 1.75rem;
+    border-radius: var(--mf-r-kart);
+    background: var(--mf-recine-acik);
+  }
   .mf-yazi-not p { margin: 0; font-family: var(--mf-font-serif); font-style: italic; font-size: 1.5rem; line-height: 1.35; }
 }
 
-@keyframes mf-katman {
-  from { clip-path: inset(100% 0 0 0); }
-  to { clip-path: inset(0 0 0 0); }
+@keyframes mf-belir {
+  from { opacity: 0; filter: blur(14px); translate: 0 10px; }
+  to { opacity: 1; filter: blur(0); translate: 0 0; }
+}
+@keyframes mf-yuksel {
+  from { opacity: 0; translate: 0 56px; }
+  to { opacity: 1; translate: 0 0; }
 }

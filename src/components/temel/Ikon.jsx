@@ -1,12 +1,14 @@
-// Ikon: yalnız işlev için ikonlar (YON §8.7): 20 px, 1.5 px çizgi, currentColor.
-// ad: "whatsapp" | "menu" | "kapat" | "arti" | "eksi" | "geri". Dekoratiftir (aria-hidden); anlamı düğmenin aria-label'ı taşır.
+// Ikon: yalnız işlev için ikonlar: 20 px, 1.75 px yuvarlak uçlu çizgi, currentColor.
+// ad: "whatsapp" | "menu" | "kapat" | "arti" | "eksi" | "geri" | "ok" | "capraz". Dekoratiftir (aria-hidden); anlamı düğmenin aria-label'ı taşır.
 // Örnek: <Ikon ad="whatsapp" />   <Ikon ad="arti" boyut={16} />
 const CIZGI = {
-  menu: <path d="M3 8h18M3 15h18" />,
-  kapat: <path d="M5 5l14 14M19 5L5 19" />,
-  arti: <path d="M12 4v16M4 12h16" />,
-  eksi: <path d="M4 12h16" />,
-  geri: <path d="M10 5l-7 7 7 7M3 12h18" />,
+  menu: <path d="M4 8h16M4 16h16" />,
+  kapat: <path d="M6 6l12 12M18 6L6 18" />,
+  arti: <path d="M12 5v14M5 12h14" />,
+  eksi: <path d="M5 12h14" />,
+  geri: <path d="M10 6l-6 6 6 6M4 12h16" />,
+  ok: <path d="M14 6l6 6-6 6M20 12H4" />,
+  capraz: <path d="M8 16L16 8M9 8h7v7" />,
 }
 
 // Resmi WhatsApp glifi, tek renk
@@ -28,8 +30,9 @@ export default function Ikon({ ad, boyut = 20, className = '' }) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="square"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       aria-hidden="true"
       focusable="false"
       className={className}

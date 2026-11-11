@@ -1,72 +1,125 @@
 import { useEffect, useState } from 'react'
-import { Kapsayici, Izgara } from '../temel/Kapsayici'
-import { Buton, MetinBaglanti } from '../temel/Buton'
+import { Link } from 'react-router-dom'
+import { Kapsayici } from '../temel/Kapsayici'
+import { Buton } from '../temel/Buton'
+import Ikon from '../temel/Ikon'
 import UrunGorseli from '../temel/UrunGorseli'
-import EserEtiketi from '../temel/EserEtiketi'
+import { WA_GENEL_MESAJ, waBaglanti } from '../../data/iletisim'
 
-// Ana sayfa 1. bölüm (YON §6.2-1): solda 7 kolon başlık + giriş + eylemler (alta hizalı), sağda 5 kolon öne çıkan ürün + eser etiketi.
-// Altında teknik satır (METIN §3.1). Görsel yalnız ilk yüklemede "katman katman" açılır.
-// Props: urun (products.js kaydı; yoksa yalnız yer tutucu çizilir).
+// Ana sayfa 1. bölüm: gök zemini üstünde ortalanmış başlık (kalın grotesk + italik vurgu), giriş, iki eylem;
+// altında yelpaze gibi açılmış beş ürün fotoğrafı (her biri kendi ürün sayfasına gider) ve teknik künye.
+// Açılış yalnız ilk yüklemede oynar: metin bulanıktan nete, kartlar aşağıdan yukarı (index.css .mf-belir / .mf-yuksel).
+// Props: kartlar (5 ürün kaydı: soldan sağa; ortadaki en büyük). 768 px altında yalnız ortadaki üçü görünür
+// (ikinci kart o zaman en soldadır: bindirme payı yalnız md üstünde verilir ki yelpaze ortalı kalsın).
+// İsim etiketi kartın dış köşesinde durur (sağdaki kartlarda sağ altta): iç köşe komşu kartın altında kalıyor.
 let acilisOynadi = false
 
-const TEKNIK = ['16K MSLA', '25 mikron katman', '218 × 123 × 250 mm baskı alanı', "Manisa ve İzmir'de elden teslim"]
+const TEKNIK = ['16K MSLA yazıcı', '25 mikron katman', '218 × 123 × 250 mm baskı alanı', "Manisa ve İzmir'de elden teslim"]
 
-export default function Hero({ urun }) {
+// Yelpaze: [genişlik, dönüş, aşağı kayma, gecikme, yalnız md üstü]
+const YELPAZE = [
+  ['w-[clamp(8rem,17vw,14rem)]', '-9deg', 'mt-[clamp(2.5rem,6vw,5.5rem)]', 420, true],
+  ['w-[clamp(7.75rem,20vw,16.5rem)]', '-4.5deg', 'mt-[clamp(1.25rem,2.6vw,2.5rem)]', 300, false],
+  ['w-[clamp(9.5rem,23vw,19rem)]', '0deg', '', 180, false],
+  ['w-[clamp(7.75rem,20vw,16.5rem)]', '4.5deg', 'mt-[clamp(1.25rem,2.6vw,2.5rem)]', 300, false],
+  ['w-[clamp(8rem,17vw,14rem)]', '9deg', 'mt-[clamp(2.5rem,6vw,5.5rem)]', 420, true],
+]
+
+export default function Hero({ kartlar = [] }) {
   // StrictMode iki kez render etse de değer aynı kalır; bayrak yalnız ayrılırken kapanır.
-  const [katmanKatman] = useState(() => !acilisOynadi)
+  const [acilis] = useState(() => !acilisOynadi)
   useEffect(
     () => () => {
       acilisOynadi = true
     },
     []
   )
+  const belir = acilis ? 'mf-belir' : ''
+  const yuksel = acilis ? 'mf-yuksel' : ''
+  const gecikme = (ms) => ({ '--mf-gecikme': `${ms}ms` })
 
   return (
-    <section id="hero" aria-labelledby="hero-baslik" className="pt-[clamp(2rem,1rem+4vw,4.5rem)]">
-      <Kapsayici>
-        <Izgara>
-          <div className="col-span-full self-end pb-8 md:col-span-7 md:pb-24">
-            <p className="m-0 mb-6 text-small text-grafit-2">Manisa · SLA reçine 3D baskı atölyesi</p>
-            <h1 id="hero-baslik" className="m-0 max-w-[12ch] font-serif text-display font-[400]">
-              Reçineden ince işler.
-            </h1>
-            <p className="m-0 mt-6 max-w-[38ch] text-lead text-grafit-2">
-              Kişiye özel figür, mimari maket, sanayi prototipi ve dekor parçalarını Saturn 4 Ultra 16K yazıcıda, 25
-              mikron katmanla basıyoruz. Her parça yıkanır, kürlenir ve paketlenmeden önce tek tek kontrol edilir.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3">
-              <Buton href="#order">Fotoğraf gönderin, teklif alın</Buton>
-              <MetinBaglanti to="/magaza">Mağazaya bakın</MetinBaglanti>
-            </div>
-          </div>
+    <section
+      id="hero"
+      aria-labelledby="hero-baslik"
+      className="mf-gok overflow-hidden pt-[calc(5.5rem+clamp(1.5rem,0.4rem+4.6vw,4.5rem))]"
+    >
+      <Kapsayici className="flex flex-col items-center text-center">
+        <p
+          className={`mf-cam m-0 inline-flex min-h-9 items-center rounded-hap px-4 text-small font-[500] text-grafit-2 ${belir}`}
+        >
+          Manisa · SLA reçine 3D baskı atölyesi
+        </p>
+        <h1 id="hero-baslik" className={`m-0 mt-6 text-display font-[800] ${belir}`} style={gecikme(80)}>
+          Reçineden basılır.
+          <br />
+          <em className="mf-italik">Elde boyanır.</em>
+        </h1>
+        <p className={`m-0 mt-6 max-w-[54ch] text-lead text-grafit-2 ${belir}`} style={gecikme(180)}>
+          Sevdiğiniz karakteri 25 mikron katmanla basıyor, fırçayla tek tek boyuyoruz. Raftakilerden seçin ya da
+          fotoğraf gönderin, sizin figürünüzü yapalım.
+        </p>
+        <div className={`mt-8 flex flex-wrap justify-center gap-3 ${belir}`} style={gecikme(260)}>
+          <Buton href={waBaglanti(WA_GENEL_MESAJ)}>
+            <Ikon ad="whatsapp" />
+            WhatsApp&apos;tan yazın
+          </Buton>
+          <Buton to="/magaza" tur="cerceve">
+            Koleksiyonu görün
+          </Buton>
+        </div>
+        <ul
+          className={`m-0 mt-5 flex list-none flex-wrap justify-center gap-x-6 gap-y-1 p-0 text-small text-grafit-2 ${belir}`}
+          style={gecikme(340)}
+        >
+          <li>Fiyat WhatsApp&apos;tan</li>
+          <li>Fotoğraftan modelleme</li>
+          <li>Türkiye&apos;ye kargo</li>
+        </ul>
+      </Kapsayici>
 
-          <figure className="col-span-full m-0 mt-4 md:col-span-5 md:col-start-8 md:mt-0">
-            <UrunGorseli
-              product={urun}
-              oran="dikey"
-              oncelikli
-              katmanKatman={katmanKatman}
-              sizes="(min-width: 768px) 38vw, 100vw"
-            />
-            {urun && (
-              <figcaption>
-                <EserEtiketi
-                  name={urun.name}
-                  price={urun.price}
-                  priceFrom={urun.priceFrom}
-                  material={urun.material}
-                  dimensions={urun.dimensions}
-                  leadTime={urun.leadTime}
+      {/* Yelpaze: kartlar birbirinin üstüne biner; ortadaki öndedir */}
+      <ul className="m-0 mx-auto mt-[clamp(2.5rem,1.5rem+4vw,4.5rem)] flex max-w-[1240px] list-none items-start justify-center px-2 pb-[clamp(2.5rem,1.6rem+3.6vw,5rem)]">
+        {kartlar.slice(0, 5).map((urun, i) => {
+          const [genislik, donus, kayma, ms, yalnizMd] = YELPAZE[i]
+          const orta = i === 2
+          return (
+            <li
+              key={urun.id}
+              className={`flex-none ${genislik} ${kayma} ${yalnizMd ? 'max-md:hidden' : ''} ${i === 0 ? '' : i === 1 ? 'md:-ml-[clamp(0.75rem,2vw,1.75rem)]' : '-ml-[clamp(0.75rem,2vw,1.75rem)]'} ${orta ? 'z-3' : i === 1 || i === 3 ? 'z-2' : 'z-1'} relative hover:z-4`}
+            >
+              <Link
+                to={`/magaza/${urun.id}`}
+                aria-label={urun.name}
+                style={{ rotate: donus, ...gecikme(ms) }}
+                className={`group relative block rounded-kart bg-kirec p-1.5 shadow-yuzen transition-[scale] duration-(--mf-sure-orta) ease-mf hover:scale-[1.035] md:p-2 ${yuksel}`}
+              >
+                <UrunGorseli
+                  product={urun}
+                  kose="yok"
+                  oncelikli={orta}
+                  sizes={orta ? '(min-width: 1280px) 300px, 24vw' : '(min-width: 1280px) 260px, 21vw'}
+                  className="rounded-[calc(var(--mf-r-kart)-0.4rem)]"
                 />
-              </figcaption>
-            )}
-          </figure>
-        </Izgara>
+                <span
+                  aria-hidden="true"
+                  className={`mf-cam absolute bottom-4 hidden min-h-8 items-center rounded-hap px-3 text-small font-[600] tracking-[-0.01em] text-grafit lg:inline-flex ${
+                    i > 2 ? 'right-4' : 'left-4'
+                  }`}
+                >
+                  {urun.name}
+                </span>
+              </Link>
+            </li>
+          )
+        })}
+      </ul>
 
-        {/* Teknik satır: kutulu "güven şeridi" değil, tek çizgi altında sakin bir künye (YON §8.8) */}
-        <ul className="m-0 mt-(--mf-bolum-kucuk) grid list-none grid-cols-2 gap-x-(--mf-oluk) gap-y-2 border-t border-cizgi p-0 pt-5 pb-6 md:flex md:flex-wrap md:gap-x-12">
+      {/* Teknik künye: ödül rozetleri değil, doğrulanabilir dört bilgi */}
+      <Kapsayici>
+        <ul className="m-0 flex list-none flex-wrap justify-center gap-2 p-0 pb-(--mf-bolum-kucuk)">
           {TEKNIK.map((t) => (
-            <li key={t} className="text-small text-grafit-2">
+            <li key={t} className="inline-flex min-h-9 items-center rounded-hap bg-tas px-4 text-small text-grafit-2">
               {t}
             </li>
           ))}

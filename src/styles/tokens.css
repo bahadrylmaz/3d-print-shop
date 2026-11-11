@@ -1,14 +1,17 @@
 /* =====================================================================
-   MicronForge tasarım sistemi: "Alçı Atölyesi"
-   Kaynak belge: docs/tasarim/YON.md
-   Kullanım (2. aşama, Dev): src/index.css içinde
-       @import "tailwindcss";
-       @import "./styles/tokens.css";
-   Bu dosya henüz hiçbir yere import edilmedi.
+   MicronForge tasarım sistemi: "Açık Gök"
+   Referans: supaste.com (gök gradyanı, yuvarlak paneller, hap butonlar, kalın grotesk + italik serif vurgu)
+   ve inspora.design (hap filtreler, sade galeri ızgarası). Önceki yön ("Alçı Atölyesi") docs/tasarim/YON.md'de
+   duruyor; o belge artık bu dosyayı anlatmıyor.
+
+   Renk adları önceki sistemden kaldı (yüzlerce sınıf bu adları kullanıyor); anlamları şöyle:
+     alci = sayfa zemini        kirec = beyaz yüzey (kart, form)     tas = açık panel
+     grafit = mürekkep (metin)  sis = soluk metin                    recine = vurgu (logodaki mor-mavi)
+     gok-1/2/3 = hero ve footer'daki gök gradyanının durakları
 
    Yapı:
    1) @font-face   (kendi sunucumuz: /public/fonts, OFL 1.1)
-   2) :root        ham değerler (tarayıcıda doğrudan çalışır; onizleme.html bunu kullanır)
+   2) :root        ham değerler
    3) @theme       Tailwind 4 eşlemesi (inline: yardımcı sınıflar var(--mf-*) değerini kullanır)
    4) Hareket azaltma
    ===================================================================== */
@@ -49,44 +52,50 @@
 
 /* ---------- 2. Ham değerler ---------- */
 :root {
-  /* Renk: kontrast oranları zemin #E7E8E3 üzerine (WCAG 2.x) */
-  --mf-alci:        #E7E8E3; /* sayfa zemini (%70)                        */
-  --mf-kirec:       #F3F4F0; /* yükseltilmiş yüzey: form, açılır panel     */
-  --mf-tas:         #D6D8D2; /* görsel yer tutucu, ikincil bant (%10)      */
-  --mf-tas-koyu:    #CDD0C9; /* yer tutucu ışık geçişinin koyu ucu         */
-  --mf-grafit:      #1C201E; /* ana metin, birincil buton  13.38:1         */
-  --mf-grafit-2:    #4F5551; /* ikincil metin              6.20:1          */
-  --mf-sis:         #5F6561; /* soluk metin, açıklama      4.84:1 (kireçte 5.40) */
-  --mf-cizgi:       #C3C6BF; /* saç çizgisi, yalnız ayırıcı (metin değil)  */
-  --mf-cizgi-guclu: #7B807A; /* form kenarı, kontrol sınırı 3.27:1 (UI ≥3) */
-  --mf-recine:      #1E4D40; /* TEK vurgu: bağlantı, odak, seçili  7.78:1  */
-  --mf-recine-koyu: #163B31; /* vurgu hover                                */
-  --mf-recine-acik: #CFDAD3; /* seçim zemini, vurgu tonu (grafit 11.47:1)  */
-  --mf-hata:        #8E2A22; /* yalnızca form hatası       6.81:1          */
-  --mf-beyaz:       #F3F4F0; /* koyu zemin üstü metin (kireç ile aynı)     */
+  /* Renk: kontrast oranları beyaz (#FFFFFF) üzerine (WCAG 2.x) */
+  --mf-alci:        #FBFCFF; /* sayfa zemini                               */
+  --mf-kirec:       #FFFFFF; /* beyaz yüzey: kart, form, menü              */
+  --mf-tas:         #F1F4FA; /* açık panel, görsel yer tutucu              */
+  --mf-tas-koyu:    #E4E9F3; /* panel içi ikincil yüzey, devre dışı buton  */
+  --mf-grafit:      #0D1226; /* ana metin, birincil buton   18.2:1         */
+  --mf-grafit-2:    #414A63; /* ikincil metin                8.7:1         */
+  --mf-sis:         #5C667E; /* soluk metin, künye           5.8:1 (panelde 5.3) */
+  --mf-cizgi:       #E1E6F0; /* ince ayırıcı (metin değil)                 */
+  --mf-cizgi-guclu: #8891A6; /* form kenarı, kontrol sınırı  3.2:1 (UI ≥3) */
+  --mf-recine:      #4353E6; /* vurgu: bağlantı, odak, seçili 5.8:1        */
+  --mf-recine-koyu: #3340C2; /* vurgu hover                  8.0:1         */
+  --mf-recine-acik: #E4E9FF; /* seçim zemini, vurgu tonu                   */
+  --mf-hata:        #B42318; /* yalnızca form hatası         6.6:1         */
+  --mf-beyaz:       #FFFFFF;
+
+  /* Gök: hero ve footer zemini. Üstte en dolu ton, aşağı doğru sayfa zeminine erir. */
+  --mf-gok-1:       #A9C2FF;
+  --mf-gok-2:       #CBDDFF;
+  --mf-gok-3:       #E9F1FF;
 
   /* Tipografi */
   --mf-font-serif: "Bodoni Moda", "Bodoni 72", "Didot", Georgia, serif;
   --mf-font-sans:  "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
 
   /* Ölçek: 375 px'te küçük uç, 1440 px'te büyük uç. Gövde asla 16 px altına inmez. */
-  --mf-fs-display: clamp(2.75rem, 1.78rem + 4.14vw, 5.5rem);    /* 44 -> 88 */
-  --mf-fs-h1:      clamp(2.25rem, 1.59rem + 2.82vw, 4rem);      /* 36 -> 64 */
-  --mf-fs-h2:      clamp(1.75rem, 1.4rem + 1.5vw, 2.75rem);     /* 28 -> 44 */
-  --mf-fs-h3:      clamp(1.375rem, 1.24rem + 0.56vw, 1.75rem);  /* 22 -> 28 */
-  --mf-fs-lead:    clamp(1.125rem, 1.06rem + 0.28vw, 1.3125rem);/* 18 -> 21 */
-  --mf-fs-body:    clamp(1rem, 0.98rem + 0.09vw, 1.0625rem);    /* 16 -> 17 */
-  --mf-fs-small:   0.875rem;                                    /* 14 (taban) */
+  --mf-fs-display: clamp(2.75rem, 1.78rem + 4.14vw, 5.5rem);     /* 44 -> 88 */
+  --mf-fs-h1:      clamp(2.25rem, 1.72rem + 2.25vw, 3.75rem);    /* 36 -> 60 */
+  --mf-fs-h2:      clamp(1.875rem, 1.39rem + 2.07vw, 3.25rem);   /* 30 -> 52 */
+  --mf-fs-h3:      clamp(1.25rem, 1.12rem + 0.56vw, 1.625rem);   /* 20 -> 26 */
+  --mf-fs-lead:    clamp(1.0625rem, 1rem + 0.28vw, 1.25rem);     /* 17 -> 20 */
+  --mf-fs-body:    clamp(1rem, 0.98rem + 0.09vw, 1.0625rem);     /* 16 -> 17 */
+  --mf-fs-small:   0.875rem;                                     /* 14 (taban) */
 
-  --mf-lh-display: 1.04;
-  --mf-lh-heading: 1.12;
+  --mf-lh-display: 0.98;
+  --mf-lh-heading: 1.04;
   --mf-lh-body:    1.6;
-  --mf-lh-serif-body: 1.7;
 
-  --mf-tr-display: -0.015em; /* Bodoni büyük boyda hafif sıkı */
-  --mf-tr-heading: -0.01em;
+  /* Kalın grotesk büyük boyda sıkı dizilir (Supaste: 60 px'te -3 px) */
+  --mf-tr-display: -0.045em;
+  --mf-tr-heading: -0.04em;
+  --mf-tr-h3:      -0.025em;
   --mf-tr-body:    0;
-  --mf-tr-small:   0.01em;
+  --mf-tr-small:   0;
 
   --mf-olcu-metin: 62ch; /* gövde paragraf azami genişlik */
   --mf-olcu-dar:   38ch; /* lead / hero alt metni */
@@ -102,34 +111,38 @@
   --mf-b-8: 4rem;     /* 64 */
   --mf-b-9: 6rem;     /* 96 */
   --mf-b-10: 8rem;    /* 128 */
-  /* 3. aşama: mobilde 72 px bölüm boşluğu + çizgi, 13.500 px'lik bir ana sayfada nefes değil boşluk yaratıyordu.
-     Alt uç 56 px'e, üst uç 128 px'e çekildi; oran (büyük ekranda cömert, küçükte sıkı) korunur. */
-  --mf-bolum: clamp(3.5rem, 1.5rem + 8vw, 8rem);        /* bölümler arası dikey: 56 -> 128 */
-  --mf-bolum-kucuk: clamp(2.5rem, 1.9rem + 2.6vw, 4.5rem); /* aynı bölüm içi büyük ara: 40 -> 72 */
+  --mf-bolum: clamp(3.5rem, 1.9rem + 6.4vw, 7.5rem);        /* bölümler arası dikey: 56 -> 120 */
+  --mf-bolum-kucuk: clamp(2.5rem, 1.9rem + 2.6vw, 4.5rem);  /* aynı bölüm içi büyük ara: 40 -> 72 */
+  --mf-panel-ic: clamp(1.25rem, 0.3rem + 4vw, 4rem);        /* panel iç boşluğu: 20 -> 64 */
 
   /* Izgara */
   --mf-kolon: 12;
   --mf-kolon-mobil: 4;
-  --mf-oluk: clamp(1rem, 0.75rem + 1.07vw, 2rem);    /* 16 -> 32 */
-  --mf-kenar: clamp(1.25rem, 0.2rem + 4.5vw, 4.5rem);/* 20 -> 72 */
-  --mf-max: 1360px;   /* içerik kutusu (kenar boşlukları hariç) */
+  --mf-oluk: clamp(1rem, 0.75rem + 1.07vw, 2rem);     /* 16 -> 32 */
+  --mf-kenar: clamp(1rem, 0.2rem + 3.4vw, 3rem);      /* 16 -> 48 */
+  --mf-max: 1280px;   /* içerik kutusu (kenar boşlukları hariç) */
   --mf-max-metin: 720px;
 
-  /* Köşe: keskin. Yalnız dokunulan kontroller 2 px. Hap şekli yok. */
+  /* Köşe: her şey yuvarlak. Buton ve filtre hap; kart 24-28; panel 28-44; form alanı 14. */
   --mf-r-0: 0;
-  --mf-r-kontrol: 2px;
+  --mf-r-kontrol: 14px;
+  --mf-r-kart: clamp(1.25rem, 0.9rem + 1.2vw, 1.75rem);   /* 20 -> 28 */
+  --mf-r-panel: clamp(1.75rem, 1.2rem + 2.3vw, 2.75rem);  /* 28 -> 44 */
+  --mf-r-hap: 999px;
 
   /* Çizgi */
   --mf-cizgi-ince: 1px;
-  --mf-cizgi-kalin: 2px; /* odak halkası, seçili sekme alt çizgisi */
+  --mf-cizgi-kalin: 2px; /* odak halkası */
 
-  /* Gölge: yalnız üstte duran katman (mobil menü, açılır panel). Zeminin tonunda. */
-  --mf-golge-katman: 0 1px 0 rgba(28, 32, 30, 0.06), 0 18px 40px -24px rgba(28, 32, 30, 0.28);
+  /* Gölge: mürekkep tonunda, yumuşak ve geniş. kart = dinlenen kart; yuzen = üstte duran (menü, hero kartları). */
+  --mf-golge-kart: 0 1px 2px rgba(13, 18, 38, 0.04), 0 10px 30px -14px rgba(13, 18, 38, 0.16);
+  --mf-golge-yuzen: 0 2px 4px rgba(13, 18, 38, 0.05), 0 28px 60px -24px rgba(31, 44, 110, 0.38);
+  --mf-golge-katman: 0 1px 2px rgba(13, 18, 38, 0.06), 0 18px 44px -20px rgba(13, 18, 38, 0.3);
 
   /* Hareket */
-  --mf-sure-hizli: 140ms;  /* hover, renk */
-  --mf-sure-orta:  280ms;  /* açılır panel, akordeon */
-  --mf-sure-yavas: 900ms;  /* tek açılış anı: hero "katman katman" görünme */
+  --mf-sure-hizli: 160ms;  /* hover, renk */
+  --mf-sure-orta:  300ms;  /* açılır panel, akordeon, kart */
+  --mf-sure-yavas: 900ms;  /* hero açılışı: bulanıktan nete */
   --mf-egri:       cubic-bezier(0.2, 0, 0, 1);
   --mf-egri-cikis: cubic-bezier(0.4, 0, 1, 1);
 
@@ -151,13 +164,14 @@
 
 /* ---------- 3. Tailwind 4 eşlemesi ----------
    inline: üretilen sınıflar var(--mf-*) kullanır; değer tek yerde (:root) yaşar.
-   Varsayılan Tailwind renkleri kapatıldı: bg-purple-500 gibi sınıflar artık üretilmez. */
+   Varsayılan Tailwind renkleri kapalı: bg-purple-500 gibi sınıflar üretilmez. */
 @theme inline {
   --color-*: initial;
   --color-transparent: transparent;
   --color-current: currentColor;
   --color-alci: var(--mf-alci);
   --color-kirec: var(--mf-kirec);
+  --color-beyaz: var(--mf-beyaz);
   --color-tas: var(--mf-tas);
   --color-tas-koyu: var(--mf-tas-koyu);
   --color-grafit: var(--mf-grafit);
@@ -168,6 +182,9 @@
   --color-recine: var(--mf-recine);
   --color-recine-koyu: var(--mf-recine-koyu);
   --color-recine-acik: var(--mf-recine-acik);
+  --color-gok-1: var(--mf-gok-1);
+  --color-gok-2: var(--mf-gok-2);
+  --color-gok-3: var(--mf-gok-3);
   --color-hata: var(--mf-hata);
 
   --font-*: initial;
@@ -179,12 +196,13 @@
   --text-display--letter-spacing: var(--mf-tr-display);
   --text-h1: var(--mf-fs-h1);
   --text-h1--line-height: var(--mf-lh-heading);
-  --text-h1--letter-spacing: var(--mf-tr-display);
+  --text-h1--letter-spacing: var(--mf-tr-heading);
   --text-h2: var(--mf-fs-h2);
   --text-h2--line-height: var(--mf-lh-heading);
   --text-h2--letter-spacing: var(--mf-tr-heading);
   --text-h3: var(--mf-fs-h3);
-  --text-h3--line-height: 1.2;
+  --text-h3--line-height: 1.15;
+  --text-h3--letter-spacing: var(--mf-tr-h3);
   --text-lead: var(--mf-fs-lead);
   --text-lead--line-height: 1.5;
   --text-body: var(--mf-fs-body);
@@ -196,8 +214,13 @@
   --radius-*: initial;
   --radius-none: 0;
   --radius-kontrol: var(--mf-r-kontrol);
+  --radius-kart: var(--mf-r-kart);
+  --radius-panel: var(--mf-r-panel);
+  --radius-hap: var(--mf-r-hap);
 
   --shadow-*: initial;
+  --shadow-kart: var(--mf-golge-kart);
+  --shadow-yuzen: var(--mf-golge-yuzen);
   --shadow-katman: var(--mf-golge-katman);
 
   --container-metin: var(--mf-max-metin);

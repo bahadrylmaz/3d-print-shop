@@ -9,9 +9,10 @@ export const sorular = [
   },
   {
     soru: 'Hangi figürleri basıyorsunuz?',
-    // DOĞRULA: politika kararı Bahadır'da (METIN.md §3.10, soru 2)
+    // DOĞRULA: politika kararı Bahadır'da. Önceki cevap "hak sahibinin izni olmayan karakter ve marka tasarımlarını
+    // basmıyoruz" diyordu; yeni katalog karakter figürlerinden oluştuğu için o cümle çıkarıldı.
     cevap:
-      'Kişiye özel figürler, özgün tasarımlar ve ticari kullanım izni olan dosyalarla çalışıyoruz: 32 mm ve 75 mm masa oyunu figürleri, kaideler, dekor heykelleri. Hak sahibinin izni olmayan karakter ve marka tasarımlarını basmıyoruz.',
+      'Süper kahramanlar, film ve çizgi film karakterleri, chibi setler, ejderha gibi fantastik figürler ve kişiye özel figürler basıyoruz. Mağazadaki parçalar birer örnek; listede olmayan bir karakter için adını ya da fotoğrafını yazmanız yeter. 32 mm ve 75 mm masa oyunu figürü, kaide ve dekor heykeli de basıyoruz.',
   },
   {
     soru: 'Sanayi prototipi için hangi reçineyi kullanıyorsunuz?',
@@ -30,8 +31,9 @@ export const sorular = [
   },
   {
     soru: 'Parça boyalı mı gelir?',
+    // DOĞRULA: "mağazadaki figürler boyalı teslim edilir" yeni fotoğraflara bakılarak yazıldı
     cevap:
-      'Standart teslimde parça yıkanmış, UV ile kürlenmiş ve destekleri temizlenmiş olur. Astarlı teslim ek ücretlidir. Boyalı teslimi iş özelinde konuşuyoruz; çok ayrıntılı boyama işlerinde başka bir yol önerebiliriz.',
+      'Mağazadaki figürler fotoğraflardaki gibi elde boyanmış teslim edilir; şeffaf reçine parçalar boyasızdır. Kendi dosyanızdan ya da özel bir modelden basılan işlerde standart teslim boyasızdır: parça yıkanmış, UV ile kürlenmiş ve destekleri temizlenmiş olur. Astar ve boya ayrıca konuşulur.',
   },
   {
     soru: 'Fiyatı nasıl öğrenirim?',

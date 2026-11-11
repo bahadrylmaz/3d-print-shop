@@ -1,7 +1,7 @@
 import Bolum from '../temel/Bolum'
 
-// Ana sayfa 3. bölümün devamı "Süreç" (YON §6.2-3 alt, METIN §3.3): gerçek bir sıra olduğu için numaralı.
-// 1280: yatay 4 sütun (her biri 3 kol), numara Bodoni 44 px. 375: dikey liste. Çapa: #process.
+// Ana sayfa 4. bölüm "Süreç": gerçek bir sıra olduğu için numaralı dört kart, açık panel içinde.
+// 1280: yatay 4 kart. 768: 2 × 2. 375: alt alta. Çapa: #process.
 const ADIMLAR = [
   {
     baslik: 'Gönderin',
@@ -13,7 +13,7 @@ const ADIMLAR = [
     baslik: 'Fiyat ve onay',
     metin:
       'Çalışma saatlerinde yaklaşık 30 dakika içinde tahmini fiyat, süre ve reçine önerisiyle döneriz. Model bizden çıkacaksa ön izlemeyi gönderir, onayınızı bekleriz.',
-    sure: '30 dakika', // DOĞRULA: 30 dakikada dönüş süresi (METIN.md §3.3)
+    sure: '30 dakika', // DOĞRULA: 30 dakikada dönüş süresi
   },
   {
     baslik: 'Baskı',
@@ -31,37 +31,36 @@ const ADIMLAR = [
 
 export default function Surec() {
   return (
-    <Bolum id="process" baslikId="surec-baslik" bosluk="kucuk">
-      <div className="col-span-full mb-8 md:col-span-6 md:mb-12">
-        <h2 id="surec-baslik" className="m-0 font-serif text-h2 font-[400]">
-          Fotoğraftan teslime
+    <Bolum id="process" baslikId="surec-baslik" panel="tas" bosluk="dar" izgara={false}>
+      <div className="mx-auto mb-8 max-w-[44rem] text-center md:mb-12">
+        <h2 id="surec-baslik" className="m-0 text-h2 font-[700]">
+          Fotoğraftan <em className="mf-italik">teslime</em>
         </h2>
-        <p className="m-0 mt-4 max-w-[48ch] text-grafit-2">
+        <p className="m-0 mx-auto mt-5 max-w-[48ch] text-grafit-2">
           STL dosyanız olmak zorunda değil. Fotoğraf, çizim ya da ölçülü bir taslak başlamak için yeter.
         </p>
       </div>
 
-      <ol className="col-span-full m-0 grid list-none grid-cols-1 gap-x-(--mf-oluk) p-0 md:grid-cols-12">
+      <ol className="m-0 grid list-none grid-cols-1 gap-2.5 p-0 md:grid-cols-2 md:gap-4 lg:grid-cols-4">
         {ADIMLAR.map((a, i) => (
-          // Mobil: numara solda kendi sütununda (alt alta numara + başlık 4 adımda ~250 px boşluk yiyordu). md: numara üstte.
-          <li
-            key={a.baslik}
-            className="grid grid-cols-[2.75rem_1fr] gap-x-3 border-t border-cizgi pt-5 pb-8 md:col-span-3 md:block md:pb-0"
-          >
-            <span aria-hidden="true" className="mf-rakam row-span-3 block font-serif text-[2.75rem] leading-none font-[400]">
+          <li key={a.baslik} className="flex flex-col rounded-kart bg-kirec p-6 shadow-kart md:p-7">
+            <span
+              aria-hidden="true"
+              className="mf-rakam grid h-10 w-10 place-items-center rounded-hap bg-recine-acik text-[1.0625rem] font-[700] text-recine-koyu"
+            >
               {i + 1}
             </span>
-            <h3 className="m-0 mt-1 font-serif text-h3 font-[500] md:mt-5">{a.baslik}</h3>
+            <h3 className="m-0 mt-5 text-h3 font-[700]">{a.baslik}</h3>
             <p className="m-0 mt-3 text-grafit-2">{a.metin}</p>
-            <p className="m-0 mt-3 text-small text-sis">{a.sure}</p>
+            <p className="m-0 mt-auto pt-5 text-small font-[600] text-grafit">{a.sure}</p>
           </li>
         ))}
       </ol>
 
-      {/* DOĞRULA: toplam yaklaşık 48 saat (METIN.md §3.3 bölüm altı) */}
-      <p className="col-span-full m-0 mt-8 max-w-[62ch] md:mt-12 text-grafit-2 md:col-span-8">
-        Dosyası hazır, onaylanmış bir işte toplam süre yaklaşık 48 saat. Modelleme gereken işlerde süreyi teklifte
-        ayrıca yazarız.
+      {/* DOĞRULA: toplam yaklaşık 48 saat */}
+      <p className="m-0 mx-auto mt-8 max-w-[62ch] text-center text-grafit-2 md:mt-10">
+        Dosyası hazır, onaylanmış bir işte toplam süre yaklaşık 48 saat. Modelleme ya da boyama gereken işlerde süreyi
+        teklifte ayrıca yazarız.
       </p>
     </Bolum>
   )

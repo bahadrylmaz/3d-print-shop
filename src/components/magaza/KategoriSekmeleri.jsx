@@ -1,15 +1,13 @@
-// KategoriSekmeleri: alt çizgili metin sekmeleri (YON §6.3, onizleme .sekmeler). Hap yok, kutu yok.
-// <button aria-pressed>; seçili olan Grafit 500 + 2 px alt çizgi. Mobilde yalnız şerit yatay kaydırılır (sayfa değil),
-// şerit sol kenara kadar taşar. Sağda düz metin sayaç (ör. "12 ürün"), aria-live ile duyurulur.
+// KategoriSekmeleri: hap şeklinde filtre düğmeleri (Inspora'daki kategori şeridi gibi). Seçili olan mürekkep dolu, diğerleri açık panel.
+// <button aria-pressed>. Mobilde yalnız şerit yatay kaydırılır (sayfa değil). Sağda düz metin sayaç (ör. "13 ürün"), aria-live ile duyurulur.
 // Props: secenekler [{ id, label }], secili (id), onSec(id), etiket (görünmez grup adı), sayac (metin, isteğe bağlı).
-// Blog listesinde kategori filtresi gerekirse aynı bileşen kullanılır (YON §6.5).
 export default function KategoriSekmeleri({ secenekler, secili, onSec, etiket, sayac, className = '' }) {
   return (
-    <div className={`flex items-end justify-between gap-x-6 border-b border-cizgi ${className}`}>
+    <div className={`flex items-center justify-between gap-x-4 ${className}`}>
       <div
         role="group"
         aria-label={etiket}
-        className="-mb-px -ml-(--mf-kenar) flex min-w-0 flex-1 gap-x-8 overflow-x-auto pr-2 pl-(--mf-kenar) [scrollbar-width:none] md:ml-0 md:pr-0 md:pl-0 [&::-webkit-scrollbar]:hidden"
+        className="mf-serit -mx-(--mf-kenar) flex min-w-0 flex-1 gap-2 overflow-x-auto px-(--mf-kenar) py-1 md:mx-0 md:flex-wrap md:px-0"
       >
         {secenekler.map((s) => {
           const secildi = s.id === secili
@@ -19,10 +17,8 @@ export default function KategoriSekmeleri({ secenekler, secili, onSec, etiket, s
               type="button"
               aria-pressed={secildi}
               onClick={() => onSec(s.id)}
-              className={`min-h-11 flex-none cursor-pointer border-0 bg-transparent p-0 font-sans text-[0.9375rem] whitespace-nowrap transition-[color,box-shadow] duration-(--mf-sure-hizli) ease-mf hover:text-grafit focus-visible:outline-offset-[-2px] ${
-                secildi
-                  ? 'font-[500] text-grafit shadow-[inset_0_-2px_0_var(--mf-grafit)]'
-                  : 'font-[400] text-grafit-2 shadow-[inset_0_-2px_0_transparent]'
+              className={`min-h-11 flex-none cursor-pointer rounded-hap border-0 px-5 font-sans text-[0.9375rem] whitespace-nowrap transition-colors duration-(--mf-sure-hizli) ease-mf ${
+                secildi ? 'bg-grafit font-[600] text-kirec' : 'bg-tas font-[500] text-grafit-2 hover:bg-tas-koyu hover:text-grafit'
               }`}
             >
               {s.label}
@@ -31,7 +27,7 @@ export default function KategoriSekmeleri({ secenekler, secili, onSec, etiket, s
         })}
       </div>
       {sayac && (
-        <p aria-live="polite" className="mf-rakam m-0 min-h-11 flex-none items-center text-small text-sis flex">
+        <p aria-live="polite" className="mf-rakam m-0 hidden flex-none text-small text-sis sm:block">
           {sayac}
         </p>
       )}

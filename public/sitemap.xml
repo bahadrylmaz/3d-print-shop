@@ -11,64 +11,69 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://micronforge.shop/magaza/buz-ejderha</loc>
+    <loc>https://micronforge.shop/magaza/venom</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://micronforge.shop/magaza/anka-kusu</loc>
+    <loc>https://micronforge.shop/magaza/batman</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://micronforge.shop/magaza/kurt</loc>
+    <loc>https://micronforge.shop/magaza/black-panther</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://micronforge.shop/magaza/uluyan-kurt</loc>
+    <loc>https://micronforge.shop/magaza/wolverine</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://micronforge.shop/magaza/fil</loc>
+    <loc>https://micronforge.shop/magaza/hulk</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://micronforge.shop/magaza/baykus</loc>
+    <loc>https://micronforge.shop/magaza/kirmizi-hulk</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://micronforge.shop/magaza/kaplumbaga</loc>
+    <loc>https://micronforge.shop/magaza/kaptan-amerika</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://micronforge.shop/magaza/kirpi</loc>
+    <loc>https://micronforge.shop/magaza/superman</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://micronforge.shop/magaza/kurukafa</loc>
+    <loc>https://micronforge.shop/magaza/darth-vader</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://micronforge.shop/magaza/boga</loc>
+    <loc>https://micronforge.shop/magaza/ninja-kaplumbaga</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://micronforge.shop/magaza/atlas</loc>
+    <loc>https://micronforge.shop/magaza/chibi-set</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://micronforge.shop/magaza/ozel-figur</loc>
+    <loc>https://micronforge.shop/magaza/keloglan</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://micronforge.shop/magaza/ejderha</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://micronforge.shop/blog</loc>

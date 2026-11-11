@@ -1,0 +1,65 @@
+<!doctype html>
+<!--
+  Paylaşım görseli (public/og-image.png, 1200 × 630) kaynağı. Sitedeki hero ile aynı dil: gök zemini,
+  kalın başlık + italik vurgu, yelpaze fotoğraflar. Yeniden üretmek için (proje kökünden):
+
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --hide-scrollbars \
+    --force-device-scale-factor=1 --window-size=1200,630 --virtual-time-budget=3000 \
+    --screenshot=public/og-image.png "file://$PWD/scripts/og-image.html"
+-->
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      @font-face {
+        font-family: "Bodoni Moda";
+        src: url("../public/fonts/bodoni-moda/BodoniModa-Italic-Variable.woff2") format("woff2");
+        font-weight: 400 900;
+        font-style: italic;
+      }
+      @font-face {
+        font-family: "Schibsted Grotesk";
+        src: url("../public/fonts/schibsted-grotesk/SchibstedGrotesk-Variable.woff2") format("woff2");
+        font-weight: 400 900;
+      }
+      * { box-sizing: border-box; margin: 0; }
+      html, body { width: 1200px; height: 630px; overflow: hidden; }
+      body {
+        position: relative;
+        font-family: "Schibsted Grotesk", sans-serif;
+        color: #0D1226;
+        background:
+          radial-gradient(46% 40% at 12% 18%, rgba(255, 255, 255, 0.6), transparent 72%),
+          radial-gradient(40% 40% at 92% 88%, rgba(255, 255, 255, 0.55), transparent 72%),
+          linear-gradient(180deg, #A9C2FF 0%, #CBDDFF 46%, #E9F1FF 100%);
+      }
+      .sol { position: absolute; left: 72px; top: 64px; width: 620px; }
+      .marka { display: flex; align-items: center; gap: 16px; font-size: 30px; font-weight: 700; letter-spacing: -0.03em; }
+      .marka img { width: 60px; height: 60px; border-radius: 18px; }
+      h1 { margin-top: 84px; font-size: 84px; line-height: 0.98; font-weight: 800; letter-spacing: -0.045em; }
+      h1 em { font-family: "Bodoni Moda", serif; font-weight: 400; letter-spacing: -0.025em; }
+      .alt { margin-top: 36px; font-size: 28px; color: #414A63; letter-spacing: -0.01em; }
+      .kart {
+        position: absolute;
+        padding: 9px;
+        border-radius: 30px;
+        background: #fff;
+        box-shadow: 0 2px 4px rgba(13, 18, 38, 0.05), 0 30px 60px -24px rgba(31, 44, 110, 0.45);
+      }
+      .kart img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 22px; }
+      .k1 { width: 214px; left: 584px; top: 188px; rotate: -7deg; }
+      .k3 { width: 214px; left: 978px; top: 188px; rotate: 7deg; }
+      .k2 { width: 262px; left: 757px; top: 132px; }
+    </style>
+  </head>
+  <body>
+    <div class="sol">
+      <div class="marka"><img src="../public/logo-kristal.jpg" alt="" />MicronForge</div>
+      <h1>Reçineden basılır.<br /><em>Elde boyanır.</em></h1>
+      <p class="alt">SLA reçine 3D baskı atölyesi · Manisa</p>
+    </div>
+    <div class="kart k1"><img src="../public/shop/batman-1-k.jpg" alt="" /></div>
+    <div class="kart k3"><img src="../public/shop/wolverine-1-k.jpg" alt="" /></div>
+    <div class="kart k2"><img src="../public/shop/venom-1-k.jpg" alt="" /></div>
+  </body>
+</html>

@@ -1,20 +1,20 @@
 import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { Kapsayici, Izgara } from '../temel/Kapsayici'
+import { Kapsayici } from '../temel/Kapsayici'
+import Bolum from '../temel/Bolum'
 import { Buton, MetinBaglanti } from '../temel/Buton'
 import Ikon from '../temel/Ikon'
+import SayfaBasligi from '../yerlesim/SayfaBasligi'
 import UrunKarti from './UrunKarti'
 import KategoriSekmeleri from './KategoriSekmeleri'
 import { products, filters, SITE } from '../../data/products'
 import { INSTAGRAM_KULLANICI, INSTAGRAM_URL, WA_GENEL_MESAJ, waBaglanti } from '../../data/iletisim'
 import useJsonLd from '../../hooks/useJsonLd'
 
-// Mağaza listesi (/magaza): YON §6.3, METIN §4.1.
-// 1280: H1 (5 kol) | giriş + fiyat notu (5 kol, alta hizalı) → sekmeler + sayaç → 3 sütunlu raf (her kart 4 kol;
-//   orta sütun 96 px aşağıda, "vitrin rafı" ritmi) → liste altı. 375: 2 sütun, sağ sütun 48 px aşağıda.
-// Filtre adreste: /magaza?kategori=dekor (paylaşılabilir; kanonik adres yine /magaza). Bilinmeyen değer "Tümü" sayılır.
-// Filtre değişince ızgara 140 ms çapraz geçiş (hareket azaltmada anında).
+// Mağaza listesi (/magaza): gök bandında ortalanmış başlık → hap filtreler + sayaç → ürün ızgarası (mobil 2, md 3, xl 4 sütun) → özel baskı paneli.
+// Filtre adreste: /magaza?kategori=super-kahraman (paylaşılabilir; kanonik adres yine /magaza). Bilinmeyen değer "Tümü" sayılır.
+// Filtre değişince ızgara 160 ms çapraz geçiş (hareket azaltmada anında).
 const sayKategori = (id) => (id === 'all' ? products.length : products.filter((p) => p.category === id).length)
 
 export default function Magaza() {
@@ -23,7 +23,7 @@ export default function Magaza() {
 
   const secili = filters.find((f) => f.kategori && f.kategori === params.get('kategori'))?.id ?? 'all'
   const liste = secili === 'all' ? products : products.filter((p) => p.category === secili)
-  // METIN §4.1: ürünü olmayan kategori sekmesi gösterilmez (adresten seçilmişse görünür kalır)
+  // Ürünü olmayan kategori düğmesi gösterilmez (adresten seçilmişse görünür kalır)
   const sekmeler = filters.filter((f) => f.id === 'all' || f.id === secili || sayKategori(f.id) > 0)
 
   const sec = (id) => {
@@ -50,30 +50,29 @@ export default function Magaza() {
   )
   useJsonLd('shop-itemlist-jsonld', jsonLd)
 
-  const gecis = { duration: azHareket ? 0 : 0.14, ease: [0.2, 0, 0, 1] }
+  const gecis = { duration: azHareket ? 0 : 0.16, ease: [0.2, 0, 0, 1] }
 
   return (
     <>
-      <section aria-labelledby="magaza-baslik" className="py-(--mf-bolum-kucuk)">
-        <Kapsayici>
-          <Izgara className="gap-y-6">
-            <h1 id="magaza-baslik" className="col-span-full m-0 font-serif text-h1 font-[400] md:col-span-5">
-              Mağaza
-            </h1>
-            <div className="col-span-full md:col-span-5 md:col-start-7 md:pt-3">
-              <p className="m-0 max-w-[46ch] text-lead text-grafit-2">
-                Atölyede basılmış dekor ve koleksiyon parçaları. Her birini farklı ölçü, renk ya da reçineyle yeniden
-                basabiliriz. Siparişler WhatsApp'tan alınır.
-              </p>
-              <p className="m-0 mt-4 text-small text-sis">
-                Fiyat için WhatsApp'tan yazın. Ölçü, adet ve boyaya göre hesaplıyoruz.
-              </p>
-            </div>
-          </Izgara>
+      <section aria-labelledby="magaza-baslik">
+        <SayfaBasligi
+          baslikId="magaza-baslik"
+          baslik="Mağaza:"
+          vurgu="elde boyanmış figürler"
+          className="pb-8!"
+        >
+          <p className="m-0 mt-6 max-w-[50ch] text-lead text-grafit-2">
+            Atölyede basılıp boyanmış koleksiyon parçaları. Her birini farklı ölçüde yeniden basabiliriz. Siparişler
+            WhatsApp&apos;tan alınır.
+          </p>
+          <p className="m-0 mt-3 text-small text-sis">
+            Fiyat için WhatsApp&apos;tan yazın. Ölçü, adet ve boyaya göre hesaplıyoruz.
+          </p>
+        </SayfaBasligi>
 
+        <Kapsayici className="pb-(--mf-bolum)">
           {products.length > 0 && (
             <KategoriSekmeleri
-              className="mt-(--mf-bolum-kucuk)"
               etiket="Kategoriye göre süz"
               secenekler={sekmeler}
               secili={secili}
@@ -91,17 +90,14 @@ export default function Magaza() {
               transition={gecis}
             >
               {liste.length > 0 ? (
-                <Izgara as="ul" className="m-0 list-none gap-y-12 p-0 pt-12 md:gap-y-20 md:pt-16">
+                <ul className="m-0 grid list-none grid-cols-2 gap-2.5 p-0 pt-5 md:grid-cols-3 md:gap-4 md:pt-8 xl:grid-cols-4">
                   {liste.map((urun, i) => (
-                    <li
-                      key={urun.id}
-                      className={`col-span-2 md:col-span-4 ${i % 2 === 1 ? 'max-md:mt-12' : ''} ${i % 3 === 1 ? 'md:mt-24' : ''}`}
-                    >
+                    <li key={urun.id}>
                       {/* İlk satır ekranın üstünde (LCP adayı): lazy yerine eager + fetchpriority high */}
-                      <UrunKarti urun={urun} oncelikli={i < 3} sizes="(min-width: 1440px) 440px, (min-width: 768px) 31vw, 46vw" />
+                      <UrunKarti urun={urun} oncelikli={i < 4} sizes="(min-width: 1280px) 300px, (min-width: 768px) 31vw, 46vw" />
                     </li>
                   ))}
-                </Izgara>
+                </ul>
               ) : (
                 <BosDurum tamamenBos={products.length === 0} />
               )}
@@ -110,43 +106,44 @@ export default function Magaza() {
         </Kapsayici>
       </section>
 
-      <section aria-label="Özel baskı" className="pb-(--mf-bolum)">
-        <Kapsayici>
-          <Izgara className="gap-y-6 border-t border-cizgi pt-8">
-            <p className="col-span-full m-0 max-w-[38ch] font-serif text-h3 font-[400] md:col-span-6">
-              Aradığınız parça burada yoksa fotoğrafını gönderin, sizin için basalım.
-            </p>
-            <div className="col-span-full flex flex-wrap items-center gap-x-8 gap-y-3 md:col-span-5 md:col-start-8 md:self-end md:justify-self-end">
-              <Buton href={waBaglanti(WA_GENEL_MESAJ)} tur="cerceve">
-                <Ikon ad="whatsapp" />
-                WhatsApp'tan yazın
-              </Buton>
-              <p className="m-0 text-grafit-2">
-                Instagram'da daha fazla iş: <MetinBaglanti href={INSTAGRAM_URL}>{INSTAGRAM_KULLANICI}</MetinBaglanti>
-              </p>
-            </div>
-          </Izgara>
-        </Kapsayici>
-      </section>
+      <Bolum panel="tas" bosluk="yok" izgara={false} baslikId="ozel-baski-baslik">
+        <div className="flex flex-col items-center text-center">
+          <h2 id="ozel-baski-baslik" className="m-0 max-w-[20ch] text-h2 font-[700]">
+            Aradığınız karakter <em className="mf-italik">burada yok mu?</em>
+          </h2>
+          <p className="m-0 mt-5 max-w-[46ch] text-grafit-2">
+            Adını ya da fotoğrafını gönderin, sizin için basalım.
+          </p>
+          <div className="mt-7 flex flex-wrap justify-center gap-3">
+            <Buton href={waBaglanti(WA_GENEL_MESAJ)}>
+              <Ikon ad="whatsapp" />
+              WhatsApp&apos;tan yazın
+            </Buton>
+            <Buton href="/#order" tur="cerceve">
+              Teklif formu
+            </Buton>
+          </div>
+          <p className="m-0 mt-5 text-grafit-2">
+            Instagram&apos;da daha fazla iş: <MetinBaglanti href={INSTAGRAM_URL}>{INSTAGRAM_KULLANICI}</MetinBaglanti>
+          </p>
+        </div>
+      </Bolum>
     </>
   )
 }
 
-// METIN §2 boş durumlar: kategori boş ya da mağaza tamamen boş (yeni katalog gelene kadar)
+// Boş durumlar: kategori boş ya da mağaza tamamen boş
 function BosDurum({ tamamenBos }) {
   return (
-    <Izgara className="pt-12 md:pt-16">
-      <div className="col-span-full md:col-span-6">
-        <p className="m-0 max-w-[38ch] text-lead text-grafit-2">
-          {tamamenBos
-            ? 'Yeni parçaların fotoğrafları çekiliyor. Bu arada istediğiniz parçayı fotoğrafla anlatabilirsiniz.'
-            : 'Bu kategoride şu an parça yok. Benzerini sizin için basabiliriz.'}
-        </p>
-        <Buton href="/#order" className="mt-8">
-          Teklif isteyin
-        </Buton>
-      </div>
-      <div className="mf-fon col-span-2 mt-12 aspect-[3/4] md:col-span-3 md:col-start-9 md:mt-0" aria-hidden="true" />
-    </Izgara>
+    <div className="mt-8 flex flex-col items-center rounded-panel bg-tas px-6 py-14 text-center">
+      <p className="m-0 max-w-[38ch] text-lead text-grafit-2">
+        {tamamenBos
+          ? 'Yeni parçaların fotoğrafları çekiliyor. Bu arada istediğiniz parçayı fotoğrafla anlatabilirsiniz.'
+          : 'Bu kategoride şu an parça yok. Benzerini sizin için basabiliriz.'}
+      </p>
+      <Buton href="/#order" className="mt-8">
+        Teklif isteyin
+      </Buton>
+    </div>
   )
 }

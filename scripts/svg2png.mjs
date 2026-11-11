@@ -1,10 +1,10 @@
-// SVG -> PNG rasterizer (og-image + optional Instagram assets).
+// SVG -> PNG rasterizer (optional Instagram assets).
+// og-image.png artık buradan üretilmiyor: kaynağı scripts/og-image.html (başındaki komutla Chrome'dan basılır).
 // Usage: node scripts/svg2png.mjs
 import { Resvg } from '@resvg/resvg-js'
 import { readFileSync, writeFileSync } from 'node:fs'
 
 const jobs = [
-  ['public/og-image.svg', 'public/og-image.png', 1200],
   ['public/instagram-pp.svg', 'public/instagram-pp.png', 1080],
   ['public/banner.svg', 'public/banner.png', 1600],
   ['public/instagram-3grid/post-1-sol.svg', 'public/instagram-3grid/post-1-sol.png', 1080],
