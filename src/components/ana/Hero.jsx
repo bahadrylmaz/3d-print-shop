@@ -9,6 +9,7 @@ import { WA_GENEL_MESAJ, waBaglanti } from '../../data/iletisim'
 // Ana sayfa 1. bölüm: gök zemini üstünde ortalanmış başlık (kalın grotesk + italik vurgu), giriş, iki eylem;
 // altında yelpaze gibi açılmış beş ürün fotoğrafı (her biri kendi ürün sayfasına gider) ve teknik künye.
 // Açılış yalnız ilk yüklemede oynar: metin bulanıktan nete, kartlar aşağıdan yukarı (index.css .mf-belir / .mf-yuksel).
+// İçerik animasyona bağımlı kalmasın diye sınıflar 2,6 sn sonra kaldırılır (ACILIS_EMNIYET_MS).
 // Props: kartlar (5 ürün kaydı: soldan sağa; ortadaki en büyük). 768 px altında yalnız ortadaki üçü görünür
 // (ikinci kart o zaman en soldadır: bindirme payı yalnız md üstünde verilir ki yelpaze ortalı kalsın).
 // İsim etiketi kartın dış köşesinde durur (sağdaki kartlarda sağ altta): iç köşe komşu kartın altında kalıyor.
@@ -25,15 +26,21 @@ const YELPAZE = [
   ['w-[clamp(8rem,17vw,14rem)]', '9deg', 'mt-[clamp(2.5rem,6vw,5.5rem)]', 420, true],
 ]
 
+// Emniyet: en uzun açılış animasyonu 420 ms gecikme + 1100 ms sürer (1520 ms). Bu süre dolduktan sonra animasyon sınıfları
+// kaldırılır. Olağan tarayıcıda animasyon çoktan bitmiştir ve hiçbir şey değişmez; animasyon saati ilerlemeyen bir
+// ortamda (gömülü ya da arka planda kalan sayfa) ise başlık, düğmeler ve kartlar opaklık 0'da takılı kalmaz.
+const ACILIS_EMNIYET_MS = 2600
+
 export default function Hero({ kartlar = [] }) {
   // StrictMode iki kez render etse de değer aynı kalır; bayrak yalnız ayrılırken kapanır.
-  const [acilis] = useState(() => !acilisOynadi)
-  useEffect(
-    () => () => {
+  const [acilis, setAcilis] = useState(() => !acilisOynadi)
+  useEffect(() => {
+    const zamanlayici = setTimeout(() => setAcilis(false), ACILIS_EMNIYET_MS)
+    return () => {
+      clearTimeout(zamanlayici)
       acilisOynadi = true
-    },
-    []
-  )
+    }
+  }, [])
   const belir = acilis ? 'mf-belir' : ''
   const yuksel = acilis ? 'mf-yuksel' : ''
   const gecikme = (ms) => ({ '--mf-gecikme': `${ms}ms` })
