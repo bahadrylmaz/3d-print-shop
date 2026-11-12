@@ -57,6 +57,19 @@
       linear-gradient(0deg, var(--mf-gok-1) 0%, var(--mf-gok-2) 44%, var(--mf-gok-3) 100%);
   }
 
+  /* Gece paneli: lacivert zemin + ince ızgara çizgileri (Instagram sayfasındaki zemin) + telefonun arkasında mor ışıma.
+     Sitedeki tek koyu yüzey; içindeki odak halkası beyaz olur ki lacivertte kaybolmasın. */
+  .mf-gece {
+    color: var(--mf-kirec);
+    background:
+      radial-gradient(38% 58% at 74% 48%, rgba(124, 108, 255, 0.5), transparent 72%),
+      radial-gradient(34% 46% at 6% 104%, rgba(67, 83, 230, 0.42), transparent 72%),
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px) 0 0 / 88px 88px,
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px) 0 0 / 88px 88px,
+      linear-gradient(160deg, var(--mf-gece-2) 0%, var(--mf-gece) 62%);
+  }
+  .mf-gece :focus-visible { outline-color: var(--mf-kirec); }
+
   /* Başlıktaki italik vurgu: kalın groteskin yanında ince Bodoni italik ("Reçineden basılır. *Elde boyanır.*") */
   .mf-italik {
     font-family: var(--mf-font-serif);

@@ -8,6 +8,7 @@
      alci = sayfa zemini        kirec = beyaz yüzey (kart, form)     tas = açık panel
      grafit = mürekkep (metin)  sis = soluk metin                    recine = vurgu (logodaki mor-mavi)
      gok-1/2/3 = hero ve footer'daki gök gradyanının durakları
+     gece / gece-2 = koyu panel (Instagram bölümü): logonun ve Instagram sayfasının laciverti
 
    Yapı:
    1) @font-face   (kendi sunucumuz: /public/fonts, OFL 1.1)
@@ -72,6 +73,10 @@
   --mf-gok-1:       #A9C2FF;
   --mf-gok-2:       #CBDDFF;
   --mf-gok-3:       #E9F1FF;
+
+  /* Gece: sitedeki tek koyu yüzey. Logonun zemini ve Instagram sayfasındaki lacivert. Üstünde metin beyaz (16.9:1). */
+  --mf-gece:        #14112E;
+  --mf-gece-2:      #262060;
 
   /* Tipografi */
   --mf-font-serif: "Bodoni Moda", "Bodoni 72", "Didot", Georgia, serif;
@@ -185,6 +190,8 @@
   --color-gok-1: var(--mf-gok-1);
   --color-gok-2: var(--mf-gok-2);
   --color-gok-3: var(--mf-gok-3);
+  --color-gece: var(--mf-gece);
+  --color-gece-2: var(--mf-gece-2);
   --color-hata: var(--mf-hata);
 
   --font-*: initial;

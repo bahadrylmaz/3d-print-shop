@@ -1,5 +1,5 @@
 // Ikon: yalnız işlev için ikonlar: 20 px, 1.75 px yuvarlak uçlu çizgi, currentColor.
-// ad: "whatsapp" | "menu" | "kapat" | "arti" | "eksi" | "geri" | "ok" | "capraz". Dekoratiftir (aria-hidden); anlamı düğmenin aria-label'ı taşır.
+// ad: "whatsapp" | "instagram" | "menu" | "kapat" | "arti" | "eksi" | "geri" | "ok" | "capraz". Dekoratiftir (aria-hidden); anlamı düğmenin aria-label'ı taşır.
 // Örnek: <Ikon ad="whatsapp" />   <Ikon ad="arti" boyut={16} />
 const CIZGI = {
   menu: <path d="M4 8h16M4 16h16" />,
@@ -9,6 +9,14 @@ const CIZGI = {
   geri: <path d="M10 6l-6 6 6 6M4 12h16" />,
   ok: <path d="M14 6l6 6-6 6M20 12H4" />,
   capraz: <path d="M8 16L16 8M9 8h7v7" />,
+  // Sade çizgi glif: yuvarlak köşeli kare, mercek ve flaş noktası (renkli Instagram logosu değil)
+  instagram: (
+    <>
+      <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <path d="M17.1 6.9h.01" />
+    </>
+  ),
 }
 
 // Resmi WhatsApp glifi, tek renk

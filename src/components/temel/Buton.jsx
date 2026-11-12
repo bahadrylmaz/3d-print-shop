@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 
-// Buton: 48 px yükseklikte hap. tur="birincil" (mürekkep dolu) | "cerceve" (beyaz hap, ince kenar).
+// Buton: 48 px yükseklikte hap. tur="birincil" (mürekkep dolu) | "cerceve" (beyaz hap, ince kenar) |
+//   "hayalet" (yalnız koyu zeminde: saydam, beyaz kenarlı, beyaz yazı).
 // Hedefe göre öğe seçer: to -> router <Link>, href -> <a>, ikisi de yoksa <button type="button">.
 // Örnek: <Buton href="/#order">Teklif isteyin</Buton>  <Buton to="/magaza" tur="cerceve" genis>…</Buton>
 // MetinBaglanti: altı çizili, 44 px dokunma alanlı metin bağlantı ("Mağazaya bakın" gibi ikincil eylem).
@@ -11,6 +12,8 @@ const TURLER = {
   birincil: 'bg-grafit text-kirec hover:bg-recine-koyu',
   cerceve:
     'bg-kirec text-grafit shadow-[inset_0_0_0_1px_var(--mf-cizgi),var(--mf-golge-kart)] hover:shadow-[inset_0_0_0_1px_var(--mf-grafit),var(--mf-golge-kart)]',
+  hayalet:
+    'bg-transparent text-kirec shadow-[inset_0_0_0_1px_rgba(255,255,255,0.38)] hover:bg-kirec/12 hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.7)]',
 }
 
 function hedefOge({ to, href, children, className, ...rest }) {

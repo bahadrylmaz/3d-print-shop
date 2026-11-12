@@ -8,11 +8,12 @@ import Atolyeden from '../components/ana/Atolyeden'
 import TeklifFormu from '../components/ana/TeklifFormu'
 import Ilkeler from '../components/ana/Ilkeler'
 import Sorular from '../components/ana/Sorular'
+import Instagram from '../components/ana/Instagram'
 import Blogdan from '../components/ana/Blogdan'
 import { products, getProduct } from '../data/products'
 import { blogPosts } from '../data/blogPosts'
 
-// Ana sayfa: Hero (gök + yelpaze) → Vitrin → Atölyede basılanlar → Süreç → Malzemeler → Teklif formu → Kurallar → SSS → Rehber.
+// Ana sayfa: Hero (gök + yelpaze) → Vitrin → Atölyede basılanlar → Süreç → Malzemeler → Teklif formu → Kurallar → SSS → Instagram → Rehber.
 // Eski çapalar korunur: #hero, #services, #process, #materials, #order, #pricing, #faq.
 // Hero yelpazesi soldan sağa beş ürün (ortadaki en büyük); vitrin sekiz ürün. Kataloğun sırası değişse de seçim sabit kalsın diye id ile.
 const sec = (idler) => idler.map(getProduct).filter(Boolean)
@@ -47,6 +48,7 @@ export default function Home() {
       <TeklifFormu />
       <Ilkeler />
       <Sorular />
+      <Instagram />
       <Blogdan yazilar={sonYazilar} />
     </SayfaIskeleti>
   )

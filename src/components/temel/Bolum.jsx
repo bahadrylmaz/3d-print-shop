@@ -1,7 +1,8 @@
 import { Kapsayici, Izgara } from './Kapsayici'
 
 // Bolum: sayfanın bir bölümü. <section> + dikey boşluk + Kapsayici (+ Izgara).
-// panel verilirse içerik yuvarlak köşeli bir panelin içine oturur: 'tas' (açık gri-mavi) | 'beyaz' (gölgeli beyaz).
+// panel verilirse içerik yuvarlak köşeli bir panelin içine oturur: 'tas' (açık gri-mavi) | 'beyaz' (gölgeli beyaz) |
+//   'gece' (lacivert, ızgara çizgili; içindeki metin beyaz, taşan süsler kırpılır).
 // Props: id, ekCapalar (eski bağlantılar için ek çapa id'leri, ör. ['services']), baslikId (aria-labelledby için),
 //   bosluk 'normal' (56-120 px) | 'kucuk' (40-72 px) | 'dar' (panelleri alt alta dizmek için 12-16 px) | 'yok',
 //   izgara (çocukları 12 kolonluk ızgaraya koyar, varsayılan true), className, icClassName (ızgaranın sınıfı).
@@ -16,6 +17,7 @@ const BOSLUK = {
 const PANEL = {
   tas: 'rounded-panel bg-tas px-(--mf-panel-ic) py-[calc(var(--mf-panel-ic)*1.15)]',
   beyaz: 'rounded-panel bg-kirec px-(--mf-panel-ic) py-[calc(var(--mf-panel-ic)*1.15)] shadow-kart',
+  gece: 'mf-gece relative overflow-hidden rounded-panel px-(--mf-panel-ic) py-[calc(var(--mf-panel-ic)*1.15)]',
 }
 
 export default function Bolum({
